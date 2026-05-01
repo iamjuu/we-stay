@@ -1,10 +1,15 @@
 import Navbar from "./components/navbar/navbar";
 import HeroButton from "./components/herobutton/herobutton";
-import { ContainerImage1, PlaceholderImage } from "@/public";
+import {
+  ContainerImage1,
+  HeroImage,
+  PlaceholderImage,
+} from "@/content";
 import WeStaySection from "./components/card";
 import JoinCard from "./components/westay";
 import Homeowners from "./components/Homeowners";
 import { FaStar } from "react-icons/fa6";
+import Image from "next/image";
 
 export default function Home() {
   const homeownerQuestions = [
@@ -46,7 +51,7 @@ export default function Home() {
     <>
       <div
         style={{
-          backgroundImage: 'url("/images/Hero Img.png")',
+          backgroundImage: `url(${HeroImage.src})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -65,7 +70,7 @@ export default function Home() {
               <HeroButton />
             </div>
 
-            <div className="px-[80px] md:mt-[104px] font-dm-sans  text-white">
+            <div className="px-[80px] md:mt-[104px] mb-[120px] font-dm-sans  text-white">
               <p className="section-paragraph font-[400]">
                 Check your ADU eligibility, <br />
                 explore your options, and <br /> move forward with <br />{" "}
@@ -74,35 +79,38 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2">
-          <div className="bg-[#F3FFFE] rounded-full  border-[7px] border-white flex gap-3 p-[15px]">
-            <div className="flex  -space-x-3  ">
-              {image.map((item, index) => (
-                <img
-                  key={index}
-                  src={item.src}
-                  alt={item.alt}
-                  className="h-8 w-8 rounded-full border-2 border-white object-cover"
-                />
-              ))}
-            </div>
-            <div>
-              <p className="flex">
-                <FaStar color="#3D3D3D" />
-                <FaStar color="#3D3D3D" />
-                <FaStar color="#3D3D3D" />
-                <FaStar color="#3D3D3D" />
-                <FaStar color="#3D3D3D" />
-              </p>
-              <p
-                style={{ fontFamily: "DM Sans" }}
-                className="text-[#3D3D3D] text-[12px] leading-[26px] font-[300]"
-              >
-                Trusted by 5.000+ Customers
-              </p>
-            </div>
-          </div>
-        </div>
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10">
+  <div className="bg-[#F3FFFE] rounded-full border-[5px] sm:border-[7px] border-white flex flex-row items-center gap-2 sm:gap-3 px-3 sm:px-4 py-[10px] sm:py-[15px]">
+
+    {/* Avatar stack */}
+    <div className="flex flex-row items-center -space-x-2">
+      {image.map((item, index) => (
+        <Image
+          key={index}
+          src={item.src}
+          alt={item.alt}
+          className="h-6 w-6 sm:h-8 sm:w-8 rounded-full border-2 border-white object-cover shrink-0"
+        />
+      ))}
+    </div>
+
+    {/* Stars + text — vertical stack */}
+    <div className="flex flex-col justify-center gap-0">
+      <div className="flex flex-row items-center gap-[2px]">
+        {[...Array(5)].map((_, i) => (
+          <FaStar key={i} color="#3D3D3D" size={10} />
+        ))}
+      </div>
+      <p
+        style={{ fontFamily: "DM Sans" }}
+        className="text-[#3D3D3D] text-[10px] sm:text-[12px] font-[300] whitespace-nowrap leading-tight"
+      >
+        Trusted by 5,000+ Customers
+      </p>
+    </div>
+
+  </div>
+</div>
       </div>
 
       <div className="w-full px-4 py-20 sm:px-6 lg:px-8">

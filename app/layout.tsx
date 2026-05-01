@@ -24,8 +24,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${playfairDisplay.variable} ${dmSans.variable}`}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        suppressHydrationWarning
+        className={`${playfairDisplay.variable} ${dmSans.variable}`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
