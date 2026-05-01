@@ -56,57 +56,69 @@
     pointer-events: none;
   }
 
+  /* HERO */
   .hero-heading {
     font-size: clamp(2.5rem, 4.861cqi, 4.8125rem);
     line-height: 1.1;
   }
 
+  /* SECTION */
   .section-heading {
-    font-size: 52px;
-    line-height: 0px;
+    font-size: clamp(52px, 2.7vw, 52px);
+    line-height: clamp(65px, 3.4vw, 65px);
   }
 
   .section-paragraph {
-    font-size: 18px;
-    line-height: 1.4;
+    font-size: clamp(18px, 1.2vw, 25px);
+    line-height: clamp(25px, 1.6vw, 32px);
+  }
+  .semi-heading {
+    font-family: "DM Sans", sans-serif;
+    font-weight: 600;
+    font-size: clamp(32px, 2.7vw, 52px);
+    line-height: 100%;
   }
 
+
+  /* SECOND SECTION */
+  .second-section-heading {
+    font-family: "DM Sans", sans-serif;
+    font-size: clamp(32px, 1.8vw, 42px);
+    line-height: clamp(38px, 2.2vw, 48px);
+    font-weight: 500;
+  }
+
+  .second-section-list-data {
+    font-family: "DM Sans", sans-serif;
+    font-size: clamp(18px, 1.2vw, 25px);
+    line-height: clamp(26px, 1.6vw, 32px);
+    font-weight: 400;
+    color: #93928e;
+  }
+
+  .list-data-heading {
+    font-family: "DM Sans", sans-serif;
+    font-size: clamp(18px, 1.2vw, 25px);
+    line-height: clamp(26px, 1.6vw, 32px);
+    font-weight: 400;
+    color: #93928e;
+  }
+
+  /* CARDS */
   .card-title {
-    font-size: 18px;
-    line-height: 1.25;
+    font-size: clamp(18px, 1.8vw, 36px);
+    line-height: clamp(22px, 2vw, 33px);
   }
 
   .card-paragraph {
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: clamp(14px, 1.4vw, 28px);
+    line-height: clamp(20px, 2vw, 39px);
+    letter-spacing: -0.04em;
   }
 
-  @media (min-width: 75rem) {
-    .section-heading {
-      font-size: 52px;
-      line-height: 65px;
-    }
-      .section-paragraph {
-      font-size: 25px;
-      line-height: 32px;
-    }
-
-    .section-footer {
-      font-size: 52px;
-      font-weight: 600;
-    }
-/* *********************************** */
-  
-
-    .card-title {
-      font-size: 36px;
-      line-height: 33px;
-    }
-
-    .card-paragraph {
-      font-size: 28px;
-      line-height: 39px;
-      letter-spacing: -0.04em;
-    }
+  /* FOOTER */
+  .section-footer {
+    font-size: clamp(32px, 2.7vw, 52px);
+    font-weight: 600;
   }
 }
