@@ -1,4 +1,4 @@
-import { ContainerImage1, NaturalImage } from "@/public";
+import { ContainerImage1, NaturalImage } from "@/content";
 import Image from "next/image";
 import React from "react";
 

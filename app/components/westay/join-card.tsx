@@ -1,6 +1,6 @@
 "use client";
 
-import { ContainerImage1 } from "@/public";
+import { ContainerImage1 } from "@/content";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";

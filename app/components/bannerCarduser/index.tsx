@@ -1,20 +1,27 @@
 import Image from "next/image";
+import {
+  BannerCardUserAvatar1,
+  BannerCardUserAvatar2,
+  BannerCardUserAvatar3,
+  BannerCardUserAvatar4,
+  BannerCardUserStars,
+} from "@/content";
 
 const avatars = [
   {
-    src: "/assets/banner-card-user/avatar-1.png",
+    src: BannerCardUserAvatar1,
     alt: "Customer avatar 1",
   },
   {
-    src: "/assets/banner-card-user/avatar-2.png",
+    src: BannerCardUserAvatar2,
     alt: "Customer avatar 2",
   },
   {
-    src: "/assets/banner-card-user/avatar-3.png",
+    src: BannerCardUserAvatar3,
     alt: "Customer avatar 3",
   },
   {
-    src: "/assets/banner-card-user/avatar-4.png",
+    src: BannerCardUserAvatar4,
     alt: "Customer avatar 4",
   },
 ];
@@ -29,7 +36,7 @@ export default function BannerCardUser() {
       >
         {avatars.map((avatar, index) => (
           <Image
-            key={avatar.src}
+            key={avatar.alt}
             alt={avatar.alt}
             className={`h-[30px] w-[30px] rounded-full object-cover ${
               index === 0 ? "" : "-ml-[15px]"
@@ -45,7 +52,7 @@ export default function BannerCardUser() {
         <Image
           alt="Five star rating"
           className="col-start-1 row-start-1 h-[14.82px] w-[78.07px]"
-          src="/assets/banner-card-user/stars.png"
+          src={BannerCardUserStars}
           width={79}
           height={15}
         />
