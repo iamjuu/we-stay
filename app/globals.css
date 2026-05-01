@@ -1,9 +1,74 @@
 @import "tailwindcss";
 
+@theme {
+  --breakpoint-desktop: 75rem;
+}
+
 .font-playfair-display {
   font-family: var(--font-playfair-display), serif;
 }
 
 .font-dm-sans {
   font-family: var(--font-dm-sans), sans-serif;
+}
+
+@layer utilities {
+  .hero-heading {
+    font-size: 52px;
+    line-height: 1.1;
+  }
+
+  .section-heading {
+    font-size: 32px;
+    line-height: 1.1;
+  }
+
+  .section-paragraph {
+    font-size: 18px;
+    line-height: 1.4;
+  }
+
+  .card-title {
+    font-size: 18px;
+    line-height: 1.25;
+  }
+
+  .card-paragraph {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 75rem) {
+    .hero-heading {
+      font-size: 52px;
+      line-height: 1;
+    }
+
+    .section-heading {
+      font-size: 52px;
+      line-height: 50px;
+    }
+      .section-paragraph {
+      font-size: 25px;
+      line-height: 32px;
+    }
+
+    .section-footer {
+      font-size: 52px;
+      font-weight: 600;
+    }
+/* *********************************** */
+  
+
+    .card-title {
+      font-size: 36px;
+      line-height: 33px;
+    }
+
+    .card-paragraph {
+      font-size: 28px;
+      line-height: 39px;
+      letter-spacing: -0.04em;
+    }
+  }
 }

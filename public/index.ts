@@ -1,4 +1,8 @@
-export const heroImage = "/images/Hero Img.png";
+
+
+
+
+// Use it like: <img src={DefaultLogo} alt="Logo" />export const heroImage = "/images/Hero Img.png";
 export const containerImage = "/images/Container.svg";
 export const figmaNodePreviewImage = "/images/figma-node-87-824.png";
 
@@ -19,7 +23,7 @@ export const ContainerImage1 = "/images/Container1.png";
 
 export const images = {
   ContainerImage1,
-  heroImage,
+  
   containerImage,
   figmaNodePreviewImage,
   bannerCardUserAvatar1,

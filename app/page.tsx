@@ -3,6 +3,7 @@ import HeroButton from "./components/herobutton/herobutton";
 import { ContainerImage1, PlaceholderImage } from "@/public";
 import WeStaySection from "./components/card";
 import JoinCard from "./components/westay";
+import Homeowners from "./components/Homeowners";
 import { FaStar } from "react-icons/fa6";
 
 export default function Home() {
@@ -56,7 +57,7 @@ export default function Home() {
           <Navbar />
           <div>
             <div className=" mt-[80px] flex flex-col items-center gap-[118px]">
-              <h1 className="font-playfair-display font-[700] text-white text-center text-[60px] leading-[60px]">
+              <h1 className="hero-heading  font-playfair-display text-center font-[700] text-white">
                 See What Your
                 <br />
                 Backyard Can Build
@@ -65,7 +66,7 @@ export default function Home() {
             </div>
 
             <div className="px-[80px] md:mt-[104px] font-dm-sans  text-white">
-              <p className="text-[22px] leading-[26px] font-[400]">
+              <p className="section-paragraph font-[400]">
                 Check your ADU eligibility, <br />
                 explore your options, and <br /> move forward with <br />{" "}
                 guidance you can trust.
@@ -104,15 +105,21 @@ export default function Home() {
         </div>
       </div>
 
-      <div className=" w-full flex items-center  justify-center">
-        <div className=" flex items-center max-w-8xl   ">
-          <div className=" border border-[#E1E0DB]  bg-[#F5F7FA] rounded-[20px] my-[140px] flex  gap-[120px]  ">
-            <img src={ContainerImage1} className="object-contain" alt="" />
-            <div className=" pr-[100px] py-[65px] ">
-              <div className="flex   flex-col gap-[20px]">
+      <div className="w-full px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-col overflow-hidden rounded-[20px] border border-[#E1E0DB] bg-[#F5F7FA] lg:flex-row">
+            <div className="w-full lg:w-[46%]">
+              <img
+                src={ContainerImage1}
+                className="h-full w-full object-cover"
+                alt="Homeowners planning an ADU project"
+              />
+            </div>
+            <div className="flex py-[65px] flex-col px-6  sm:px-10 lg:px-12 xl:pr-16">
+              <div className="flex flex-col gap-4 lg:gap-5">
                 <h1
                   style={{ fontFamily: "DM Sans" }}
-                  className=" text-left flex flex-col font-[400] text-[42px] leading-[44px]"
+                  className="section-heading flex flex-col text-left font-[400]"
                 >
                   Most Homeowners Want to Build,
                   <span className="text-[#93928E] font-[400]">
@@ -121,7 +128,7 @@ export default function Home() {
                 </h1>
                 <p
                   style={{ fontFamily: "DM Sans" }}
-                  className=" font-DM Sans tezt-[25px] text-[#93928E] leading-[32px] font-[400]"
+                  className="section-paragraph font-[400] text-[#93928E]"
                 >
                   Many homeowners are unsure:
                 </p>
@@ -136,7 +143,7 @@ export default function Home() {
                     <div className="h-full w-[4px] rounded-l-[6px] bg-[#8ED9D8]" />
                     <span
                       style={{ fontFamily: "DM Sans" }}
-                      className="px-6 text-[25px] font-normal leading-[32px] font-[400] text-[#9B9B9B]"
+                      className="px-6 text-[22px] font-normal leading-[32px] font-[400] text-[#9B9B9B]"
                     >
                       {item}
                     </span>
@@ -149,15 +156,15 @@ export default function Home() {
         </div>
       </div>
 
-   
-
       <div>
         <WeStaySection />
       </div>
       <div>
         <JoinCard />
       </div>
-       
+      <div>
+        <Homeowners />
+      </div>
     </>
   );
 }
