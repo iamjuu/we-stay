@@ -19,8 +19,8 @@
   }
 
   .section-heading {
-    font-size: 32px;
-    line-height: 1.1;
+    font-size: 52px;
+    line-height: 0px;
   }
 
   .section-paragraph {
@@ -46,7 +46,7 @@
 
     .section-heading {
       font-size: 52px;
-      line-height: 50px;
+      line-height: 65px;
     }
       .section-paragraph {
       font-size: 25px;
