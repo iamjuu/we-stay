@@ -62,11 +62,11 @@ export default function JoinCard() {
   const [activeIndex, setActiveIndex] = useState(joinSteps.length - 1);
 
   return (
-    <section className="w-full px-4 pt-[120px] sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+    <section className="w-full px-4 pt-16 sm:pt-20 md:pt-24 lg:pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
+      <div className="mx-auto max-w-7xl 2xl:max-w-none">
 
         {/* Heading */}
-        <div className="mb-12 text-left">
+        <div className="mb-8 sm:mb-10 lg:mb-12 text-left">
           <h2
             style={{ fontFamily: "DM Sans" }}
             className="section-heading font-[500] text-[#111111]"
@@ -76,7 +76,7 @@ export default function JoinCard() {
           </h2>
         </div>
 
-        {/* Layout: stacked on mobile, side-by-side on lg+ */}
+        {/* Layout */}
         <div className="flex flex-col gap-12 lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-stretch lg:gap-[100px]">
 
           {/* Image */}

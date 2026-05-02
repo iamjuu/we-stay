@@ -29,7 +29,7 @@ export default function PropertyCarousel() {
   const n = properties.length;
 
   return (
-    <div className="w-full px-4 pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
+    <div className="w-full px-4 pt-16 sm:pt-20 md:pt-24 lg:pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
       <div className="mx-auto max-w-7xl 2xl:max-w-none">
 
         {/* Top Row */}
@@ -59,51 +59,47 @@ export default function PropertyCarousel() {
 
         {/* Carousel — bleeds to right edge */}
         <div className="-mr-4 sm:-mr-6 lg:-mr-8 2xl:-mr-[100px]">
-          <div className="relative h-[500px] overflow-hidden">
+          <div
+            className="relative overflow-hidden"
+            style={{ height: "clamp(280px, 55vw, 680px)" }}
+          >
             {properties.map((property, index) => {
               const isActive = index === current;
               const isNext = index === (current + 1) % n;
               const isPrev = index === (current - 1 + n) % n;
 
-              // Shared left-based positioning for smooth transitions
-              let left = "120%";      // hidden right (default)
+              let left = "120%";
               let width = "68%";
-              let height = "500px";
+              let height = "100%";
               let top = "0px";
               let opacity = 0;
               let zIndex = 1;
               let borderRadius = "24px";
-              let scale = "1";
 
               if (isActive) {
                 left = "0%";
                 width = "68%";
-                height = "500px";
+                height = "100%";
                 top = "0px";
                 opacity = 1;
                 zIndex = 10;
                 borderRadius = "24px";
-                scale = "1";
               } else if (isNext) {
-                // sits right after the active card with a small gap
                 left = "70%";
                 width = "30%";
-                height = "380px";
-                top = "60px";
+                height = "78%";
+                top = "11%";
                 opacity = 1;
                 zIndex = 5;
                 borderRadius = "24px 0px 0px 24px";
-                scale = "1";
               } else if (isPrev) {
-                // hidden to the left, ready to slide in when going prev
                 left = "-35%";
                 width = "30%";
-                height = "380px";
-                top = "60px";
+                height = "78%";
+                top = "11%";
                 opacity = 0;
                 zIndex = 1;
                 borderRadius = "0px 24px 24px 0px";
-                scale = "1";
               } else {
                 left = "120%";
                 opacity = 0;
@@ -122,8 +118,6 @@ export default function PropertyCarousel() {
                     opacity,
                     zIndex,
                     borderRadius,
-                    transform: `scale(${scale})`,
-                    // All properties animate together on the same axis
                     transition:
                       "left 0.65s cubic-bezier(0.4, 0, 0.2, 1), width 0.65s cubic-bezier(0.4, 0, 0.2, 1), height 0.65s cubic-bezier(0.4, 0, 0.2, 1), top 0.65s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1)",
                   }}

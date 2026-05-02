@@ -140,48 +140,48 @@ export default function Home() {
       </div>
 
       <div className="w-full px-4 py-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
-        <div className="mx-auto max-w-7xl 2xl:max-w-none">
-          <div className="flex flex-col overflow-hidden rounded-[20px] border border-[#E1E0DB] bg-[#F5F7FA] lg:flex-row">
-            <div className="w-full lg:w-[46%]">
-              <Image
-                src={SectionTwo}
-                className="h-full w-full object-contain"
-                alt="Homeowners planning an ADU project"
-              />
-            </div>
-            <div className="flex  xl:py-[30px] md:py-[10px] flex-col px-6  sm:px-10 lg:px-12 xl:pr-16">
-              <div className="flex flex-col gap-4 lg:gap-5">
-                <h1
-                  className="second-section-heading flex flex-col text-left "
-                >
-                  Most Homeowners Want to Build,
-                  <span className="second-section-heading text-[#93928E]">
-                    But Don’t Know Where to Start
-                  </span>
-                </h1>
-                <p className="list-data-heading">
-                  Many homeowners are unsure:
-                </p>
-              </div>
+  <div className="mx-auto max-w-7xl 2xl:max-w-none">
+    <div className="flex flex-col overflow-hidden rounded-[20px] border border-[#E1E0DB] bg-[#F5F7FA] lg:flex-row">
 
-              <div className="mt-[28px] flex flex-col gap-[12px]">
-                {homeownerQuestions.map((item) => (
-                  <div
-                    key={item}
-                    className="flex h-[49px] w-full items-center rounded-[6px] border border-[#E2E2E2] bg-[#FAFAFA] shadow-[inset_0_1px_6px_rgba(0,0,0,0.18)]"
-                  >
-                    <div className="h-full w-[4px] rounded-l-[6px] bg-[#8ED9D8]" />
-                    <span className="second-section-list-data py-[10px] px-6">
-                      {item}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <div></div>
+      {/* Image */}
+      <div className="w-full lg:w-[46%] shrink-0">
+        <Image
+          src={SectionTwo}
+          className="h-full w-full object-cover"
+          alt="Homeowners planning an ADU project"
+        />
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-1 flex-col justify-center px-6 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12 xl:px-16 xl:py-16">
+        <div className="flex flex-col gap-4 lg:gap-5">
+          <h1 className="second-section-heading flex flex-col text-left">
+            Most Homeowners Want to Build,
+            <span className="second-section-heading text-[#93928E]">
+              But Don't Know Where to Start
+            </span>
+          </h1>
+          <p className="list-data-heading">Many homeowners are unsure:</p>
+        </div>
+
+        <div className="mt-[28px] flex flex-col gap-[12px]">
+          {homeownerQuestions.map((item) => (
+            <div
+              key={item}
+              className="flex h-[49px] w-full items-center rounded-[6px] border border-[#E2E2E2] bg-[#FAFAFA] shadow-[inset_0_1px_6px_rgba(0,0,0,0.18)]"
+            >
+              <div className="h-full w-[4px] rounded-l-[6px] bg-[#8ED9D8]" />
+              <span className="second-section-list-data py-[10px] px-6">
+                {item}
+              </span>
             </div>
-          </div>
+          ))}
         </div>
       </div>
+
+    </div>
+  </div>
+</div>
 
       <div>
         <WeStaySection />
