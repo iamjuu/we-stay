@@ -2,7 +2,7 @@ import { NaturalImage } from "@/content";
 import Image from "next/image";
 import React from "react";
 
-const index = () => {
+const  index = () => {
   const features = [
     {
       number: "1",

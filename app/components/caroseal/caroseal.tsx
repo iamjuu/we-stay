@@ -29,7 +29,7 @@ export default function PropertyCarousel() {
   const n = properties.length;
 
   return (
-    <div className="w-full px-4 py-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
+    <div className="w-full px-4 pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
       <div className="mx-auto max-w-7xl 2xl:max-w-none">
 
         {/* Top Row */}

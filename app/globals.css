@@ -139,7 +139,14 @@
   font-weight: 500;
   font-style: normal; /* "Medium" weight usually implies normal style */
 }
-
+.roof-section-heading {
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(36px, 3.2vw, 52px);
+  line-height: clamp(45px, 4vw, 65px);
+  font-weight: 500;
+  font-style: normal;
+  color: #111827;
+}
 
   /* ***********************style for components ******************************* */
   /* CARDS */
