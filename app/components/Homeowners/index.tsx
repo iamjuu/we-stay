@@ -26,7 +26,7 @@ const index = () => {
     },
   ];
   return (
-    <section className="w-full px-4 py-20 sm:px-6 lg:px-8">
+    <section className="w-full px-4 pt-[120px] sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className=" gap-[100px flex]">
           <div className="mb-12 flex flex-col   text-left">
@@ -72,7 +72,7 @@ const index = () => {
                 </div>
               ))}
             </div>
-            <div className="bg-red-100">
+            <div className="">
               <Image
                 src={NaturalImage}
                 width={100}

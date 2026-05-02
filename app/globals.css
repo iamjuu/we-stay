@@ -104,6 +104,44 @@
     color: #93928e;
   }
 
+
+/* THREE SECTION  */
+.medium-heading {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 500;
+  font-size: clamp(32px, 2.7vw, 52px);
+  line-height: clamp(34px, 2.3vw, 44px);
+}
+
+
+/* FOUR SECTION  */
+
+
+.section-three-card-heading {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  font-size: clamp(22px, 1.8vw, 36px);
+  line-height: clamp(26px, 1.6vw, 32.95px);
+}
+.section-three-card-paragraph {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 400;
+  font-size: clamp(18px, 1.4vw, 28px);
+  line-height: clamp(26px, 2vw, 38.94px);
+}
+
+.carousel-heading {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 38px on mobile to 52px on desktop */
+  font-size: clamp(38px, 3vw, 52px); 
+  /* Scales from 48px on mobile to 65px on desktop */
+  line-height: clamp(48px, 4vw, 65px); 
+  font-weight: 500;
+  font-style: normal; /* "Medium" weight usually implies normal style */
+}
+
+
+  /* ***********************style for components ******************************* */
   /* CARDS */
   .card-title {
     font-size: clamp(18px, 1.8vw, 36px);

@@ -25,22 +25,6 @@ const joinSteps = [
     zIndex: 20,
   },
   {
-    title: "Check Eligibility",
-    description: "See what your lot can support.",
-    icon: MapPin,
-    rotation: "3deg",
-    offset: "18px",
-    zIndex: 20,
-  },
-  {
-    title: "Check Eligibility",
-    description: "See what your lot can support.",
-    icon: MapPin,
-    rotation: "3deg",
-    offset: "18px",
-    zIndex: 20,
-  },
-  {
     title: "Compare Options",
     description: "Review the best ADU path for your goals.",
     icon: MapPin,
@@ -56,13 +40,29 @@ const joinSteps = [
     offset: "56px",
     zIndex: 40,
   },
+  {
+    title: "Start Your Journey",
+    description: "Get a free, no-obligation estimate and start planning your ADU.",
+    icon: MapPin,
+    rotation: "-2deg",
+    offset: "76px",
+    zIndex: 40,
+  },
+  {
+    title: "Start Your Journey",
+    description: "Get a free, no-obligation estimate and start planning your ADU.",
+    icon: MapPin,
+    rotation: "-3deg",
+    offset: "76px",
+    zIndex: 40,
+  },
 ];
 
 export default function JoinCard() {
   const [activeIndex, setActiveIndex] = useState(joinSteps.length - 1);
 
   return (
-    <section className="w-full px-4 py-20 sm:px-6 lg:px-8">
+    <section className="w-full px-4 pt-[120px] sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="mb-12 flex flex-col  gap-3 text-left">
           <h2
@@ -93,7 +93,7 @@ export default function JoinCard() {
               return (
                 <button
                   type="button"
-                  key={step.title}
+                  key={`join-step-${index}`}
                   onClick={() => setActiveIndex(index)}
                   style={{
                     top: `calc(${step.offset} + ${index * STACK_GAP}px)`,

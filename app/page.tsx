@@ -11,7 +11,7 @@ import JoinCard from "./components/westay";
 import Homeowners from "./components/Homeowners";
 import { FaStar } from "react-icons/fa6";
 import Image from "next/image";
-
+import PropertyCarousel from "./components/caroseal/caroseal";
 export default function Home() {
   const homeownerQuestions = [
     "If their property qualifies",
@@ -113,36 +113,32 @@ export default function Home() {
 
           </div>
         </div>
-
-
-
-
       </div>
       <div className="flex   py-[100px]   flex-col items-center bg-[#0C1B2A]">
         <h1
-        style={{
-          fontFamily: "DM Sans",
-        }}
-        className="semi-heading text-white">
+          style={{
+            fontFamily: "DM Sans",
+          }}
+          className="semi-heading text-white">
           No matter what your reason
         </h1>
-        <span 
-        style={{
-          fontFamily: "DM Sans",
-        }}
-        className=" semi-heading text-[#F05C4A]">
+        <span
+          style={{
+            fontFamily: "DM Sans",
+          }}
+          className=" semi-heading text-[#F05C4A]">
           Generate rental income
         </span>
         <h1
-        style={{
-          fontFamily: "DM Sans",
-        }}
-        className="semi-heading text-white">
-        WeStay is for homeowners that need clarity
+          style={{
+            fontFamily: "DM Sans",
+          }}
+          className="semi-heading text-white">
+          WeStay is for homeowners that need clarity
         </h1>
       </div>
 
-      <div className="w-full px-4 py-20 sm:px-6 lg:px-8 2xl:px-[100px]">
+      <div className="w-full px-4 py-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
         <div className="mx-auto max-w-7xl 2xl:max-w-none">
           <div className="flex flex-col overflow-hidden rounded-[20px] border border-[#E1E0DB] bg-[#F5F7FA] lg:flex-row">
             <div className="w-full lg:w-[46%]">
@@ -194,6 +190,10 @@ export default function Home() {
       </div>
       <div>
         <Homeowners />
+      </div>
+      <div>
+        <PropertyCarousel />
+
       </div>
     </>
   );
