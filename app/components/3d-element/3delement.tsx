@@ -45,7 +45,7 @@ const ThreeDElement = () => {
 
   return (
     <>
-      <section className="w-full px-4 pt-16 sm:pt-20 md:pt-24 lg:pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
+      <section className="w-full px-4 py-16 sm:py-20 md:py-24 lg:py-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
         <div className="mx-auto max-w-7xl 2xl:max-w-none">
           <div className="relative flex min-h-[280px] w-full flex-col items-center justify-between overflow-hidden rounded-[20px] p-8 sm:min-h-[360px] sm:p-12 md:min-h-[420px] lg:min-h-[500px] lg:p-16">
             <div

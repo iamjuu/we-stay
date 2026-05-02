@@ -113,28 +113,17 @@ const RoofComponent = () => {
             <div className="relative w-full h-[220px] sm:h-[320px] md:h-[400px] lg:h-[480px] xl:h-[440px] overflow-hidden rounded-tl-[24px] rounded-bl-[24px]">
               <iframe
                 ref={iframeRef}
-                title="Basic House 1"
                 frameBorder="0"
                 allowFullScreen
                 className="w-full h-full"
-                src="https://sketchfab.com/models/6b2ea63f0ab04abd9cc299197cb6a158/embed?autostart=1&ui_controls=1&ui_infos=0&ui_inspector=0&ui_watermark=0"
+                src="https://sketchfab.com/models/6b2ea63f0ab04abd9cc299197cb6a158/embed?autostart=1&ui_controls=1&ui_infos=0&ui_inspector=0&ui_watermark=0&background_color=ffffff"
                 allow="autoplay; fullscreen; xr-spatial-tracking"
               />
 
               {/* Bottom gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
 
-              {/* Label on model */}
-              <div className="absolute bottom-0 left-0 p-5 sm:p-8 pointer-events-none">
-                <div className="bg-black/30 backdrop-blur-sm rounded-[16px] px-4 py-3 inline-block">
-                  <h3 className="text-white font-bold text-lg sm:text-xl mb-1">
-                    One bedroom
-                  </h3>
-                  <p className="text-white/80 text-sm">
-                    540 sq ft · 1 bedroom · 1 bath
-                  </p>
-                </div>
-              </div>
+            
             </div>
           </div>
 
@@ -147,24 +136,21 @@ const RoofComponent = () => {
               <button
                 key={index}
                 onClick={() => setSelectedColor(index)}
-                className={`relative rounded-full transition-all duration-300 hover:scale-110 focus:outline-none ${
-                  selectedColor === index
+                className={`relative rounded-full transition-all duration-300 hover:scale-110 focus:outline-none ${selectedColor === index
                     ? 'p-[3px] bg-[#4DB6AC]'
                     : 'p-[3px] bg-transparent'
-                }`}
+                  }`}
                 aria-label={`Select ${option.name} color`}
               >
                 {/* White gap */}
                 <div
-                  className={`rounded-full p-[3px] ${
-                    selectedColor === index ? 'bg-white' : 'bg-transparent'
-                  }`}
+                  className={`rounded-full p-[3px] ${selectedColor === index ? 'bg-white' : 'bg-transparent'
+                    }`}
                 >
                   {/* Gray ring */}
                   <div
-                    className={`rounded-full p-[2px] ${
-                      selectedColor === index ? 'bg-gray-300' : 'bg-transparent'
-                    }`}
+                    className={`rounded-full p-[2px] ${selectedColor === index ? 'bg-gray-300' : 'bg-transparent'
+                      }`}
                   >
                     {/* Color swatch */}
                     <div
