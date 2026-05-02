@@ -24,6 +24,15 @@
   }
 }
 
+@keyframes panoramaFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @layer utilities {
   .cta-animated-border::before {
     content: "";

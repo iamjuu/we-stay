@@ -19,11 +19,13 @@ import SectionTwo from "./images/Section-two.svg"
 import Caroeal1 from "./images/caroseal-1.svg"
 import Caroeal2 from "./images/caroseal-2.svg"
 import Caroeal3 from "./images/caroseal-3.svg"
+import PanoramaImage from "./images/panorama.jpg"
 
 /** Card thumbnails until real exports exist; same asset as container hero. */
 const PlaceholderImage = ContainerImage1;
 
 export {
+  PanoramaImage,
   Caroeal1,
   Caroeal2,
   Caroeal3,

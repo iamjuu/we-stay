@@ -13,6 +13,7 @@ import { FaStar } from "react-icons/fa6";
 import Image from "next/image";
 import PropertyCarousel from "./components/caroseal/caroseal";
 import RoofComponent from "./components/roof-component/roofcomponent";
+import ThreeDElement from "./components/3d-element/3delement";
 export default function Home() {
   const homeownerQuestions = [
     "If their property qualifies",
@@ -197,6 +198,10 @@ export default function Home() {
       </div>
       <div>
         <RoofComponent />
+      </div>
+      <div>
+
+        <ThreeDElement/>
       </div>
     </>
   );
