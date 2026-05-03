@@ -45,7 +45,8 @@ export function InteriorTourClient() {
           <Canvas
             className="!block h-full w-full touch-none [&>div]:h-full [&>div]:w-full [&>div]:outline-none"
             style={{ width: "100%", height: "100%" }}
-            camera={{ position: [0, 0, 0.01], fov: 70, near: 0.01, far: 2000 }}
+            dpr={[1, 2]}
+            camera={{ position: [0, 0, 0.024], fov: 92, near: 0.078, far: 8000 }}
             gl={{ antialias: true, alpha: false }}
           >
           <Suspense

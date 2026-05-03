@@ -4,12 +4,14 @@ import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Suspense } from "react";
 import { ConfiguratorModel, type RoofStyle, type SidingId } from "./ConfiguratorModel";
+import { PLAN_MODEL_URL } from "./planModelUrls";
 
-const MODEL_URL = "/3dmodels/800Sqftbench.glb";
-
-useGLTF.preload(MODEL_URL);
+for (const url of Object.values(PLAN_MODEL_URL)) {
+  useGLTF.preload(url);
+}
 
 type ConfiguratorCanvasProps = {
+  modelUrl: string;
   roofStyle: RoofStyle;
   wallTint: string | null;
   sidingId: SidingId;
@@ -19,6 +21,7 @@ type ConfiguratorCanvasProps = {
 };
 
 export function ConfiguratorCanvas({
+  modelUrl,
   roofStyle,
   wallTint,
   sidingId,
@@ -32,19 +35,31 @@ export function ConfiguratorCanvas({
         shadows
         className="h-full w-full touch-none [&>div]:outline-none"
         camera={{ position: [0, 3, 8], fov: 42, near: 0.05, far: 500 }}
+        gl={{ antialias: true }}
       >
         <color attach="background" args={["#eaecea"]} />
-        <ambientLight intensity={0.45} />
+        {/* Low fill so the directional “sun” casts readable shadows */}
+        <ambientLight intensity={0.22} />
         <directionalLight
           castShadow
-          intensity={1.05}
-          position={[8, 14, 6]}
-          shadow-mapSize-width={1536}
-          shadow-mapSize-height={1536}
+          color="#fff8f0"
+          intensity={2.35}
+          position={[14, 28, 10]}
+          shadow-mapSize-width={2048}
+          shadow-mapSize-height={2048}
+          shadow-camera-near={0.5}
+          shadow-camera-far={120}
+          shadow-camera-left={-35}
+          shadow-camera-right={35}
+          shadow-camera-top={35}
+          shadow-camera-bottom={-35}
+          shadow-bias={-0.0004}
+          shadow-normalBias={0.03}
         />
         <Suspense fallback={null}>
           <ConfiguratorModel
-            url={MODEL_URL}
+            key={modelUrl}
+            url={modelUrl}
             roofStyle={roofStyle}
             wallTint={wallTint}
             sidingId={sidingId}
@@ -52,7 +67,8 @@ export function ConfiguratorCanvas({
             showLanaiMeshes={showLanaiMeshes}
             showShowerPortion={showShowerPortion}
           />
-          <Environment preset="city" />
+          {/* Softer IBL so the sun direction reads more clearly */}
+          <Environment preset="city" environmentIntensity={0.55} />
         </Suspense>
         <OrbitControls
           enableDamping

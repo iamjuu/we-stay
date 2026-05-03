@@ -1,6 +1,7 @@
 "use client";
 
 import { ConfiguratorCanvas } from "@/app/components/aduConfigurator/ConfiguratorCanvas";
+import { type PlanId, PLAN_MODEL_URL } from "@/app/components/aduConfigurator/planModelUrls";
 import { type SidingId } from "@/app/components/aduConfigurator/ConfiguratorModel";
 import { Home, Layers, Maximize2, User } from "lucide-react";
 import Link from "next/link";
@@ -18,8 +19,6 @@ type OptionalFeatures = {
 const ACCENT = "#5fb3b3";
 const PANEL_BG = "#f7f9f8";
 const CARD_BORDER = "#e8ebea";
-
-type PlanId = "studio" | "one-bedroom" | "two-bedroom" | "two-office";
 
 const PLANS: {
   id: PlanId;
@@ -52,8 +51,6 @@ const PLANS: {
     icon: <Maximize2 className="h-5 w-5" strokeWidth={1.65} aria-hidden />,
   },
 ];
-
-type SidingId = "default-stucco" | "board-batten" | "vertical-tg" | "horizontal-lap";
 
 const SIDING_OPTIONS: { id: SidingId; title: string; sub: string }[] = [
   { id: "default-stucco", title: "Default stucco", sub: "Cladding material" },
@@ -622,6 +619,7 @@ export function AduConfiguratorClient() {
 
       <main className="relative order-1 h-[52svh] min-h-[300px] w-full shrink-0 bg-[#eaecea] lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch">
         <ConfiguratorCanvas
+          modelUrl={PLAN_MODEL_URL[planId]}
           roofStyle={roofId}
           wallTint={cladding.tint}
           sidingId={sidingId}

@@ -9,8 +9,30 @@ export type RoofStyle = "asphalt" | "metal";
 /** Matches sidebar “Siding options” — drives wall pattern meshes in the GLB. */
 export type SidingId = "default-stucco" | "board-batten" | "vertical-tg" | "horizontal-lap";
 
-const VERTICAL_WALL_PATTERN = "Vertical_Wall_Pattern";
-const HORIZONTAL_WALL_PATTERN = "Horizontal_Wall_Pattern";
+/** Main + side-room pattern overlays — only the pair for the selected siding stays visible. */
+const WALL_PATTERN_MESH_NAMES = [
+  "Horizontal_Wall_Pattern",
+  "Batten_Wall_Pattern",
+  "Vertical_Wall_Pattern",
+  "Horizontal_Wall_Pattern_For_Side_Room",
+  "Batten_Wall_Pattern_For_Side_Room",
+  "Vertical_Wall_Pattern_For_Side_Room",
+] as const;
+
+function sidingPatternVisibleNames(sidingId: SidingId): ReadonlySet<string> {
+  switch (sidingId) {
+    case "default-stucco":
+      return new Set();
+    case "vertical-tg":
+      return new Set(["Vertical_Wall_Pattern", "Vertical_Wall_Pattern_For_Side_Room"]);
+    case "horizontal-lap":
+      return new Set(["Horizontal_Wall_Pattern", "Horizontal_Wall_Pattern_For_Side_Room"]);
+    case "board-batten":
+      return new Set(["Batten_Wall_Pattern", "Batten_Wall_Pattern_For_Side_Room"]);
+    default:
+      return new Set();
+  }
+}
 
 /** Exact `object.name` from GLB — include aliases if exports differ (case/underscores). */
 const ASPHALT_ROOF_NAMES = [
@@ -98,15 +120,15 @@ export function ConfiguratorModel({
   }, [cloned, roofStyle]);
 
   useLayoutEffect(() => {
-    const showVerticalPattern = sidingId === "vertical-tg";
-    const showHorizontalPattern = sidingId === "horizontal-lap";
+    const patternVisible = sidingPatternVisibleNames(sidingId);
 
     cloned.traverse((o) => {
       if ((DECK_SLAB_NAMES as readonly string[]).includes(o.name)) o.visible = showDeckSlab;
       if ((LANAI_MESH_NAMES as readonly string[]).includes(o.name)) o.visible = showLanaiMeshes;
       if (o.name === SHOWER_PORTION_NAME) o.visible = showShowerPortion;
-      if (o.name === VERTICAL_WALL_PATTERN) o.visible = showVerticalPattern;
-      if (o.name === HORIZONTAL_WALL_PATTERN) o.visible = showHorizontalPattern;
+      if ((WALL_PATTERN_MESH_NAMES as readonly string[]).includes(o.name)) {
+        o.visible = patternVisible.has(o.name);
+      }
     });
   }, [cloned, sidingId, showDeckSlab, showLanaiMeshes, showShowerPortion]);
 

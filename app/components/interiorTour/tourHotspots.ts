@@ -18,10 +18,10 @@ export const ROOM_LABEL: Record<RoomId, string> = {
 };
 
 export const ROOM_PATH: Record<RoomId, string> = {
-  kitchen: "/3dimages/kitchen.png",
-  hall: "/3dimages/hall.png",
-  bedroom: "/3dimages/bedroom.png",
-  washroom: "/3dimages/washroom.png",
+  kitchen: "/3dimages/chatgpt/onebhkfull.png",
+  hall: "/3dimages/chatgpt/hall.png",
+  bedroom: "/3dimages/chatgpt/bedroom.png",
+  washroom: "/3dimages/chatgpt/bathroom.png",
 };
 
 export type HotspotDef = {
