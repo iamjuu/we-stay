@@ -22,11 +22,15 @@ import Caroeal3 from "./images/caroseal-3.svg"
 import PanoramaImage from "./images/panorama.jpg"
 import Men1 from "./images/men.svg"
 import Men2 from "./images/men2.svg"
+import Property from "./images/property.png"
+import WhiteLogo from "./images/white-logo.svg"
 
 /** Card thumbnails until real exports exist; same asset as container hero. */
 const PlaceholderImage = ContainerImage1;
 
 export {
+  Property,
+  WhiteLogo,
   Men1,
   Men2,
   PanoramaImage,
