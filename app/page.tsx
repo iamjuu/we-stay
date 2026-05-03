@@ -116,10 +116,12 @@ export default function Home() {
       <div className="w-full px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="flex flex-col overflow-hidden rounded-[20px] border border-[#E1E0DB] bg-[#F5F7FA] lg:flex-row">
-            <div className="w-full lg:w-[46%]">
-              <img
+            <div className="relative w-full min-h-[240px] lg:min-h-0 lg:w-[46%]">
+              <Image
                 src={ContainerImage1}
-                className="h-full w-full object-cover"
+                width={634}
+                height={596}
+                className="h-full min-h-[240px] w-full object-cover lg:min-h-full"
                 alt="Homeowners planning an ADU project"
               />
             </div>
