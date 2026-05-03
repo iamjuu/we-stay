@@ -15,6 +15,7 @@ import PropertyCarousel from "./components/caroseal/caroseal";
 import RoofComponent from "./components/roof-component/roofcomponent";
 import ThreeDElement from "./components/3d-element/3delement";
 import BuilderNetwork from "./components/builder-network/builder-network";
+import TestimonialCarousel from "./components/testimonial/testimonail";
 export default function Home() {
   const homeownerQuestions = [
     "If their property qualifies",
@@ -206,7 +207,10 @@ export default function Home() {
       </div>
       <div>
         <BuilderNetwork />
-        </div>
+      </div>
+      <div>
+        <TestimonialCarousel />
+      </div>
     </>
   );
 }
