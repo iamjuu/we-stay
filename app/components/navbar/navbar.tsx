@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link"; // Import Link for better Next.js navigation
 import { useState } from "react";
 
-const navItems = ["How It Works", "ADU Options", "Peek Inside","About"];
+const navItems = ["How It Works", "ADU Options", "Peek Inside", "About"];
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -20,35 +20,35 @@ const Navbar = () => {
         <div className="flex  items-center justify-between px-5 py-3 sm:px-7 lg:px-[42px] lg:py-[10px]">
           {/* Logo */}
           <div className=" flex items-center justify-between w-full">
-          <div className="">
-            <Image
-              alt="WeStay logo"
-              className="h-full w-full object-contain"
-              src={Logo}
-            />
-          </div>
+            <div className="">
+              <Image
+                alt="WeStay logo"
+                className="h-full w-full object-contain"
+                src={Logo}
+              />
+            </div>
 
-          {/* Desktop nav items */}
-          <div
-            className="hidden items-center gap-[50px] text-[16px] font-normal leading-none text-black lg:flex"
-            style={{ fontFamily: '"DM Sans", sans-serif' }}
-          >
-            {navItems.map((item) => (
-              <Link // Fixed: Added Link/a tag
-                key={item}
-                href="#"
-                className="whitespace-nowrap transition-opacity duration-200 hover:opacity-70"
-                style={{ fontVariationSettings: "'opsz' 14" }}
-              >
-                {item}
-              </Link>
-            ))}
-          </div>
+            {/* Desktop nav items */}
+            <div
+              className="hidden items-center gap-[50px] text-[16px] font-normal leading-none text-black lg:flex"
+              style={{ fontFamily: '"DM Sans", sans-serif' }}
+            >
+              {navItems.map((item) => (
+                <Link // Fixed: Added Link/a tag
+                  key={item}
+                  href="#"
+                  className="whitespace-nowrap transition-opacity duration-200 hover:opacity-70"
+                  style={{ fontVariationSettings: "'opsz' 14" }}
+                >
+                  {item}
+                </Link>
+              ))}
+            </div>
 
-          {/* Desktop CTA */}
-          <div className="hidden lg:block">
-            <CtaButton buttonName="Book A Call" />
-          </div>
+            {/* Desktop CTA */}
+            <div className="hidden lg:block">
+              <CtaButton buttonName="Book A Call" />
+            </div>
           </div>
 
           {/* Mobile hamburger */}
@@ -58,9 +58,33 @@ const Navbar = () => {
             aria-label="Toggle menu"
           >
             <svg width="30" height="24" viewBox="0 0 30 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <line x1="7.125" y1="10.875" x2="25.875" y2="10.875" stroke="black" stroke-width="2.25" stroke-linecap="round" />
-              <line x1="10.125" y1="4.875" x2="25.875" y2="4.875" stroke="black" stroke-width="2.25" stroke-linecap="round" />
-              <line x1="4.125" y1="16.875" x2="25.875" y2="16.875" stroke="black" stroke-width="2.25" stroke-linecap="round" />
+              <line
+                x1="7.125"
+                y1="10.875"
+                x2="25.875"
+                y2="10.875"
+                stroke="black"
+                strokeWidth="2.25"
+                strokeLinecap="round"
+              />
+              <line
+                x1="10.125"
+                y1="4.875"
+                x2="25.875"
+                y2="4.875"
+                stroke="black"
+                strokeWidth="2.25"
+                strokeLinecap="round"
+              />
+              <line
+                x1="4.125"
+                y1="16.875"
+                x2="25.875"
+                y2="16.875"
+                stroke="black"
+                strokeWidth="2.25"
+                strokeLinecap="round"
+              />
             </svg>
 
           </button>

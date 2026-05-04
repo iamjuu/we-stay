@@ -1,16 +1,18 @@
 import Navbar from "./components/navbar/navbar";
 import HeroButton from "./components/herobutton/herobutton";
-import {
-  ContainerImage1,
-  HeroImage,
-  PlaceholderImage,
-} from "@/content";
+import { HeroImage, PlaceholderImage, SectionTwo } from "@/content";
 import WeStaySection from "./components/card";
 import JoinCard from "./components/westay";
 import Homeowners from "./components/Homeowners";
 import { FaStar } from "react-icons/fa6";
 import Image from "next/image";
-
+import PropertyCarousel from "./components/caroseal/caroseal";
+import RoofComponent from "./components/roof-component/roofcomponent";
+import ThreeDElement from "./components/3d-element/3delement";
+import BuilderNetwork from "./components/builder-network/builder-network";
+import TestimonialCarousel from "./components/testimonial/testimonail";
+import Eligibility from "./components/eligibility/eligibility";
+import Footer from "./components/footer/footer";
 export default function Home() {
   const homeownerQuestions = [
     "If their property qualifies",
@@ -70,78 +72,94 @@ export default function Home() {
               <HeroButton />
             </div>
 
-            <div className="px-[80px] md:mt-[104px] mb-[120px] font-dm-sans  text-white">
+            <div className="hidden md:block px-[80px] md:mt-[104px] lg:mt-[104px] mb-[120px] font-dm-sans text-white">
               <p className="section-paragraph font-[400]">
                 Check your ADU eligibility, <br />
-                explore your options, and <br /> move forward with <br />{" "}
+                explore your options, and <br />
+                move forward with <br />
                 guidance you can trust.
               </p>
             </div>
           </div>
         </div>
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10">
-  <div className="bg-[#F3FFFE] rounded-full border-[5px] sm:border-[7px] border-white flex flex-row items-center gap-2 sm:gap-3 px-3 sm:px-4 py-[10px] sm:py-[15px]">
+          <div className="bg-[#F3FFFE] rounded-full border-[5px] sm:border-[7px] border-white flex flex-row items-center gap-2 sm:gap-3 px-3 sm:px-4 py-[10px] sm:py-[15px]">
 
-    {/* Avatar stack */}
-    <div className="flex flex-row items-center -space-x-2">
-      {image.map((item, index) => (
-        <Image
-          key={index}
-          src={item.src}
-          alt={item.alt}
-          className="h-6 w-6 sm:h-8 sm:w-8 rounded-full border-2 border-white object-cover shrink-0"
-        />
-      ))}
-    </div>
+            {/* Avatar stack */}
+            <div className="flex flex-row items-center -space-x-2">
+              {image.map((item, index) => (
+                <Image
+                  key={index}
+                  src={item.src}
+                  alt={item.alt}
+                  className="h-6 w-6 sm:h-8 sm:w-8 rounded-full border-2 border-white object-cover shrink-0"
+                />
+              ))}
+            </div>
 
-    {/* Stars + text — vertical stack */}
-    <div className="flex flex-col justify-center gap-0">
-      <div className="flex flex-row items-center gap-[2px]">
-        {[...Array(5)].map((_, i) => (
-          <FaStar key={i} color="#3D3D3D" size={10} />
-        ))}
+            {/* Stars + text — vertical stack */}
+            <div className="flex flex-col justify-center gap-0">
+              <div className="flex flex-row items-center gap-[2px]">
+                {[...Array(5)].map((_, i) => (
+                  <FaStar key={i} color="#3D3D3D" size={10} />
+                ))}
+              </div>
+              <p
+                style={{ fontFamily: "DM Sans" }}
+                className="text-[#3D3D3D] text-[10px] sm:text-[12px] font-[300] whitespace-nowrap leading-tight"
+              >
+                Trusted by 5,000+ Customers
+              </p>
+            </div>
+
+          </div>
+        </div>
       </div>
-      <p
-        style={{ fontFamily: "DM Sans" }}
-        className="text-[#3D3D3D] text-[10px] sm:text-[12px] font-[300] whitespace-nowrap leading-tight"
-      >
-        Trusted by 5,000+ Customers
-      </p>
-    </div>
-
-  </div>
-</div>
+      <div className="flex   py-[100px]   flex-col items-center bg-[#0C1B2A]">
+        <h1
+          style={{
+            fontFamily: "DM Sans",
+          }}
+          className="semi-heading text-white">
+          No matter what your reason
+        </h1>
+        <span
+          style={{
+            fontFamily: "DM Sans",
+          }}
+          className=" semi-heading text-[#F05C4A]">
+          Generate rental income
+        </span>
+        <h1
+          style={{
+            fontFamily: "DM Sans",
+          }}
+          className="semi-heading text-white">
+          WeStay is for homeowners that need clarity
+        </h1>
       </div>
 
-      <div className="w-full px-4 py-20 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-7xl">
+      <div className="w-full px-4 py-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
+        <div className="mx-auto max-w-7xl 2xl:max-w-none">
           <div className="flex flex-col overflow-hidden rounded-[20px] border border-[#E1E0DB] bg-[#F5F7FA] lg:flex-row">
-            <div className="relative w-full min-h-[240px] lg:min-h-0 lg:w-[46%]">
+            <div className="relative w-full min-h-[240px] shrink-0 lg:min-h-0 lg:w-[46%]">
               <Image
-                src={ContainerImage1}
-                width={634}
-                height={596}
+                src={SectionTwo}
                 className="h-full min-h-[240px] w-full object-cover lg:min-h-full"
                 alt="Homeowners planning an ADU project"
               />
             </div>
-            <div className="flex py-[65px] flex-col px-6  sm:px-10 lg:px-12 xl:pr-16">
+
+            {/* Content */}
+            <div className="flex flex-1 flex-col justify-center px-6 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12 xl:px-16 xl:py-16">
               <div className="flex flex-col gap-4 lg:gap-5">
-                <h1
-                  style={{ fontFamily: "DM Sans" }}
-                  className="section-heading flex flex-col text-left font-[400]"
-                >
+                <h1 className="second-section-heading flex flex-col text-left">
                   Most Homeowners Want to Build,
-                  <span className="text-[#93928E] font-[400]">
-                    But Don’t Know Where to Start
+                  <span className="second-section-heading text-[#93928E]">
+                    But Don't Know Where to Start
                   </span>
                 </h1>
-                <p
-                  style={{ fontFamily: "DM Sans" }}
-                  className="section-paragraph font-[400] text-[#93928E]"
-                >
-                  Many homeowners are unsure:
-                </p>
+                <p className="list-data-heading">Many homeowners are unsure:</p>
               </div>
 
               <div className="mt-[28px] flex flex-col gap-[12px]">
@@ -151,17 +169,14 @@ export default function Home() {
                     className="flex h-[49px] w-full items-center rounded-[6px] border border-[#E2E2E2] bg-[#FAFAFA] shadow-[inset_0_1px_6px_rgba(0,0,0,0.18)]"
                   >
                     <div className="h-full w-[4px] rounded-l-[6px] bg-[#8ED9D8]" />
-                    <span
-                      style={{ fontFamily: "DM Sans" }}
-                      className="px-6 text-[22px] font-normal leading-[32px] font-[400] text-[#9B9B9B]"
-                    >
+                    <span className="second-section-list-data py-[10px] px-6">
                       {item}
                     </span>
                   </div>
                 ))}
               </div>
-              <div></div>
             </div>
+
           </div>
         </div>
       </div>
@@ -174,6 +189,28 @@ export default function Home() {
       </div>
       <div>
         <Homeowners />
+      </div>
+      <div>
+        <PropertyCarousel />
+      </div>
+      <div>
+        <RoofComponent />
+      </div>
+      <div>
+
+        <ThreeDElement />
+      </div>
+      <div>
+        <BuilderNetwork />
+      </div>
+      <div>
+        <TestimonialCarousel />
+      </div>
+      <div>
+        <Eligibility />
+      </div>
+      <div className="pt-[120px]">
+        <Footer />
       </div>
     </>
   );
