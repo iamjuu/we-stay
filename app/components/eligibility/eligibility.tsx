@@ -4,7 +4,7 @@ import CtaButton from "../ctaButton/ctaButton";
 
 export default function Eligibility() {
   return (
-    <section className="w-full px-4 py-16 sm:px-6 lg:px-8 2xl:px-[100px]">
+    <section className="w-full px-4 pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
       <div className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl">
         <Image
           src={Property}

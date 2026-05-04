@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0f1e2e] text-white px-20 py-14 
+    <footer className="bg-[#0f1e2e]  text-white px-20 py-14 
      gap-[400px] grid grid-cols-2">
 
       {/* Brand */}
@@ -13,7 +13,7 @@ export default function Footer() {
 
           <Image src={Logo} />
         </div>
-        <p>
+        <p className="footer-section-one">
           WeStay helps homeowners unlock the value of their property through smarter ADU pathways.
         </p>
       </div>
@@ -24,10 +24,10 @@ export default function Footer() {
         <h4 className="text-base font-bold mb-5 text-white">Quick Links</h4>
         <ul className="flex flex-col gap-3">
           {["About us", "Contact us", "Blog", "FAQ"].map((item) => (
-            <li key={item}>
+            <li   key={item}>
               <Link
                 href="#"
-                className="text-[#b0bec5] text-sm hover:text-white transition-colors duration-200"
+                className="quick-link text-[#b0bec5] text-sm hover:text-white transition-colors duration-200"
               >
                 {item}
               </Link>

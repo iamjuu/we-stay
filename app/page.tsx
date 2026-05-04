@@ -216,7 +216,7 @@ export default function Home() {
       <div>
         <Eligibility />
       </div>
-      <div>
+      <div className="pt-[120px]">
 
         <Footer />
       </div>

@@ -166,6 +166,61 @@
   line-height: clamp(24px, 3.125vw, 45px);
   color: #0c1b2a;
 }
+
+/* Footer sits on dark bg (#0f1e2e) — light text only; dark #0C1B2A is invisible there */
+.footer-section-one {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 20px on mobile to 27px on desktop */
+  font-size: clamp(20px, 2vw, 27px);
+  line-height: 1.6;
+  font-weight: 400;
+  font-style: normal;
+  color: #e2e8f0;
+}
+.quick-link {
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(18px, 1.8vw, 24px);
+  line-height: 1.5;
+  font-weight: 400;
+  font-style: normal;
+  color: #b0bec5;
+}
+
+/* **************steps************** */
+.steps-heading {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 28px on mobile to 36px on desktop */
+  font-size: clamp(28px, 3.5vw, 36px);
+  /* Precise line height from your spec */
+  line-height: 43.96px;
+  /* SemiBold weight */
+  font-weight: 600;
+  font-style: normal;
+ 
+  letter-spacing: -0.01em; /* Optional: adds a modern, tight feel for bold headings */
+}
+
+.steps-subheading {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 18px on mobile to 22px on desktop */
+  font-size: clamp(18px, 2vw, 22px);
+  /* Precise line height from your spec */
+  line-height: 28px;
+  /* Regular weight */
+  font-weight: 400;
+  font-style: normal;
+
+}
+
+.step-2-btn {
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  line-height: 16.8px;
+  font-weight: 600; /* Semi Bold */
+  font-style: normal;
+  text-transform: uppercase; /* Optional: buttons often look better in caps at 14px */
+  letter-spacing: 0.01em;
+}
 /* .caroseal-section-heading */
   /* ***********************style for components ******************************* */
   /* CARDS */
@@ -184,5 +239,37 @@
   .section-footer {
     font-size: clamp(32px, 2.7vw, 52px);
     font-weight: 600;
+  }
+
+  /* Custom Scrollbar Styles */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(45, 212, 191, 0.2);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+  }
+
+  .scrollbar-thin:hover::-webkit-scrollbar-thumb {
+    background: rgba(45, 212, 191, 0.4);
+  }
+
+  .scrollbar-track-transparent::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thumb-teal-400\/20::-webkit-scrollbar-thumb {
+    background: rgba(45, 212, 191, 0.2);
+  }
+
+  .scrollbar-thumb-teal-400\/40::-webkit-scrollbar-thumb {
+    background: rgba(45, 212, 191, 0.4);
   }
 }
