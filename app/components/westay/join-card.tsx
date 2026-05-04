@@ -25,22 +25,6 @@ const joinSteps = [
     zIndex: 20,
   },
   {
-    title: "Check Eligibility",
-    description: "See what your lot can support.",
-    icon: MapPin,
-    rotation: "3deg",
-    offset: "18px",
-    zIndex: 20,
-  },
-  {
-    title: "Check Eligibility",
-    description: "See what your lot can support.",
-    icon: MapPin,
-    rotation: "3deg",
-    offset: "18px",
-    zIndex: 20,
-  },
-  {
     title: "Compare Options",
     description: "Review the best ADU path for your goals.",
     icon: MapPin,
@@ -56,36 +40,63 @@ const joinSteps = [
     offset: "56px",
     zIndex: 40,
   },
+  {
+    title: "Start Your Journey",
+    description: "Get a free, no-obligation estimate and start planning your ADU.",
+    icon: MapPin,
+    rotation: "-2deg",
+    offset: "76px",
+    zIndex: 50,
+  },
+  {
+    title: "Plan Your Build",
+    description: "Work with our partners to finalize your ADU design and timeline.",
+    icon: MapPin,
+    rotation: "-3deg",
+    offset: "76px",
+    zIndex: 60,
+  },
 ];
 
 export default function JoinCard() {
   const [activeIndex, setActiveIndex] = useState(joinSteps.length - 1);
 
   return (
-    <section className="w-full px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-12 flex flex-col  gap-3 text-left">
+    <section className="w-full px-4 pt-16 sm:pt-20 md:pt-24 lg:pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
+      <div className="mx-auto max-w-7xl 2xl:max-w-none">
+
+        {/* Heading */}
+        <div className="mb-8 sm:mb-10 lg:mb-12 text-left">
           <h2
             style={{ fontFamily: "DM Sans" }}
-            className="section-heading text-left leading-[65px] font-[500] text-[#111111]"
+            className="section-heading font-[500] text-[#111111]"
           >
             A Simpler Path to <br />
             <span className="text-[#93928E]">Building an ADU</span>
           </h2>
         </div>
 
-        <div className="grid gap-[100px] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-stretch">
-          <div className="overflow-hidden rounded-[20px]">
+        {/* Layout */}
+        <div className="flex flex-col gap-12 lg:grid lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-stretch lg:gap-[100px]">
+
+          {/* Image */}
+          <div className="overflow-hidden rounded-[20px] w-full">
             <Image
               src={ContainerImage1}
               width={634}
               height={596}
-              className="h-full w-full object-cover"
+              className="h-[300px] w-full object-cover sm:h-[420px] lg:h-full"
               alt="Homeowners planning an ADU project"
             />
           </div>
 
-          <div className="relative min-h-[280px]   pt-10 sm:min-h-[300px] lg:min-h-[360px]">
+          {/* Stacked Cards */}
+          <div
+            className="relative w-full"
+            style={{
+              minHeight: `${joinSteps.length * STACK_GAP + 280}px`,
+            }}
+          >
             {joinSteps.map((step, index) => {
               const Icon = step.icon;
               const isActive = index === activeIndex;
@@ -93,7 +104,7 @@ export default function JoinCard() {
               return (
                 <button
                   type="button"
-                  key={step.title}
+                  key={`join-step-${index}`}
                   onClick={() => setActiveIndex(index)}
                   style={{
                     top: `calc(${step.offset} + ${index * STACK_GAP}px)`,
@@ -126,6 +137,7 @@ export default function JoinCard() {
               );
             })}
           </div>
+
         </div>
       </div>
     </section>
