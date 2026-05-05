@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useEffect, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
+import { StepFooter } from "../components/step-footer";
 
 function CriterionPassIcon() {
   return (
@@ -120,6 +122,7 @@ function CircleProgress({ score }: { score: number }) {
 }
 
 export default function PropertyScorePage() {
+  const router = useRouter();
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
       <div className="flex flex-col w-full">
@@ -131,67 +134,71 @@ export default function PropertyScorePage() {
           <div className="w-[500px] h-[400px] rounded-full bg-teal-400/10 blur-[130px]" />
         </div>
 
-        <div className="relative w-full max-w-xl  mx-auto px-6 py-10 flex flex-col items-center gap-8 pt-[120px]">
+        <div className="relative w-full max-w-xl lg:max-w-3xl mx-auto px-6 py-10 flex flex-col items-center gap-8 pt-[120px]">
           <h1 className="text-white text-2xl font-bold tracking-tight text-center">
             Your Property Potential Score
           </h1>
-<div className="w-full overflow-y-auto scrollbar-thin scrollbar-track-transparent max-h-[calc(100vh-200px)] px-2">
-          <div className="flex flex-col items-center gap-5 w-full">
-            <CircleProgress  score={80} />
+          <div className="w-full overflow-y-auto scrollbar-thin scrollbar-track-transparent max-h-[calc(100vh-200px)] px-2">
+            <div className="flex flex-col items-center gap-5 w-full">
+              <CircleProgress score={80} />
 
-            <div className="flex bg-[#2E7D3233]/20 rounded-full border border-[#2E7D32] py-[10px] px-[30px] items-center gap-2 text-[#2E7D32] text-xs font-medium">
+              <div className="flex bg-[#2E7D3233]/20 rounded-full border border-[#2E7D32] py-[10px] px-[30px] items-center gap-2 text-[#2E7D32] text-xs font-medium">
 
-              <p>
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M6.45 10.95L11.7375 5.6625L10.6875 4.6125L6.45 8.85L4.3125 6.7125L3.2625 7.7625L6.45 10.95ZM7.5 15C6.4625 15 5.4875 14.8031 4.575 14.4094C3.6625 14.0156 2.86875 13.4812 2.19375 12.8062C1.51875 12.1312 0.984375 11.3375 0.590625 10.425C0.196875 9.5125 0 8.5375 0 7.5C0 6.4625 0.196875 5.4875 0.590625 4.575C0.984375 3.6625 1.51875 2.86875 2.19375 2.19375C2.86875 1.51875 3.6625 0.984375 4.575 0.590625C5.4875 0.196875 6.4625 0 7.5 0C8.5375 0 9.5125 0.196875 10.425 0.590625C11.3375 0.984375 12.1312 1.51875 12.8062 2.19375C13.4812 2.86875 14.0156 3.6625 14.4094 4.575C14.8031 5.4875 15 6.4625 15 7.5C15 8.5375 14.8031 9.5125 14.4094 10.425C14.0156 11.3375 13.4812 12.1312 12.8062 12.8062C12.1312 13.4812 11.3375 14.0156 10.425 14.4094C9.5125 14.8031 8.5375 15 7.5 15Z" fill="#69AF6C" />
-                </svg>
+                <p>
+                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6.45 10.95L11.7375 5.6625L10.6875 4.6125L6.45 8.85L4.3125 6.7125L3.2625 7.7625L6.45 10.95ZM7.5 15C6.4625 15 5.4875 14.8031 4.575 14.4094C3.6625 14.0156 2.86875 13.4812 2.19375 12.8062C1.51875 12.1312 0.984375 11.3375 0.590625 10.425C0.196875 9.5125 0 8.5375 0 7.5C0 6.4625 0.196875 5.4875 0.590625 4.575C0.984375 3.6625 1.51875 2.86875 2.19375 2.19375C2.86875 1.51875 3.6625 0.984375 4.575 0.590625C5.4875 0.196875 6.4625 0 7.5 0C8.5375 0 9.5125 0.196875 10.425 0.590625C11.3375 0.984375 12.1312 1.51875 12.8062 2.19375C13.4812 2.86875 14.0156 3.6625 14.4094 4.575C14.8031 5.4875 15 6.4625 15 7.5C15 8.5375 14.8031 9.5125 14.4094 10.425C14.0156 11.3375 13.4812 12.1312 12.8062 12.8062C12.1312 13.4812 11.3375 14.0156 10.425 14.4094C9.5125 14.8031 8.5375 15 7.5 15Z" fill="#69AF6C" />
+                  </svg>
 
-              </p>
-              <p className="text-[14px] leading-[16px]">
+                </p>
+                <p className="text-[14px] leading-[16px]">
 
-                Eligible
-              </p>
-            </div>
+                  Eligible
+                </p>
+              </div>
 
-            <div className="w-full max-w-sm">
-              <div className="text-slate-300 text-sm text-center leading-relaxed">
-                Excellent news. Your lot meets all primary zoning criteria. You are well-positioned to
-                maximize property value through an ADU addition.
-                Excellent news. Your lot meets all primary zoning criteria. You are well-positioned to
-                maximize property value through an ADU addition.
-      
+              <div className="w-full max-w-sm">
+                <div className="text-slate-300 text-sm text-center leading-relaxed">
+                  Excellent news. Your lot meets all primary zoning criteria. You are well-positioned to
+                  maximize property value through an ADU addition.
+                  Excellent news. Your lot meets all primary zoning criteria. You are well-positioned to
+                  maximize property value through an ADU addition.
+
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="w-full h-px bg-white/10 my-5" />
+            <div className="w-full h-px bg-white/10 my-5" />
 
-          <div className="flex flex-wrap justify-center gap-3 w-full pb-4">
-            {criteria.map((c) => (
-              <div
-                key={c.label}
-                className={`flex items-start gap-2.5 border rounded-xl px-4 py-3 flex-1 min-w-[140px] ${
-                  c.passing ? "bg-white/5 border-white/10" : "bg-orange-500/10 border-orange-500/30"
-                }`}
-              >
-                <div className="mt-0.5 flex-shrink-0 flex items-center justify-center [&_svg]:block">
-                  {c.icon}
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-white text-xs font-semibold leading-tight">{c.label}</span>
-                  <span
-                    className={`text-[11px] mt-0.5 leading-tight ${
-                      c.passing ? "text-slate-400" : "text-orange-400"
+            <div className="grid grid-cols-3 gap-3 w-full pb-4">
+              {criteria.map((c) => (
+                <div
+                  key={c.label}
+                  className={`flex items-center gap-3 border rounded-xl px-4 py-4 ${c.passing
+                      ? "bg-white/5 border-[#2E7D32]/60"
+                      : "bg-orange-500/10 border-orange-500/50"
                     }`}
-                  >
-                    {c.detail}
-                  </span>
+                >
+                  <div className="flex-shrink-0 flex items-center justify-center [&_svg]:block">
+                    {c.icon}
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-white text-[13px] font-semibold leading-tight">
+                      {c.label}
+                    </span>
+                    <span
+                      className={`text-[11px] mt-1 leading-tight ${c.passing ? "text-slate-400" : "text-orange-400"
+                        }`}
+                    >
+                      {c.detail}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-          </div>
-          <button className="
+          <button
+            onClick={() => router.push("/steps/step-3")}
+            className="
             w-full py-4 rounded-full
             bg-teal-400 hover:bg-teal-300
             text-slate-900 font-semibold text-sm tracking-wide
@@ -211,7 +218,9 @@ export default function PropertyScorePage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </button>
-        
+
+          <StepFooter currentStep={2} />
+
         </div>
       </div>
     </div>

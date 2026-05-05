@@ -2,10 +2,13 @@
 
 import Navbar from "@/app/components/navbar/navbar";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { StepsInput } from "../components/steps-input";
 import { StepsSubmitBtn } from "../components/steps-submit-btn";
+import { StepFooter } from "../components/step-footer";
 
 export default function ReportForm() {
+  const router = useRouter();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -22,7 +25,7 @@ export default function ReportForm() {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 1500));
     setLoading(false);
-    alert("Score revealed!");
+    router.push("/steps/step-2");
   };
 
   return (
@@ -38,7 +41,7 @@ export default function ReportForm() {
       </div>
 
       {/* Outer max-width container */}
-      <div className="relative w-full  max-w-7xl mx-auto">
+      <div className="relative w-full   max-w-7xl mx-auto">
         
         {/* Centered inner card — constrained to ~440px for form readability */}
         <div className="w-full max-w-[550px] mx-auto flex flex-col items-center gap-6 py-10">
@@ -68,6 +71,8 @@ export default function ReportForm() {
           </div>
 
           <StepsSubmitBtn onClick={handleSubmit} loading={loading} />
+
+          <StepFooter currentStep={1} />
 
         </div>
       </div>
