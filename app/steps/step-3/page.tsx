@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
 import { StepsSubmitBtn } from "../components/steps-submit-btn";
 import { StepFooter } from "../components/step-footer";
+import { useBuildPath } from "@/app/context/build-path-session";
 
 const options = [
   {
@@ -71,6 +72,7 @@ const options = [
 
 export default function GoalSelection() {
   const router = useRouter();
+  const { setSelections } = useBuildPath();
   const [selected, setSelected] = useState("long-term");
 
   const rows: (typeof options)[] = [
@@ -176,11 +178,18 @@ export default function GoalSelection() {
             </div>
 
             {/* CTA */}
-            <StepsSubmitBtn className="!bg-[#F05C4A] text-white " idleText="Continue" onClick={() => router.push("/steps/step-4")} />
-<div className="pt-[90px] bg-red-50 w-full">
+            <StepsSubmitBtn
+              className="!bg-[#F05C4A] text-white "
+              idleText="Continue"
+              onClick={() => {
+                setSelections({ goalId: selected });
+                router.push("/steps/step-4");
+              }}
+            />
+<div className="pt-[90px]  w-full">
 
 
-            <StepFooter currentStep={3} />
+            <StepFooter currentStep={3} totalSteps={7} />
 </div>
           </div>
         </div>

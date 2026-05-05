@@ -5,7 +5,9 @@ import { type PlanId, PLAN_MODEL_URL } from "@/app/components/aduConfigurator/pl
 import { type SidingId } from "@/app/components/aduConfigurator/ConfiguratorModel";
 import { Home, Layers, Maximize2, User } from "lucide-react";
 import Link from "next/link";
-import { type ReactNode, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
+import { useBuildPath } from "@/app/context/build-path-session";
 
 type RoofStyle = "asphalt" | "metal";
 
@@ -293,6 +295,14 @@ function OptionCard({
 }
 
 export function AduConfiguratorClient() {
+  const router = useRouter();
+  const { setConfiguratorSummary } = useBuildPath();
+  const [viewportReady, setViewportReady] = useState(false);
+  const [loadProgress, setLoadProgress] = useState(0);
+
+  const handleLoadIdle = useCallback(() => setViewportReady(true), []);
+  const handleLoadProgress = useCallback((p: number) => setLoadProgress(p), []);
+
   const [planId, setPlanId] = useState<PlanId>("two-office");
   const [sidingId, setSidingId] = useState<SidingId>("default-stucco");
   const [claddingId, setCladdingId] = useState<CladdingId>("coastal");
@@ -342,6 +352,21 @@ export function AduConfiguratorClient() {
 
   const toggleUpgrade = (key: keyof UpgradesPick) => {
     setUpgrades((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const handleFinish = () => {
+    setConfiguratorSummary({
+      planId,
+      sidingId,
+      claddingId,
+      roofStyle: roofId,
+      interiorId,
+      fundingId,
+      features: { deck: features.deck, lanai: features.lanai, shower: features.shower },
+      upgrades: { ...upgrades },
+      chipLabels: [...yourAduChips],
+    });
+    router.push("/steps/thank-you");
   };
 
   return (
@@ -608,6 +633,7 @@ export function AduConfiguratorClient() {
 
             <button
               type="button"
+              onClick={handleFinish}
               className="font-dm-sans mt-6 w-full rounded-[14px] bg-[#ff6b5c] py-4 text-[15px] font-semibold text-white transition-colors hover:bg-[#ef5d4f] active:bg-[#e55548]"
               style={{ fontVariationSettings: "'opsz' 14" }}
             >
@@ -618,6 +644,38 @@ export function AduConfiguratorClient() {
       </aside>
 
       <main className="relative order-1 h-[52svh] min-h-[300px] w-full shrink-0 bg-[#eaecea] lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch">
+        {!viewportReady ? (
+          <div
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+            className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-5 bg-[#eaecea] px-6"
+          >
+            <div
+              className="h-11 w-11 shrink-0 rounded-full border-2 border-[#d8dfe0] border-t-[#5fb3b3] motion-safe:animate-spin"
+              aria-hidden
+            />
+            <div className="flex flex-col items-center gap-2 text-center">
+              <p
+                className="text-[15px] font-semibold tracking-tight text-[#1c2321]"
+                style={{ fontVariationSettings: "'opsz' 14" }}
+              >
+                Loading your ADU model
+              </p>
+              <p className="max-w-[280px] text-[13px] leading-snug text-[#6f7673]">
+                Preparing the 3D preview — this may take a moment on slower connections.
+              </p>
+            </div>
+            <div className="h-1.5 w-full max-w-[240px] overflow-hidden rounded-full bg-[#e8ebe9]">
+              <div
+                className="h-full rounded-full bg-[#5fb3b3] transition-[width] duration-300 ease-out"
+                style={{
+                  width: `${Math.min(100, Math.max(0, Math.round(loadProgress)))}%`,
+                }}
+              />
+            </div>
+          </div>
+        ) : null}
         <ConfiguratorCanvas
           modelUrl={PLAN_MODEL_URL[planId]}
           roofStyle={roofId}
@@ -626,6 +684,8 @@ export function AduConfiguratorClient() {
           showDeckSlab={features.deck}
           showLanaiMeshes={features.lanai}
           showShowerPortion={features.shower}
+          onLoadIdle={handleLoadIdle}
+          onLoadProgress={handleLoadProgress}
         />
         <div
           aria-hidden

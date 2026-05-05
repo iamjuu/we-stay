@@ -1,5 +1,5 @@
 import Navbar from "./components/navbar/navbar";
-import HeroButton from "./components/herobutton/herobutton";
+import HeroEligibility from "./components/hero-eligibility/hero-eligibility";
 import { HeroImage, PlaceholderImage, SectionTwo } from "@/content";
 import WeStaySection from "./components/card";
 import JoinCard from "./components/westay";
@@ -60,25 +60,16 @@ export default function Home() {
         }}
         className="min-h-screen flex flex-col justify-between bg-gray-100 relative"
       >
-        <div className="">
+        <div className="relative z-20">
           <Navbar />
           <div>
-            <div className=" mt-[80px] flex flex-col items-center gap-[118px]">
-              <h1 className="hero-heading  font-playfair-display text-center font-[700] text-white">
+            <div className=" mt-[80px] mb-[120px] flex w-full flex-col items-center gap-[118px] md:items-start md:px-[80px] md:mt-[104px] lg:mt-[104px]">
+              <h1 className="hero-heading w-full font-playfair-display text-center font-[700] text-white md:text-left">
                 See What Your
                 <br />
                 Backyard Can Build
               </h1>
-              <HeroButton />
-            </div>
-
-            <div className="hidden md:block px-[80px] md:mt-[104px] lg:mt-[104px] mb-[120px] font-dm-sans text-white">
-              <p className="section-paragraph font-[400]">
-                Check your ADU eligibility, <br />
-                explore your options, and <br />
-                move forward with <br />
-                guidance you can trust.
-              </p>
+              <HeroEligibility />
             </div>
           </div>
         </div>

@@ -4,310 +4,35 @@ import { useState, useCallback } from 'react';
 import { Sparkles } from 'lucide-react';
 import AddressInput from '@/components/AddressInput';
 import ScorecardDisplay from '@/components/ScorecardDisplay';
-import {
-  GeocodeData,
-  ParcelData,
-  ZoningData,
-  FloodData,
-  AssessorData,
-  RegridData,
-  SMAData,
-  WaterData,
-  SewerData,
-  RailData,
-  PermitData,
-} from '@/components/PipelineSteps';
-import { evaluateAllGates, FullEligibilityResult } from '@/lib/eligibility-gates';
-import {
-  mapGeocodeFullFromApi,
-  mapParcelFromApi,
-  mapRegridFromApi,
-  mapZoningFromApi,
-  mapFloodFromApi,
-  mapAssessorFromApi,
-  mapSmaFromApi,
-  mapWaterFromApi,
-  mapSewerFromApi,
-  mapRailFromApi,
-  mapPermitFromApi,
-  mapRentFromApi,
-  type RentalEstimateRow,
-} from '@/lib/pipeline-api-mapper';
-
-// Helper Functions for API Calls
-async function fetchGeocode(address: string) {
-  const startTime = performance.now();
-  const res = await fetch(`/api/geocode?address=${encodeURIComponent(address)}`);
-  const json = await res.json();
-  return {
-    ...json,
-    responseTime: Math.round(performance.now() - startTime),
-  };
-}
-
-async function fetchParcel(lat: number, lng: number) {
-  const startTime = performance.now();
-  const res = await fetch(`/api/parcel?lat=${lat}&lng=${lng}`);
-  const json = await res.json();
-  return {
-    ...json,
-    responseTime: Math.round(performance.now() - startTime),
-  };
-}
-
-async function fetchRegrid(tmk: string) {
-  const startTime = performance.now();
-  const res = await fetch(`/api/regrid?tmk=${encodeURIComponent(tmk)}`);
-  const json = await res.json();
-  return {
-    ...json,
-    responseTime: Math.round(performance.now() - startTime),
-  };
-}
-
-async function fetchZoning(lat: number, lng: number) {
-  const startTime = performance.now();
-  const res = await fetch(`/api/zoning?lat=${lat}&lng=${lng}`);
-  const json = await res.json();
-  return {
-    ...json,
-    responseTime: Math.round(performance.now() - startTime),
-  };
-}
-
-async function fetchFlood(lat: number, lng: number) {
-  const startTime = performance.now();
-  const res = await fetch(`/api/flood?lat=${lat}&lng=${lng}`);
-  const json = await res.json();
-  return {
-    ...json,
-    responseTime: Math.round(performance.now() - startTime),
-  };
-}
-
-async function fetchAssessor(tmk: string) {
-  const startTime = performance.now();
-  const res = await fetch(`/api/assessor?tmk=${encodeURIComponent(tmk)}`);
-  const json = await res.json();
-  return {
-    ...json,
-    responseTime: Math.round(performance.now() - startTime),
-  };
-}
-
-async function fetchSMA(lat: number, lng: number) {
-  const startTime = performance.now();
-  const res = await fetch(`/api/sma?lat=${lat}&lng=${lng}`);
-  const json = await res.json();
-  return {
-    ...json,
-    responseTime: Math.round(performance.now() - startTime),
-  };
-}
-
-async function fetchWater(lat: number, lng: number) {
-  const startTime = performance.now();
-  const res = await fetch(`/api/water?lat=${lat}&lng=${lng}`);
-  const json = await res.json();
-  return {
-    ...json,
-    responseTime: Math.round(performance.now() - startTime),
-  };
-}
-
-async function fetchSewer(lat: number, lng: number) {
-  const startTime = performance.now();
-  const res = await fetch(`/api/sewer?lat=${lat}&lng=${lng}`);
-  const json = await res.json();
-  return {
-    ...json,
-    responseTime: Math.round(performance.now() - startTime),
-  };
-}
-
-async function fetchRail(lat: number, lng: number) {
-  const startTime = performance.now();
-  const res = await fetch(`/api/rail?lat=${lat}&lng=${lng}`);
-  const json = await res.json();
-  return {
-    ...json,
-    responseTime: Math.round(performance.now() - startTime),
-  };
-}
-
-async function fetchPermit(tmk: string) {
-  const startTime = performance.now();
-  const res = await fetch(`/api/permit?tmk=${encodeURIComponent(tmk)}`);
-  const json = await res.json();
-  return {
-    ...json,
-    responseTime: Math.round(performance.now() - startTime),
-  };
-}
-
-async function fetchRent(zipCode: string) {
-  const startTime = performance.now();
-  const res = await fetch(`/api/rent?zipCode=${encodeURIComponent(zipCode)}`);
-  const json = await res.json();
-  return {
-    ...json,
-    responseTime: Math.round(performance.now() - startTime),
-  };
-}
-
-// Helper to extract zip code from address
-function extractZipCode(addressComponents: any[]): string | null {
-  if (!addressComponents) return null;
-  const zipComponent = addressComponents.find(component =>
-    component.types.includes('postal_code')
-  );
-  return zipComponent?.short_name || null;
-}
+import type { FullEligibilityResult } from '@/lib/eligibility-gates';
+import { runEligibilityPipeline, type EligibilityRentalPayload } from '@/lib/eligibility-pipeline';
 
 export default function ScorecardPage() {
   const [isRunning, setIsRunning] = useState(false);
   const [eligibilityResult, setEligibilityResult] = useState<FullEligibilityResult | null>(null);
   const [address, setAddress] = useState<string>('');
-  const [rentalData, setRentalData] = useState<{ zipCode: string; rentals: RentalEstimateRow[] } | null>(
-    null
-  );
+  const [rentalData, setRentalData] = useState<EligibilityRentalPayload | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const runPipeline = useCallback(
-    async (inputAddress: string) => {
-      setEligibilityResult(null);
-      setRentalData(null);
-      setError(null);
-      setIsRunning(true);
-      setAddress('');
+  const runPipeline = useCallback(async (inputAddress: string) => {
+    setEligibilityResult(null);
+    setRentalData(null);
+    setError(null);
+    setIsRunning(true);
+    setAddress('');
 
-      let geocodeData: GeocodeData | null = null;
-      let parcelData: ParcelData | null = null;
-      let regridData: RegridData | null = null;
-      let zoningData: ZoningData | null = null;
-      let floodData: FloodData | null = null;
-      let assessorData: AssessorData | null = null;
-      let smaData: SMAData | null = null;
-      let waterData: WaterData | null = null;
-      let sewerData: SewerData | null = null;
-      let railData: RailData | null = null;
-      let permitData: PermitData | null = null;
+    const outcome = await runEligibilityPipeline(inputAddress);
+    setIsRunning(false);
 
-      try {
-        // Sequential: Geocoding → Parcel
-        const geocodeResult = await fetchGeocode(inputAddress);
-        const geoMapped = mapGeocodeFullFromApi(geocodeResult);
-        if (!geoMapped) {
-          const msg =
-            geocodeResult &&
-            typeof geocodeResult === 'object' &&
-            'error' in geocodeResult &&
-            geocodeResult.error != null
-              ? String(geocodeResult.error)
-              : 'Geocoding failed';
-          throw new Error(msg);
-        }
+    if (!outcome.ok) {
+      setError(outcome.error);
+      return;
+    }
 
-        geocodeData = geoMapped.display;
-        setAddress(geocodeData.formattedAddress);
-
-        const zipCode = extractZipCode(geoMapped.addressComponents as { types: string[]; short_name?: string }[]);
-        if (zipCode) {
-          const rentResult = await fetchRent(zipCode);
-          const rentMapped = mapRentFromApi(rentResult);
-          if (rentMapped) setRentalData(rentMapped);
-        }
-
-        const parcelResult = await fetchParcel(geocodeData.lat, geocodeData.lng);
-        const parcelMapped = mapParcelFromApi(parcelResult);
-        if (!parcelMapped) {
-          throw new Error(parcelResult.error || 'Parcel lookup failed');
-        }
-
-        parcelData = parcelMapped;
-
-        // Parallel: All other API calls
-        const [
-          regridResult,
-          zoningResult,
-          floodResult,
-          assessorResult,
-          smaResult,
-          waterResult,
-          sewerResult,
-          railResult,
-          permitResult,
-        ] = await Promise.allSettled([
-          fetchRegrid(parcelData.tmk),
-          fetchZoning(geocodeData.lat, geocodeData.lng),
-          fetchFlood(geocodeData.lat, geocodeData.lng),
-          parcelData.qpublicTmk ? fetchAssessor(parcelData.qpublicTmk) : Promise.reject(new Error('No TMK')),
-          fetchSMA(geocodeData.lat, geocodeData.lng),
-          fetchWater(geocodeData.lat, geocodeData.lng),
-          fetchSewer(geocodeData.lat, geocodeData.lng),
-          fetchRail(geocodeData.lat, geocodeData.lng),
-          fetchPermit(parcelData.tmk),
-        ]);
-
-        if (regridResult.status === 'fulfilled') {
-          regridData = mapRegridFromApi(regridResult.value);
-        }
-
-        if (zoningResult.status === 'fulfilled') {
-          zoningData = mapZoningFromApi(zoningResult.value);
-        }
-
-        if (floodResult.status === 'fulfilled') {
-          floodData = mapFloodFromApi(floodResult.value);
-        }
-
-        if (assessorResult.status === 'fulfilled') {
-          assessorData = mapAssessorFromApi(assessorResult.value);
-        }
-
-        if (smaResult.status === 'fulfilled') {
-          smaData = mapSmaFromApi(smaResult.value);
-        }
-
-        if (waterResult.status === 'fulfilled') {
-          waterData = mapWaterFromApi(waterResult.value);
-        }
-
-        if (sewerResult.status === 'fulfilled') {
-          sewerData = mapSewerFromApi(sewerResult.value);
-        }
-
-        if (railResult.status === 'fulfilled') {
-          railData = mapRailFromApi(railResult.value);
-        }
-
-        if (permitResult.status === 'fulfilled') {
-          permitData = mapPermitFromApi(permitResult.value);
-        }
-
-        // Evaluate all 11 gates
-        const result = evaluateAllGates(
-          regridData,
-          zoningData,
-          floodData,
-          parcelData,
-          smaData,
-          waterData,
-          sewerData,
-          railData,
-          permitData,
-          assessorData
-        );
-
-        setEligibilityResult(result);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setIsRunning(false);
-      }
-    },
-    []
-  );
+    setAddress(outcome.address);
+    setEligibilityResult(outcome.eligibilityResult);
+    setRentalData(outcome.rentalData);
+  }, []);
 
   return (
     <div className="min-h-screen bg-transparent py-8 px-4">

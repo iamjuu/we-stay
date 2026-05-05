@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { DM_Sans, Playfair_Display } from "next/font/google";
+import { Providers } from "@/app/providers";
 import "./globals.css";
 
 const playfairDisplay = Playfair_Display({
@@ -29,7 +30,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${playfairDisplay.variable} ${dmSans.variable}`}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

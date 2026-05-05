@@ -1,8 +1,8 @@
 "use client";
 
-import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
+import { Environment, OrbitControls, useGLTF, useProgress } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { ConfiguratorModel, type RoofStyle, type SidingId } from "./ConfiguratorModel";
 import { PLAN_MODEL_URL } from "./planModelUrls";
 
@@ -18,7 +18,34 @@ type ConfiguratorCanvasProps = {
   showDeckSlab: boolean;
   showLanaiMeshes: boolean;
   showShowerPortion: boolean;
+  /** When loading manager goes idle (model + env, etc.). */
+  onLoadIdle?: () => void;
+  /** Approximate load progress 0–100. */
+  onLoadProgress?: (progress: number) => void;
 };
+
+function LoadProgressReporter({
+  onIdle,
+  onProgress,
+}: {
+  onIdle?: () => void;
+  onProgress?: (progress: number) => void;
+}) {
+  const { active, progress } = useProgress();
+
+  useEffect(() => {
+    onProgress?.(progress);
+  }, [progress, onProgress]);
+
+  useEffect(() => {
+    if (!active && onIdle) {
+      const id = requestAnimationFrame(() => onIdle());
+      return () => cancelAnimationFrame(id);
+    }
+  }, [active, onIdle]);
+
+  return null;
+}
 
 export function ConfiguratorCanvas({
   modelUrl,
@@ -28,6 +55,8 @@ export function ConfiguratorCanvas({
   showDeckSlab,
   showLanaiMeshes,
   showShowerPortion,
+  onLoadIdle,
+  onLoadProgress,
 }: ConfiguratorCanvasProps) {
   return (
     <div className="h-full min-h-0 w-full max-lg:min-h-[260px]">
@@ -56,6 +85,7 @@ export function ConfiguratorCanvas({
           shadow-bias={-0.0004}
           shadow-normalBias={0.03}
         />
+        <LoadProgressReporter onIdle={onLoadIdle} onProgress={onLoadProgress} />
         <Suspense fallback={null}>
           <ConfiguratorModel
             key={modelUrl}

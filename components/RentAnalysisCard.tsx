@@ -1,10 +1,4 @@
-import { DollarSign, TrendingDown } from 'lucide-react';
-
-// ADU images for each card (2 options)
-const aduImages = [
-  'https://images.squarespace-cdn.com/content/v1/6910d35fca92b56af610d60e/769dc1d4-422d-4686-beb3-6e5cddbc814e/ADU.png', // 1 Bed / 1 Bath
-  'https://images.squarespace-cdn.com/content/v1/6910d35fca92b56af610d60e/3435e4b5-caf1-4bfc-90dc-1b986d4ecc63/Screenshot+by+Snip+My+on+Jan+15%2C+2026+at+10.23.31%E2%80%AFAM.png', // 2 Bed / 1 Bath
-];
+import Image from 'next/image';
 
 interface RentalData {
   bedrooms: number;
@@ -33,12 +27,14 @@ interface AduOption {
   label?: string;
 }
 
+/** ADU photos — /public/images (750 sq ft + 1000 sq ft cards) */
+const aduImages = ['/images/housepicture.png', '/images/Picture.png'];
+
 export default function RentAnalysisCard({
   zipCode,
   rentals,
   maxAduSqFt,
 }: RentAnalysisCardProps) {
-  // Use mock data if rentals are not available (for development/testing)
   const mockRentals: RentalData[] = [
     {
       bedrooms: 1,
@@ -75,7 +71,6 @@ export default function RentAnalysisCard({
     0
   );
 
-  // Format currency
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -115,108 +110,84 @@ export default function RentAnalysisCard({
   ];
 
   return (
-    <div className="space-y-4">
-      {/* Header */}
+    <div className="space-y-5">
       <div className="text-center">
-        <h2 className="text-xl font-bold text-white">ADU Investment Options</h2>
-        <p className="text-sm text-white/60 mt-1">
+        <h2 className="font-dm-sans text-xl font-bold text-white">ADU Investment Options</h2>
+        <p className="mt-1 font-dm-sans text-sm text-white/60">
           Rental estimates for ZIP {effectiveZipCode} based on{' '}
-          {(comparableCount > 0 ? comparableCount : effectiveRentals[0]?.comparableCount) || 15}+
-          comparable properties
+          {(comparableCount > 0 ? comparableCount : effectiveRentals[0]?.comparableCount) || 15}+ comparable
+          properties
           {!usingLiveRentals && (
-            <span className="block mt-1 text-white/40 text-xs">
+            <span className="mt-1 block text-xs text-white/45">
               Showing illustrative comparables until rent data loads for this ZIP.
             </span>
           )}
         </p>
         {maxAduSqFt != null && maxAduSqFt < 1000 && (
-          <p className="text-xs text-amber-200/90 mt-2 max-w-md mx-auto">
-            ADU size caps above apply to your lot (up to {maxAduSqFt.toLocaleString()} sq ft). Rent rows reflect
-            market comps by bedroom count, not unit square footage.
+          <p className="mx-auto mt-2 max-w-md font-dm-sans text-xs text-amber-200/90">
+            ADU size caps above apply to your lot (up to {maxAduSqFt.toLocaleString()} sq ft). Rent rows reflect market
+            comps by bedroom count, not unit square footage.
           </p>
         )}
       </div>
 
-      {/* Rental Cards Grid - 2 columns */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
         {aduOptions.map((option, index) => (
           <div
             key={index}
-            className="bg-[#575757]/80 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden"
+            className="overflow-hidden rounded-2xl border border-white/12 bg-[#2d2d32] shadow-[0_8px_32px_rgba(0,0,0,0.35)]"
           >
-            {/* Card Header */}
-            <div className="p-4 pb-3">
-              <div className="flex items-center justify-between mb-1">
-                {/* Image - 20% bigger (72px, was 60px) */}
-                <div className="h-[72px] w-[72px] rounded-lg overflow-hidden flex-shrink-0">
-                  <img
-                    src={aduImages[index]}
-                    alt={`${option.size} sq ft ADU`}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                {/* Square Footage */}
-                <div className="text-right">
-                  <span className="text-3xl font-bold text-white leading-none">{option.size}</span>
-                  <p className="text-xs text-white/60 mt-0.5">sq ft</p>
-                </div>
+            {/* Hero image + teal sq ft badge (design match) */}
+            <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-900">
+              <Image
+                src={aduImages[index] ?? aduImages[0]}
+                alt={`${option.size} sq ft ADU option`}
+                fill
+                className="object-cover"
+                sizes="(max-width: 640px) 100vw, 420px"
+                priority={index === 0}
+              />
+              <div className="absolute bottom-3 right-3 rounded-full bg-[#42B0A8] px-3 py-1.5 font-dm-sans text-sm font-semibold text-white shadow-md ring-2 ring-black/20">
+                {option.size} sq ft
               </div>
             </div>
 
-            {/* Horizontal Line Separator */}
-            <div className="border-t border-white/20"></div>
-
-            {/* Bed/Bath Section */}
-            <div className="px-4 py-3 text-center">
-              <p className="text-lg font-bold text-white">
+            {/* Bed/bath + Est. Rent — single row */}
+            <div className="flex items-center justify-between gap-3 border-t border-white/10 px-4 py-3.5">
+              <span className="font-dm-sans text-base font-bold text-white">
                 {option.bedrooms} Bed / {option.bathrooms} Bath
-                {option.label && (
-                  <span className="ml-2 text-xs bg-[#42B0A8]/20 text-[#42B0A8] px-2 py-0.5 rounded-full">
+                {option.label ? (
+                  <span className="ml-2 align-middle font-dm-sans text-xs font-normal text-[#42B0A8]">
                     {option.label}
                   </span>
-                )}
-              </p>
+                ) : null}
+              </span>
+              <span className="shrink-0 text-right font-dm-sans text-base font-bold text-white">
+                Est. Rent {formatCurrency(option.estimatedRent)}
+                /mo
+              </span>
             </div>
 
-            {/* Another Horizontal Line Separator */}
-            <div className="border-t border-white/20"></div>
-
-            {/* Card Content */}
-            <div className="px-4 py-4 space-y-3">
-              {/* Estimated Rent */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <DollarSign className="h-5 w-5 text-[#42B0A8]" />
-                  <span className="text-sm text-white">Est. Rent</span>
+            {/* Rent stress test — nested panel */}
+            <div className="border-t border-white/10 px-4 pb-4 pt-3">
+              <div className="rounded-xl bg-[#45454b] px-4 py-3.5">
+                <p className="font-dm-sans text-xs font-medium text-white/55">Rent Stress Test</p>
+                <div className="mt-2 flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                  <span className="font-dm-sans text-sm text-white/70">At 75% occupancy:</span>
+                  <span className="font-dm-sans text-base font-bold tabular-nums text-white">
+                    {formatCurrency(option.stressTestRent)}/mo{' '}
+                    <span className="text-sm font-normal text-white/55">effective</span>
+                  </span>
                 </div>
-                <span className="text-lg font-bold text-[#42B0A8]">
-                  {formatCurrency(option.estimatedRent)}/mo
-                </span>
-              </div>
-
-              {/* Stress Test Section */}
-              <div className="bg-[#707070] rounded-md p-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <TrendingDown className="h-4 w-4 text-[#ef4444]" />
-                  <span className="text-xs font-medium text-white">Rent Stress Test</span>
-                </div>
-                <p className="text-xs text-white/70 mb-2">At 75% occupancy:</p>
-                <p className="text-base font-semibold text-white">
-                  {formatCurrency(option.stressTestRent)}/mo
-                  <span className="text-xs text-white/60 font-normal ml-1">effective</span>
-                </p>
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Footer Note */}
-      <div className="text-center text-xs text-white/50">
-        <p>
-          Rental estimates from comparable-market data (ZIP-level) • 75% occupancy stress test accounts for vacancy
-          and maintenance
-        </p>
+      <div className="text-center font-dm-sans text-xs leading-relaxed text-white/45">
+        Rental estimates from comparable-market data (ZIP-level) • 75% occupancy stress test accounts for vacancy and
+        maintenance
       </div>
     </div>
   );

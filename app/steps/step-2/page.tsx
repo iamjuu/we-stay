@@ -1,9 +1,13 @@
 "use client";
 
-import { useState, useEffect, type ReactNode } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
 import { StepFooter } from "../components/step-footer";
+import { useEligibilitySession } from "@/app/context/eligibility-session";
+import type { EligibilityGate } from "@/lib/eligibility-gates";
+import type { FullEligibilityResult } from "@/lib/eligibility-gates";
+import RentAnalysisCard from "@/components/RentAnalysisCard";
 
 function CriterionPassIcon() {
   return (
@@ -37,35 +41,113 @@ function CriterionWarnIcon() {
   );
 }
 
-type Criterion = {
-  label: string;
-  detail: string;
-  passing: boolean;
-  icon: ReactNode;
-};
+function CriterionFailIcon() {
+  return (
+    <svg width={30} height={30} viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+      <rect width="30" height="30" rx="15" fill="#C62828" />
+      <path d="M11 11L19 19M19 11L11 19" stroke="white" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
 
-const criteria: Criterion[] = [
-  {
-    label: "Minimum Lot Size",
-    detail: "6,127 sq ft meets 5,000",
-    passing: true,
-    icon: <CriterionPassIcon />,
-  },
-  {
-    label: "State Land Use",
-    detail: "Urban district - ADU",
-    passing: true,
-    icon: <CriterionPassIcon />,
-  },
-  {
-    label: "City Zoning",
-    detail: "1 - Verify ADU eligibility",
-    passing: false,
-    icon: <CriterionWarnIcon />,
-  },
-];
+function gateDetail(gate: EligibilityGate): string {
+  const base = gate.message?.trim() || "";
+  const extra = gate.details?.trim();
+  if (extra) return `${base} ${extra}`.trim();
+  return base || "—";
+}
 
-function CircleProgress({ score }: { score: number }) {
+function eligibilityScorePercent(result: FullEligibilityResult): number {
+  const n = result.gates.length;
+  if (n === 0) return 0;
+  return Math.round((result.passCount / n) * 100);
+}
+
+function summaryCopy(address: string, result: FullEligibilityResult): string {
+  const short = address.split(",")[0]?.trim() || "This property";
+  if (result.status === "ELIGIBLE") {
+    return `Excellent news. ${short} meets primary screening criteria on available data. You're well-positioned to explore an ADU addition. Always confirm final eligibility with DPP.`;
+  }
+  if (result.status === "NEEDS_REVIEW") {
+    return `${short} clears several checks, but some items need verification or professional review before you commit to a build path.`;
+  }
+  return `Based on preliminary screening, ${short} may face significant eligibility constraints. Review failed gates below and consult DPP before proceeding.`;
+}
+
+function StatusBadge({ result }: { result: FullEligibilityResult }) {
+  if (result.status === "ELIGIBLE") {
+    return (
+      <div className="flex items-center gap-2 rounded-full border border-[#2E7D32] bg-[#2E7D3233]/20 px-[30px] py-[10px] text-[14px] font-medium leading-4 text-[#69AF6C]">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <path
+            d="M6.45 10.95L11.7375 5.6625L10.6875 4.6125L6.45 8.85L4.3125 6.7125L3.2625 7.7625L6.45 10.95ZM7.5 15C6.4625 15 5.4875 14.8031 4.575 14.4094C3.6625 14.0156 2.86875 13.4812 2.19375 12.8062C1.51875 12.1312 0.984375 11.3375 0.590625 10.425C0.196875 9.5125 0 8.5375 0 7.5C0 6.4625 0.196875 5.4875 0.590625 4.575C0.984375 3.6625 1.51875 2.86875 2.19375 2.19375C2.86875 1.51875 3.6625 0.984375 4.575 0.590625C5.4875 0.196875 6.4625 0 7.5 0C8.5375 0 9.5125 0.196875 10.425 0.590625C11.3375 0.984375 12.1312 1.51875 12.8062 2.19375C13.4812 2.86875 14.0156 3.6625 14.4094 4.575C14.8031 5.4875 15 6.4625 15 7.5C15 8.5375 14.8031 9.5125 14.4094 10.425C14.0156 11.3375 13.4812 12.1312 12.8062 12.8062C12.1312 13.4812 11.3375 14.0156 10.425 14.4094C9.5125 14.8031 8.5375 15 7.5 15Z"
+            fill="#69AF6C"
+          />
+        </svg>
+        Eligible
+      </div>
+    );
+  }
+  if (result.status === "NEEDS_REVIEW") {
+    return (
+      <div className="flex items-center gap-2 rounded-full border border-amber-500/70 bg-amber-500/15 px-[30px] py-[10px] text-[14px] font-medium leading-4 text-amber-200">
+        Needs review
+      </div>
+    );
+  }
+  return (
+    <div className="flex items-center gap-2 rounded-full border border-red-500/70 bg-red-500/15 px-[30px] py-[10px] text-[14px] font-medium leading-4 text-red-200">
+      Not eligible
+    </div>
+  );
+}
+
+function GateCard({ gate }: { gate: EligibilityGate }) {
+  const isPass = gate.status === "pass";
+  const isFlag = gate.status === "flag";
+  const isFail = gate.status === "fail";
+  const isPending = gate.status === "pending";
+
+  const icon =
+    isPass ? (
+      <CriterionPassIcon />
+    ) : isFail ? (
+      <CriterionFailIcon />
+    ) : (
+      <CriterionWarnIcon />
+    );
+
+  const shell = isPass
+    ? "bg-white/5 border-[#2E7D32]/60"
+    : isFail
+      ? "bg-red-500/10 border-red-500/50"
+      : isFlag
+        ? "bg-orange-500/10 border-orange-500/50"
+        : "bg-white/[0.03] border-white/15";
+
+  const titleClass =
+    isPass ? "text-white" : isFail ? "text-red-100" : isFlag ? "text-orange-100" : "text-white/60";
+
+  const detailClass =
+    isPass ? "text-slate-400" : isFail ? "text-red-200/90" : isFlag ? "text-orange-200/90" : "text-white/45";
+
+  return (
+    <div
+      className={`flex min-h-[88px] items-center gap-3 rounded-xl border px-4 py-4 ${shell}`}
+    >
+      <div className="flex flex-shrink-0 items-center justify-center [&_svg]:block">{icon}</div>
+      <div className="flex min-w-0 flex-col">
+        <span className={`text-[13px] font-semibold leading-tight ${titleClass}`}>{gate.name}</span>
+        <span className={`mt-1 text-[11px] leading-tight ${detailClass}`}>{gateDetail(gate)}</span>
+        {isPending && (
+          <span className="mt-0.5 text-[10px] uppercase tracking-wide text-white/35">Pending data</span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CircleProgress({ score, gradientId }: { score: number; gradientId: string }) {
   const [animated, setAnimated] = useState(0);
   const radius = 70;
   const stroke = 8;
@@ -85,6 +167,7 @@ function CircleProgress({ score }: { score: number }) {
         height={radius * 2}
         viewBox={`0 0 ${radius * 2} ${radius * 2}`}
         className="-rotate-90"
+        aria-hidden
       >
         <circle
           cx={radius}
@@ -99,7 +182,7 @@ function CircleProgress({ score }: { score: number }) {
           cy={radius}
           r={normalizedRadius}
           fill="none"
-          stroke="url(#scoreGrad)"
+          stroke={`url(#${gradientId})`}
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={circumference}
@@ -107,15 +190,15 @@ function CircleProgress({ score }: { score: number }) {
           style={{ transition: "stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)" }}
         />
         <defs>
-          <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="#4DB6AC" />
-            <stop offset="100%" stopColor="#4DB6AC" />
+            <stop offset="100%" stopColor="#26A69A" />
           </linearGradient>
         </defs>
       </svg>
       <div className="absolute flex flex-col items-center justify-center">
-        <span className="text-white text-3xl font-bold leading-none">{score}%</span>
-        <span className="text-slate-400 text-xs mt-1 tracking-wide">Your Score</span>
+        <span className="text-3xl font-bold leading-none text-white">{score}%</span>
+        <span className="mt-1 text-xs tracking-wide text-slate-400">Your Score</span>
       </div>
     </div>
   );
@@ -123,104 +206,130 @@ function CircleProgress({ score }: { score: number }) {
 
 export default function PropertyScorePage() {
   const router = useRouter();
+  const gradientId = useId().replace(/:/g, "");
+  const { snapshot, hydrated } = useEligibilitySession();
+
+  useEffect(() => {
+    if (!hydrated) return;
+    if (!snapshot) {
+      router.replace("/");
+    }
+  }, [hydrated, snapshot, router]);
+
+  const score = useMemo(
+    () => (snapshot ? eligibilityScorePercent(snapshot.eligibilityResult) : 0),
+    [snapshot]
+  );
+
+  const result = snapshot?.eligibilityResult;
+
+  if (!hydrated) {
+    return (
+      <div className="flex h-dvh max-h-dvh items-center justify-center overflow-hidden bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534]">
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-teal-400 border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (!snapshot || !result) {
+    return null;
+  }
+
+  const addressLine = snapshot.address;
+  const summary = summaryCopy(addressLine, result);
+  const zipCode = snapshot.rentalData?.zipCode ?? "";
+  const rentals = snapshot.rentalData?.rentals ?? [];
+  const maxAduSqFt = result.aduSize?.maxAduSizeSqFt ?? null;
+
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
-      <div className="flex flex-col w-full">
-        <div className="">
-          <Navbar />
-        </div>
+    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534]">
+      <div className="relative z-50 shrink-0">
+        <Navbar />
+      </div>
 
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[500px] h-[400px] rounded-full bg-teal-400/10 blur-[130px]" />
-        </div>
+      <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center">
+        <div className="h-[400px] w-[500px] rounded-full bg-teal-400/10 blur-[130px]" />
+      </div>
 
-        <div className="relative w-full max-w-xl lg:max-w-3xl mx-auto px-6 py-10 flex flex-col items-center gap-8 pt-[120px]">
-          <h1 className="text-white text-2xl font-bold tracking-tight text-center">
-            Your Property Potential Score
-          </h1>
-          <div className="w-full overflow-y-auto scrollbar-thin scrollbar-track-transparent max-h-[calc(100vh-200px)] px-2">
-            <div className="flex flex-col items-center gap-5 w-full">
-              <CircleProgress score={80} />
+      {/* Results scroll only between navbar and CTA — full page does not scroll */}
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col">
+        <div className="scrollbar min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 pt-4 pb-2 sm:px-6">
+          <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-6 pb-2">
+            <h1 className="text-center font-dm-sans text-2xl font-bold tracking-tight text-white">
+              Your Property Potential Score
+            </h1>
 
-              <div className="flex bg-[#2E7D3233]/20 rounded-full border border-[#2E7D32] py-[10px] px-[30px] items-center gap-2 text-[#2E7D32] text-xs font-medium">
+            <p className="max-w-2xl text-center font-dm-sans text-xs text-white/50">{addressLine}</p>
 
-                <p>
-                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6.45 10.95L11.7375 5.6625L10.6875 4.6125L6.45 8.85L4.3125 6.7125L3.2625 7.7625L6.45 10.95ZM7.5 15C6.4625 15 5.4875 14.8031 4.575 14.4094C3.6625 14.0156 2.86875 13.4812 2.19375 12.8062C1.51875 12.1312 0.984375 11.3375 0.590625 10.425C0.196875 9.5125 0 8.5375 0 7.5C0 6.4625 0.196875 5.4875 0.590625 4.575C0.984375 3.6625 1.51875 2.86875 2.19375 2.19375C2.86875 1.51875 3.6625 0.984375 4.575 0.590625C5.4875 0.196875 6.4625 0 7.5 0C8.5375 0 9.5125 0.196875 10.425 0.590625C11.3375 0.984375 12.1312 1.51875 12.8062 2.19375C13.4812 2.86875 14.0156 3.6625 14.4094 4.575C14.8031 5.4875 15 6.4625 15 7.5C15 8.5375 14.8031 9.5125 14.4094 10.425C14.0156 11.3375 13.4812 12.1312 12.8062 12.8062C12.1312 13.4812 11.3375 14.0156 10.425 14.4094C9.5125 14.8031 8.5375 15 7.5 15Z" fill="#69AF6C" />
-                  </svg>
-
-                </p>
-                <p className="text-[14px] leading-[16px]">
-
-                  Eligible
-                </p>
-              </div>
-
-              <div className="w-full max-w-sm">
-                <div className="text-slate-300 text-sm text-center leading-relaxed">
-                  Excellent news. Your lot meets all primary zoning criteria. You are well-positioned to
-                  maximize property value through an ADU addition.
-                  Excellent news. Your lot meets all primary zoning criteria. You are well-positioned to
-                  maximize property value through an ADU addition.
-
-                </div>
-              </div>
+            <div className="flex w-full flex-col items-center gap-5">
+              <CircleProgress score={score} gradientId={gradientId} />
+              <StatusBadge result={result} />
+              <p className="max-w-xl text-center font-dm-sans text-sm leading-relaxed text-slate-300">{summary}</p>
             </div>
 
-            <div className="w-full h-px bg-white/10 my-5" />
+            <div className="my-2 h-px w-full max-w-4xl bg-white/10" />
 
-            <div className="grid grid-cols-3 gap-3 w-full pb-4">
-              {criteria.map((c) => (
-                <div
-                  key={c.label}
-                  className={`flex items-center gap-3 border rounded-xl px-4 py-4 ${c.passing
-                      ? "bg-white/5 border-[#2E7D32]/60"
-                      : "bg-orange-500/10 border-orange-500/50"
-                    }`}
-                >
-                  <div className="flex-shrink-0 flex items-center justify-center [&_svg]:block">
-                    {c.icon}
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-white text-[13px] font-semibold leading-tight">
-                      {c.label}
-                    </span>
-                    <span
-                      className={`text-[11px] mt-1 leading-tight ${c.passing ? "text-slate-400" : "text-orange-400"
-                        }`}
-                    >
-                      {c.detail}
-                    </span>
-                  </div>
-                </div>
+            <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {result.gates.map((gate) => (
+                <GateCard key={gate.id} gate={gate} />
               ))}
             </div>
+
+            {result.aduSize && (
+              <div className="w-full max-w-4xl rounded-xl border border-white/15 bg-white/[0.06] px-5 py-4">
+                <div className="flex flex-wrap items-start gap-2">
+                  <span className="font-dm-sans text-sm font-semibold text-[#4DB6AC]">Maximum ADU Size</span>
+                  <span className="font-dm-sans text-sm text-white">
+                    {result.aduSize.maxAduSizeSqFt.toLocaleString()} sq ft
+                    {result.aduSize.primaryDwellingSizeSqFt != null &&
+                      ` · Primary dwelling ${result.aduSize.primaryDwellingSizeSqFt.toLocaleString()} sq ft`}
+                  </span>
+                </div>
+                {result.aduSize.sizeNote ? (
+                  <p className="mt-3 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 font-dm-sans text-xs text-amber-100/95">
+                    {result.aduSize.sizeNote}
+                  </p>
+                ) : null}
+              </div>
+            )}
+
+            {result.flagCount > 0 && (
+              <div className="flex w-full max-w-4xl items-start gap-3 rounded-lg border border-orange-500/45 bg-orange-500/10 px-4 py-3">
+                <CriterionWarnIcon />
+                <p className="font-dm-sans text-sm leading-snug text-orange-100/95">
+                  Additional verification required for flagged requirements
+                </p>
+              </div>
+            )}
+
+            <div className="w-full max-w-4xl pb-2">
+              <RentAnalysisCard zipCode={zipCode || "96706"} rentals={rentals} maxAduSqFt={maxAduSqFt} />
+            </div>
           </div>
-          <button
-            onClick={() => router.push("/steps/step-3")}
-            className="
-            w-full py-4 rounded-full
-            bg-teal-400 hover:bg-teal-300
-            text-slate-900 font-semibold text-sm tracking-wide
-            flex items-center justify-center gap-2
-            transition-all duration-200 active:scale-[0.98]
-            shadow-lg shadow-teal-400/20
-          ">
-            Continue My Build Path
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="w-4 h-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2.5}
+        </div>
+
+        <div className="shrink-0 border-t border-white/10 bg-[#162534]/95 px-4 pt-3 backdrop-blur-md pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-3">
+            <button
+              type="button"
+              onClick={() => router.push("/steps/step-3")}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-teal-400 py-4 text-sm font-semibold tracking-wide text-slate-900 shadow-lg shadow-teal-400/20 transition-all duration-200 hover:bg-teal-300 active:scale-[0.98]"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </button>
-
-          <StepFooter currentStep={2} />
-
+              Continue My Build Path
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2.5}
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </button>
+            <StepFooter currentStep={2} totalSteps={7} />
+          </div>
         </div>
       </div>
     </div>

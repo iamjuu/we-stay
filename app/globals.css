@@ -318,6 +318,36 @@
     background: rgba(45, 212, 191, 0.4);
   }
 
+  /* Thin scrollbar — e.g. address autocomplete (hover to reveal thumb) */
+  .scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .scrollbar:hover {
+    scrollbar-color: #e4e4e4 transparent;
+  }
+
+  .scrollbar::-webkit-scrollbar {
+    @apply size-1.5;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-transparent;
+  }
+
+  .scrollbar:hover::-webkit-scrollbar-thumb {
+    @apply bg-[#E4E4E4];
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-[#C4C4C4];
+  }
+
   .animate-fadeIn {
     animation: scorecard-fade-in 0.35s ease forwards;
   }

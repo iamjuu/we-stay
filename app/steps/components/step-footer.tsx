@@ -46,13 +46,26 @@ function StepGaugeIcon({ size }: { size: number }) {
   );
 }
 
-const stepIconRenderers: ((size: number) => ReactNode)[] = [
+/** Maps wizard step → which of the three footer icons is active (icons stay fixed at 3). */
+function segmentIndex(currentStep: number, totalSteps: number): 1 | 2 | 3 {
+  const safeTotal = Math.max(1, totalSteps);
+  const clamped = Math.min(Math.max(1, currentStep), safeTotal);
+  const idx = Math.ceil((clamped * 3) / safeTotal);
+  return Math.min(3, Math.max(1, idx)) as 1 | 2 | 3;
+}
+
+/** Always three visuals: gauge, then two target icons — independent of totalSteps. */
+const VISUAL_ICON_RENDERERS: ((size: number) => ReactNode)[] = [
+  (size) => <StepGaugeIcon size={size} />,
   (size) => <Step1Icon size={size} />,
-  (size) => <StepGaugeIcon size={size} />,
-  (size) => <StepGaugeIcon size={size} />,
+  (size) => <Step1Icon size={size} />,
 ];
 
-export function StepFooter({ currentStep, totalSteps = 3 }: StepFooterProps) {
+const VISUAL_STEPS = VISUAL_ICON_RENDERERS.length;
+
+export function StepFooter({ currentStep, totalSteps = 7 }: StepFooterProps) {
+  const activeSegment = segmentIndex(currentStep, totalSteps);
+
   return (
     <div className="w-full flex flex-col items-center gap-3 pt-2 pb-6">
       {/* Step label */}
@@ -60,12 +73,12 @@ export function StepFooter({ currentStep, totalSteps = 3 }: StepFooterProps) {
         Step {currentStep} of {totalSteps}
       </p>
 
-      {/* Icon row */}
+      {/* Icon row — fixed three milestones */}
       <div className="flex items-center w-full ">
-        {Array.from({ length: totalSteps }).map((_, i) => {
+        {Array.from({ length: VISUAL_STEPS }).map((_, i) => {
           const stepNum = i + 1;
-          const isActive = stepNum === currentStep;
-          const isDone = stepNum < currentStep;
+          const isActive = stepNum === activeSegment;
+          const isDone = stepNum < activeSegment;
           const iconSize = isActive ? STEP_ICON_ACTIVE : STEP_ICON_INACTIVE;
           const circleSize = isActive ? STEP_ICON_ACTIVE : STEP_ICON_INACTIVE;
 
@@ -85,12 +98,12 @@ export function StepFooter({ currentStep, totalSteps = 3 }: StepFooterProps) {
                         : "text-white/60"
                   }`}
                 >
-                  {stepIconRenderers[i]?.(iconSize)}
+                  {VISUAL_ICON_RENDERERS[i]?.(iconSize)}
                 </span>
               </div>
 
               {/* Connector line — not after last */}
-              {stepNum < totalSteps && (
+              {stepNum < VISUAL_STEPS && (
                 <div className="flex-1 h-px mx-1.5 bg-white/10">
                   <div
                     className="h-full bg-teal-400/50 transition-all duration-500"
