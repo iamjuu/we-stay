@@ -214,12 +214,46 @@
 
 .step-2-btn {
   font-family: "DM Sans", sans-serif;
-  font-size: 14px;
-  line-height: 16.8px;
-  font-weight: 600; /* Semi Bold */
+  /* Scales from 12px to 14px */
+  font-size: clamp(12px, 0.8vw, 14px);
+  /* Maintains the 1.2x ratio relative to font size */
+  line-height: 1.2; 
+  font-weight: 600;
   font-style: normal;
-  text-transform: uppercase; /* Optional: buttons often look better in caps at 14px */
+  text-transform: uppercase;
   letter-spacing: 0.01em;
+}
+
+.step-3-heading {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 16px to 20px */
+  font-size: clamp(16px, 1.2vw, 20px);
+  /* Maintains the 1:1 ratio */
+  line-height: 1; 
+  font-weight: 500;
+  font-style: normal;
+}
+
+.step-3-subheading-light {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 12px to 14px */
+  font-size: clamp(12px, 0.8vw, 14px);
+  line-height: 100%;
+  font-weight: 300;
+  font-style: normal;
+  color: #6B7280;
+}
+
+
+.step-four-content {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 16px on mobile to 18px on 2xl screens */
+  font-size: clamp(14px, 1.4vw, 18px);
+  /* 28.8px line height expressed as a unitless 1.6 ratio for better scaling */
+  line-height: 1.6;
+  font-weight: 400; /* Regular */
+  font-style: normal;
+  color: #FFFFFF; /* Assuming white based on your previous dark UI */
 }
 /* .caroseal-section-heading */
   /* ***********************style for components ******************************* */
