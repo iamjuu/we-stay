@@ -1,90 +1,322 @@
 'use client';
 
-import React from 'react';
+import Image from 'next/image';
+import type { CSSProperties } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
+import { Property } from '@/content';
+
+const SearchIcon = () => (
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
+  </svg>
+);
+
+const RefreshIcon = () => (
+  <svg
+    width="14"
+    height="14"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden
+  >
+    <path d="M21 12a9 9 0 0 1-15.5 6.4L3 16" />
+    <path d="M3 12a9 9 0 0 1 15.5-6.4L21 8" />
+    <path d="M21 3v5h-5" />
+    <path d="M3 21v-5h5" />
+  </svg>
+);
+
+const CornerButton = ({
+  children,
+  label,
+}: {
+  children: React.ReactNode;
+  label: string;
+}) => (
+  <button
+    type="button"
+    aria-label={label}
+    className="absolute top-4 right-4 z-20 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/4 text-white/65 transition-colors hover:border-white/35 hover:bg-white/10 hover:text-white"
+  >
+    {children}
+  </button>
+);
+
+/** Set false to hide the red overlap guide before shipping. */
+const SHOW_BUILDER_DEBUG_OVERLAP = true;
+
+/**
+ * Optional inline position for the red guide (same keys as CSS inset).
+ * Leave `{}` and use only Tailwind on the red `<div>`.
+ * Do not set `top` here *and* `top-*` in className — inline wins.
+ */
+const DEBUG_IMAGE_OVERLAP_GUIDE: CSSProperties = {};
+
+/** Visual constants for the desktop puzzle-piece. */
+const OUTER_R = 24; // image's outer corner radius (matches rounded-3xl)
+const NOTCH_R = 24; // rounded corners of the notch
+const NOTCH_PAD = 6; // breathing room between Why Join and the notch wall
+
+/**
+ * Builds an SVG path for the image's outline. The notch is a rounded
+ * rectangular bite cut OUT of the image's lower-left, sized to wrap around
+ * Why Join's top-right corner.
+ *
+ *  ┌────────────────────────┐
+ *  │                        │
+ *  │                        │       ← image
+ *  │      ┌─ notchTop       │
+ *  │     /                  │
+ *  │    │ Why Join sits     │       ← bite
+ *  │    │ inside this bite  │
+ *  │    │                   │
+ *  └────┘───────────────────┘
+ *      notchInX
+ *
+ * If Why Join doesn't actually overlap the image (e.g. tiny screen, weird
+ * layout), we fall back to a plain rounded rectangle.
+ */
+function buildPath(
+  w: number,
+  h: number,
+  notch: { top: number; right: number } | null,
+): string {
+  if (!notch) {
+    return [
+      `M ${OUTER_R} 0`,
+      `L ${w - OUTER_R} 0`,
+      `Q ${w} 0 ${w} ${OUTER_R}`,
+      `L ${w} ${h - OUTER_R}`,
+      `Q ${w} ${h} ${w - OUTER_R} ${h}`,
+      `L ${OUTER_R} ${h}`,
+      `Q 0 ${h} 0 ${h - OUTER_R}`,
+      `L 0 ${OUTER_R}`,
+      `Q 0 0 ${OUTER_R} 0`,
+      `Z`,
+    ].join(' ');
+  }
+
+  const { top, right } = notch;
+  const r = OUTER_R;
+  const r2 = NOTCH_R;
+
+  return [
+    `M ${r} 0`,
+    `L ${w - r} 0`,
+    `Q ${w} 0 ${w} ${r}`,
+    `L ${w} ${h - r}`,
+    `Q ${w} ${h} ${w - r} ${h}`,
+    `L ${right + r2} ${h}`,
+    `Q ${right} ${h} ${right} ${h - r2}`,
+    `L ${right} ${top + r2}`,
+    `Q ${right} ${top} ${right - r2} ${top}`,
+    `L ${r2} ${top}`,
+    `Q 0 ${top} 0 ${top - r2}`,
+    `L 0 ${r}`,
+    `Q 0 0 ${r} 0`,
+    `Z`,
+  ].join(' ');
+}
 
 const BuilderNetwork = () => {
-  return (
-    <section className="w-full px-4 bg-[#0C1B2A] sm:px-6 lg:px-8 2xl:px-[100px]">
-        <div className="mx-auto max-w-7xl 2xl:max-w-none">
+  const imageWrapRef = useRef<HTMLDivElement>(null);
+  const whyJoinRef = useRef<HTMLDivElement>(null);
+  const [clipPath, setClipPath] = useState<string | undefined>(undefined);
 
-        {/* Title */}
-        <h2 className="text-center text-white text-xl sm:text-2xl lg:text-3xl font-semibold mb-6 sm:mb-8 tracking-tight">
-          Join the WeStay{' '}
-          <span className="text-[#93928E]">Builder Network</span>
+  const measure = useCallback(() => {
+    const imgEl = imageWrapRef.current;
+    const whyEl = whyJoinRef.current;
+    if (!imgEl || !whyEl || typeof window === 'undefined') return;
+
+    const isDesktop = window.matchMedia('(min-width: 640px)').matches;
+    if (!isDesktop) {
+      setClipPath(undefined);
+      return;
+    }
+
+    const img = imgEl.getBoundingClientRect();
+    const why = whyEl.getBoundingClientRect();
+    const w = img.width;
+    const h = img.height;
+    if (w <= 0 || h <= 0) return;
+
+    // Why Join's edges in image-local coordinates.
+    const rawTop = why.top - img.top - NOTCH_PAD;
+    const rawRight = why.right - img.left + NOTCH_PAD;
+
+    // No overlap → plain rounded rectangle.
+    const overlaps =
+      rawRight > OUTER_R + NOTCH_R &&
+      rawTop < h - NOTCH_R &&
+      rawTop > -NOTCH_R;
+
+    if (!overlaps) {
+      setClipPath(`path('${buildPath(w, h, null)}')`);
+      return;
+    }
+
+    // Clamp so the path always renders cleanly.
+    const top = Math.max(OUTER_R + NOTCH_R, Math.min(h - NOTCH_R, rawTop));
+    const right = Math.max(NOTCH_R + 1, Math.min(w - OUTER_R - NOTCH_R, rawRight));
+
+    setClipPath(`path('${buildPath(w, h, { top, right })}')`);
+  }, []);
+
+  useLayoutEffect(() => {
+    measure();
+  }, [measure]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const ro = new ResizeObserver(() => measure());
+    if (imageWrapRef.current) ro.observe(imageWrapRef.current);
+    if (whyJoinRef.current) ro.observe(whyJoinRef.current);
+
+    const onResize = () => measure();
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', onResize);
+    };
+  }, [measure]);
+
+  return (
+    <section className="w-full bg-[#0C1B2A] px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24 2xl:px-[100px]">
+      <div className="mx-auto max-w-[1200px]">
+        <h2
+          style={{ fontFamily: '"DM Sans", sans-serif' }}
+          className="mb-10 text-center text-2xl font-semibold tracking-tight text-white sm:mb-12 sm:text-3xl lg:text-[34px]"
+        >
+          Join the WeStay <span className="text-[#93928E]">Builder Network</span>
         </h2>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-
+        <div
+          className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4"
+          style={{ fontFamily: '"DM Sans", sans-serif' }}
+        >
           {/* LEFT COLUMN */}
-          <div className="flex flex-col gap-3">
-
-            {/* Who We Want */}
-            <div className="bg-[#162032] border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col gap-2 relative">
-              <button className="absolute top-4 right-4 w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white/50 hover:text-white hover:border-white/50 transition-all">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.35-4.35" />
-                </svg>
-              </button>
-              <h3 className="text-white font-bold text-base sm:text-lg">Who We Want</h3>
-              <p className="text-white/50 text-xs sm:text-sm text-center leading-relaxed">
-                Licensed builders | Reliable teams<br />
+          <div className="flex flex-col gap-3 sm:gap-4">
+            <div className="relative flex flex-col items-center gap-2 rounded-3xl border border-white/10 bg-[#162032] px-6 py-7 text-center sm:px-8 sm:py-9">
+              <CornerButton label="Search">
+                <SearchIcon />
+              </CornerButton>
+              <h3 className="text-lg font-bold text-white sm:text-xl">Who We Want</h3>
+              <p className="text-sm leading-relaxed text-white/55">
+                Licensed builders | Reliable teams
+                <br />
                 Quality-first operators
               </p>
             </div>
 
-            {/* Why Join */}
-            <div className="bg-[#162032] border border-white/10 rounded-2xl p-5 sm:p-6 flex flex-col gap-2 relative flex-1">
-              <button className="absolute top-4 right-4 w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white/50 hover:text-white hover:border-white/50 transition-all">
-                <span className="text-white/50 font-bold text-sm">?</span>
-              </button>
-              <h3 className="text-white font-bold text-base sm:text-lg">Why Join</h3>
-              <p className="text-white/50 text-xs sm:text-sm text-center leading-relaxed">
-                Qualified leads | Better projects<br />
-                Less sales friction | Operational support<br />
+            {/* Why Join — pokes into the image bite on desktop */}
+            <div
+              ref={whyJoinRef}
+              className="relative flex flex-1 flex-col overflow-visible rounded-3xl border border-white/10 bg-[#162032] px-6 py-8 text-center sm:z-10 sm:-mr-12 sm:px-8 sm:py-10"
+            >
+              <CornerButton label="Help">
+                <span className="text-sm font-semibold leading-none">?</span>
+              </CornerButton>
+              <h3 className="text-lg font-bold text-white sm:text-xl">Why Join</h3>
+              <p className="text-sm leading-relaxed text-white/55">
+                Qualified leads | Better projects
+                <br />
+                Less sales friction | Operational support
+                <br />
                 Growth pipeline
               </p>
-              <button className="mt-3 self-center bg-[#E8603C] hover:bg-[#d4522f] active:scale-95 text-white text-xs font-semibold px-6 py-2 rounded-full transition-all duration-200">
+              <button
+                type="button"
+                className="mt-4 inline-flex items-center justify-center rounded-full bg-[#E8603C] px-7 py-2.5 text-sm font-semibold text-white shadow-[0_8px_24px_-6px_rgba(232,96,60,0.55)] transition-all duration-200 hover:bg-[#d4522f] active:scale-[0.97]"
+              >
                 Apply Now
               </button>
             </div>
-
           </div>
 
           {/* RIGHT COLUMN */}
-          <div className="flex flex-col gap-3">
+          <div className="relative z-0 flex flex-col gap-3 sm:gap-4">
+            {/*
+              Outer = overflow visible + no clip-path so the red guide can use
+              negative top / extend past edges without being clipped.
 
-            {/* Image */}
-            <div className="rounded-2xl overflow-hidden w-full h-[200px] sm:h-[240px] md:h-[260px] lg:h-[280px]">
-              <img
-                src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&q=80"
-                alt="Modern house"
-                className="w-full h-full object-cover"
-              />
+              Inner = clip-path + overflow hidden + photo only. Measuring ref
+              stays on the inner box (same size as outer via inset-0).
+            */}
+            <div className="relative z-0 aspect-16/10 w-full overflow-visible">
+              <div
+                ref={imageWrapRef}
+                className="absolute inset-0 z-0 overflow-hidden rounded-3xl"
+                style={
+                  clipPath
+                    ? { clipPath, WebkitClipPath: clipPath }
+                    : undefined
+                }
+              >
+                <Image
+                  src={Property}
+                  alt="Modern home at sunset"
+                  fill
+                  priority={false}
+                  sizes="(min-width: 1024px) 600px, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+              {SHOW_BUILDER_DEBUG_OVERLAP && (
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute left-0 top-[45%] right-[88%] bottom-0 z-5 hidden border-white/80 bg-[#162032] outline-1 outline-black/30 sm:block rounded-tr-[10px] rounded-br-[-20px]"
+                  style={
+                    Object.keys(DEBUG_IMAGE_OVERLAP_GUIDE).length > 0
+                      ? DEBUG_IMAGE_OVERLAP_GUIDE
+                      : undefined
+                  }
+                />
+              )}
             </div>
 
-            {/* Process */}
-            <div className="bg-[#162032] border border-white/10 rounded-2xl p-4 sm:p-5">
-              <div className="flex items-center justify-between mb-3 sm:mb-4">
-                <h4 className="text-white font-bold text-base sm:text-lg">Process</h4>
-                <button className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white/50 hover:text-white transition-all">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
-                  </svg>
+            <div className="relative flex flex-1 flex-col justify-center rounded-3xl border border-white/10 bg-[#162032] px-5 py-6 sm:px-7 sm:py-7">
+              <div className="mb-4 flex items-center justify-between">
+                <h4 className="text-lg font-bold text-white sm:text-xl">Process</h4>
+                <button
+                  type="button"
+                  aria-label="Refresh"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/4 text-white/65 transition-colors hover:border-white/35 hover:bg-white/10 hover:text-white"
+                >
+                  <RefreshIcon />
                 </button>
               </div>
-              <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-white/60">
-                <span className="text-white/90 whitespace-nowrap">Apply</span>
-                <div className="flex-1 border-t border-white/30" />
+              <div className="flex items-center gap-2 text-xs text-white/65 sm:text-sm">
+                <span className="whitespace-nowrap text-white">Apply</span>
+                <span className="h-px flex-1 bg-white/25" />
                 <span className="whitespace-nowrap">Review</span>
-                <div className="flex-1 border-t border-white/30" />
+                <span className="h-px flex-1 bg-white/25" />
                 <span className="whitespace-nowrap">Approved Network</span>
               </div>
             </div>
-
           </div>
-
         </div>
       </div>
     </section>
