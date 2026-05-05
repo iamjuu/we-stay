@@ -149,7 +149,7 @@ const BuilderNetwork = () => {
     const whyEl = whyJoinRef.current;
     if (!imgEl || !whyEl || typeof window === 'undefined') return;
 
-    const isDesktop = window.matchMedia('(min-width: 640px)').matches;
+    const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
     if (!isDesktop) {
       setClipPath(undefined);
       return;
@@ -214,11 +214,11 @@ const BuilderNetwork = () => {
         </h2>
 
         <div
-          className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4"
+          className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4"
           style={{ fontFamily: '"DM Sans", sans-serif' }}
         >
           {/* LEFT COLUMN */}
-          <div className="flex flex-col gap-3 sm:gap-4">
+          <div className="flex flex-col gap-3 lg:gap-4">
             <div className="relative flex flex-col items-center gap-2 rounded-3xl border border-white/10 bg-[#162032] px-6 py-7 text-center sm:px-8 sm:py-9">
               <CornerButton label="Search">
                 <SearchIcon />
@@ -231,10 +231,10 @@ const BuilderNetwork = () => {
               </p>
             </div>
 
-            {/* Why Join — pokes into the image bite on desktop */}
+            {/* Why Join — sits in the left column, pokes right into the image at lg+. */}
             <div
               ref={whyJoinRef}
-              className="relative flex flex-1 flex-col overflow-visible rounded-3xl border border-white/10 bg-[#162032] px-6 py-8 text-center sm:z-10 sm:-mr-12 sm:px-8 sm:py-10"
+              className="relative flex flex-1 flex-col overflow-visible rounded-3xl border border-white/10 bg-[#162032] px-6 py-8 text-center sm:px-8 sm:py-10 lg:z-10 lg:-mr-[160px]"
             >
               <CornerButton label="Help">
                 <span className="text-sm font-semibold leading-none">?</span>
@@ -257,7 +257,7 @@ const BuilderNetwork = () => {
           </div>
 
           {/* RIGHT COLUMN */}
-          <div className="relative z-0 flex flex-col gap-3 sm:gap-4">
+          <div className="relative z-0 flex flex-col gap-3 lg:gap-4">
             {/*
               Outer = overflow visible + no clip-path so the red guide can use
               negative top / extend past edges without being clipped.
@@ -287,7 +287,7 @@ const BuilderNetwork = () => {
               {SHOW_BUILDER_DEBUG_OVERLAP && (
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute left-0 top-[45%] right-[88%] bottom-0 z-5 hidden border-white/80 bg-[#162032] outline-1 outline-black/30 sm:block rounded-tr-[10px] rounded-br-[-20px]"
+                  className="pointer-events-none absolute left-0 right-[88%] bottom-0 z-5 hidden border-white/80 bg-[#162032] outline-1 outline-black/30 lg:top-[53%] lg:block min-[1300px]:top-[45%] rounded-tr-[10px]"
                   style={
                     Object.keys(DEBUG_IMAGE_OVERLAP_GUIDE).length > 0
                       ? DEBUG_IMAGE_OVERLAP_GUIDE
@@ -297,7 +297,7 @@ const BuilderNetwork = () => {
               )}
             </div>
 
-            <div className="relative flex flex-1 flex-col justify-center rounded-3xl border border-white/10 bg-[#162032] px-5 py-6 sm:px-7 sm:py-7">
+            <div className="relative flex flex-1 flex-col justify-center rounded-3xl border border-white/10 bg-[#162032] px-5 py-6 sm:px-7 sm:py-7 lg:ml-[160px]">
               <div className="mb-4 flex items-center justify-between">
                 <h4 className="text-lg font-bold text-white sm:text-xl">Process</h4>
                 <button
