@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+@keyframes scorecard-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @theme {
   --breakpoint-desktop: 75rem;
 }
@@ -21,6 +32,15 @@
 @keyframes cta-border-spin {
   to {
     --cta-angle: 360deg;
+  }
+}
+
+@keyframes panoramaFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
@@ -56,57 +76,279 @@
     pointer-events: none;
   }
 
+  /* HERO */
   .hero-heading {
     font-size: clamp(2.5rem, 4.861cqi, 4.8125rem);
     line-height: 1.1;
   }
 
+  /* SECTION */
   .section-heading {
-    font-size: 52px;
-    line-height: 0px;
+    font-size: clamp(52px, 2.7vw, 52px);
+    line-height: clamp(65px, 3.4vw, 65px);
   }
 
   .section-paragraph {
-    font-size: 18px;
-    line-height: 1.4;
+    font-size: clamp(18px, 1.2vw, 25px);
+    line-height: clamp(25px, 1.6vw, 32px);
+  }
+  .semi-heading {
+    font-family: "DM Sans", sans-serif;
+    font-weight: 600;
+    font-size: clamp(32px, 2.7vw, 52px);
+    line-height: 100%;
   }
 
+
+  /* SECOND SECTION */
+  .second-section-heading {
+    font-family: "DM Sans", sans-serif;
+    font-size: clamp(32px, 1.8vw, 42px);
+    line-height: clamp(38px, 2.2vw, 48px);
+    font-weight: 500;
+  }
+
+  .second-section-list-data {
+    font-family: "DM Sans", sans-serif;
+    font-size: clamp(18px, 1.2vw, 25px);
+    line-height: clamp(26px, 1.6vw, 32px);
+    font-weight: 400;
+    color: #93928e;
+  }
+
+  .list-data-heading {
+    font-family: "DM Sans", sans-serif;
+    font-size: clamp(18px, 1.2vw, 25px);
+    line-height: clamp(26px, 1.6vw, 32px);
+    font-weight: 400;
+    color: #93928e;
+  }
+
+
+/* THREE SECTION  */
+.medium-heading {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 500;
+  font-size: clamp(32px, 2.7vw, 52px);
+  line-height: clamp(34px, 2.3vw, 44px);
+}
+
+
+/* FOUR SECTION  */
+
+
+.section-three-card-heading {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  font-size: clamp(22px, 1.8vw, 36px);
+  line-height: clamp(26px, 1.6vw, 32.95px);
+}
+.section-three-card-paragraph {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 400;
+  font-size: clamp(18px, 1.4vw, 28px);
+  line-height: clamp(26px, 2vw, 38.94px);
+}
+
+.carousel-heading {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 38px on mobile to 52px on desktop */
+  font-size: clamp(38px, 3vw, 52px); 
+  /* Scales from 48px on mobile to 65px on desktop */
+  line-height: clamp(48px, 4vw, 65px); 
+  font-weight: 500;
+  font-style: normal; /* "Medium" weight usually implies normal style */
+}
+.roof-section-heading {
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(36px, 3.2vw, 52px);
+  line-height: clamp(45px, 4vw, 65px);
+  font-weight: 500;
+  font-style: normal;
+  color: #111827;
+}
+
+
+.carousel-subheading {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: clamp(17px, 2.361vw, 34px);
+  line-height: clamp(24px, 3.125vw, 45px);
+  color: #0c1b2a;
+}
+
+/* Footer sits on dark bg (#0f1e2e) — light text only; dark #0C1B2A is invisible there */
+.footer-section-one {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 20px on mobile to 27px on desktop */
+  font-size: clamp(20px, 2vw, 27px);
+  line-height: 1.6;
+  font-weight: 400;
+  font-style: normal;
+  color: #e2e8f0;
+}
+.quick-link {
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(18px, 1.8vw, 24px);
+  line-height: 1.5;
+  font-weight: 400;
+  font-style: normal;
+  color: #b0bec5;
+}
+
+/* **************steps************** */
+.steps-heading {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 28px on mobile to 36px on desktop */
+  font-size: clamp(28px, 3.5vw, 36px);
+  /* Precise line height from your spec */
+  line-height: 43.96px;
+  /* SemiBold weight */
+  font-weight: 600;
+  font-style: normal;
+ 
+  letter-spacing: -0.01em; /* Optional: adds a modern, tight feel for bold headings */
+}
+
+.steps-subheading {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 18px on mobile to 22px on desktop */
+  font-size: clamp(18px, 2vw, 22px);
+  /* Precise line height from your spec */
+  line-height: 28px;
+  /* Regular weight */
+  font-weight: 400;
+  font-style: normal;
+
+}
+
+.step-2-btn {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 12px to 14px */
+  font-size: clamp(12px, 0.8vw, 14px);
+  /* Maintains the 1.2x ratio relative to font size */
+  line-height: 1.2; 
+  font-weight: 600;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+.step-3-heading {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 16px to 20px */
+  font-size: clamp(16px, 1.2vw, 20px);
+  /* Maintains the 1:1 ratio */
+  line-height: 1; 
+  font-weight: 500;
+  font-style: normal;
+}
+
+.step-3-subheading-light {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 12px to 14px */
+  font-size: clamp(12px, 0.8vw, 14px);
+  line-height: 100%;
+  font-weight: 300;
+  font-style: normal;
+  color: #6B7280;
+}
+
+
+.step-four-content {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 16px on mobile to 18px on 2xl screens */
+  font-size: clamp(14px, 1.4vw, 18px);
+  /* 28.8px line height expressed as a unitless 1.6 ratio for better scaling */
+  line-height: 1.6;
+  font-weight: 400; /* Regular */
+  font-style: normal;
+  color: #FFFFFF; /* Assuming white based on your previous dark UI */
+}
+/* .caroseal-section-heading */
+  /* ***********************style for components ******************************* */
+  /* CARDS */
   .card-title {
-    font-size: 18px;
-    line-height: 1.25;
+    font-size: clamp(18px, 1.8vw, 36px);
+    line-height: clamp(22px, 2vw, 33px);
   }
 
   .card-paragraph {
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: clamp(14px, 1.4vw, 28px);
+    line-height: clamp(20px, 2vw, 39px);
+    letter-spacing: -0.04em;
   }
 
-  @media (min-width: 75rem) {
-    .section-heading {
-      font-size: 52px;
-      line-height: 65px;
-    }
-      .section-paragraph {
-      font-size: 25px;
-      line-height: 32px;
-    }
+  /* FOOTER */
+  .section-footer {
+    font-size: clamp(32px, 2.7vw, 52px);
+    font-weight: 600;
+  }
 
-    .section-footer {
-      font-size: 52px;
-      font-weight: 600;
-    }
-/* *********************************** */
-  
+  /* Custom Scrollbar Styles */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
 
-    .card-title {
-      font-size: 36px;
-      line-height: 33px;
-    }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+  }
 
-    .card-paragraph {
-      font-size: 28px;
-      line-height: 39px;
-      letter-spacing: -0.04em;
-    }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(45, 212, 191, 0.2);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+  }
+
+  .scrollbar-thin:hover::-webkit-scrollbar-thumb {
+    background: rgba(45, 212, 191, 0.4);
+  }
+
+  .scrollbar-track-transparent::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thumb-teal-400\/20::-webkit-scrollbar-thumb {
+    background: rgba(45, 212, 191, 0.2);
+  }
+
+  .scrollbar-thumb-teal-400\/40::-webkit-scrollbar-thumb {
+    background: rgba(45, 212, 191, 0.4);
+  }
+
+  /* Thin scrollbar — e.g. address autocomplete (hover to reveal thumb) */
+  .scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .scrollbar:hover {
+    scrollbar-color: #e4e4e4 transparent;
+  }
+
+  .scrollbar::-webkit-scrollbar {
+    @apply size-1.5;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-transparent;
+  }
+
+  .scrollbar:hover::-webkit-scrollbar-thumb {
+    @apply bg-[#E4E4E4];
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-[#C4C4C4];
+  }
+
+  .animate-fadeIn {
+    animation: scorecard-fade-in 0.35s ease forwards;
   }
 }

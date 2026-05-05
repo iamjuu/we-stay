@@ -4,17 +4,32 @@ const steps = [
   {
     title: "Click",
     desc: "Check your property and understand your options.",
-    icon: <RotateCcw size={18} className="text-white" />,
+    icon: (
+      <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13.9661 0.0282499C14.4697 -0.0347901 15.7797 0.0206726 16.2852 0.0684362C20.0978 0.444217 23.6021 2.32796 26.0189 5.30067C28.4853 8.2627 29.6707 12.0848 29.3136 15.9226C28.4031 15.7259 27.395 15.356 26.4538 15.1404C26.4756 14.5291 26.457 13.917 26.3994 13.3081C26.0628 10.2147 24.5078 7.38284 22.0785 5.43844C19.6819 3.50314 16.6056 2.61619 13.5462 2.97819C10.4101 3.32874 7.54106 4.90865 5.56812 7.37144C3.42593 10.0571 2.66272 13.1186 3.05362 16.5058C3.41033 18.9577 4.55517 21.227 6.31529 22.971C8.73608 25.3766 11.7269 26.4257 15.0861 26.4173C15.3336 27.3588 15.6338 28.3468 15.9063 29.2835C15.8527 29.2895 15.8072 29.2944 15.7535 29.2976C11.8479 29.5604 7.99701 28.2674 5.04191 25.7002C2.11177 23.1613 0.309203 19.5631 0.0301989 15.6965C-0.226233 11.9543 1.16548 7.98479 3.63202 5.17237C6.34915 2.07423 9.86181 0.308463 13.9661 0.0282499Z" fill="white" />
+        <path d="M14.793 14.8179C17.6552 15.614 20.5105 16.433 23.359 17.2759C25.2643 17.8273 27.4933 18.4085 29.3522 19.0304C27.48 19.6181 25.5585 20.2638 23.681 20.8104C25.7754 22.9204 27.8818 25.0188 29.9999 27.1047L28.64 28.4743L27.1623 29.9717L20.947 23.7262C20.3271 25.5408 19.6963 27.3514 19.0546 29.1579C18.5742 27.6996 18.113 25.9809 17.6664 24.4932L14.793 14.8179Z" fill="white" />
+        <path d="M14.1212 5.87174C14.1787 5.86315 14.1337 5.86871 14.2011 5.86408C19.1802 5.52276 23.2524 9.27678 23.4547 14.2373C22.4716 13.9894 21.4422 13.6621 20.4462 13.3974C20.4156 13.196 20.3866 13.0527 20.3305 12.8567C19.9109 11.4038 18.9323 10.1766 17.609 9.44397C16.2418 8.69673 14.6332 8.52542 13.1394 8.96807C11.5915 9.4131 10.2897 10.466 9.53087 11.8866C8.76524 13.2942 8.59845 14.9508 9.06811 16.4828C9.72543 18.5832 11.2951 19.8162 13.3469 20.4204C13.5505 21.3124 13.9327 22.5047 14.191 23.41C12.296 23.3221 10.4811 22.6196 9.02115 21.4079C7.27618 19.9492 6.17077 17.8662 5.94098 15.6033C5.71848 13.2367 6.45138 10.8793 7.9766 9.05606C9.57319 7.13411 11.6567 6.10878 14.1212 5.87174Z" fill="white" />
+      </svg>
+    ),
   },
   {
     title: "Build",
     desc: "Choose the right path, financing, and trusted team.",
-    icon: <Building2 size={18} className="text-white" />,
+    icon: (
+      <svg width="36" height="30" viewBox="0 0 36 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fillRule="evenodd" clipRule="evenodd" d="M17.9651 0C18.2919 0.288012 18.7778 0.654107 19.2121 0.981293C19.3887 1.11437 19.5568 1.24101 19.7021 1.35335L23.0914 3.97308L30.589 9.77305C31.0696 10.1428 31.5558 10.5143 32.0439 10.8874L32.0444 10.8877L32.0446 10.8878C33.3736 11.9034 34.7172 12.93 36 13.9622C35.5972 14.3973 34.9892 15.1958 34.4968 15.8425L34.4966 15.8428C34.3346 16.0556 34.1851 16.2519 34.0596 16.4134C32.9573 15.6148 31.8033 14.7169 30.6826 13.8449L30.6826 13.8449C30.2559 13.5129 29.8341 13.1847 29.4218 12.8672L29.4193 19.8091C30.0813 19.8242 30.7821 19.8197 31.4761 19.8153H31.4763H31.4765C31.8927 19.8127 32.3065 19.8101 32.7079 19.8117L32.7105 22.921L29.4227 22.9206C29.4206 23.7356 29.4242 24.5565 29.4277 25.3786C29.4337 26.7742 29.4398 28.1733 29.4184 29.5538L26.2669 29.5577L26.2657 22.9193L19.5107 22.9189L19.5082 29.5572L18.3487 29.5534L16.3712 29.5538L16.3721 22.9206L9.6651 22.9176L9.66291 29.5581L6.52225 29.5551L6.52134 22.9189L3.20784 22.9206L3.21033 19.8147L6.52405 19.8048L6.5235 12.9032C5.51019 13.6477 4.4725 14.4627 3.44847 15.267C2.94714 15.6608 2.4491 16.0519 1.95878 16.431L0 13.9651C1.21119 12.9851 2.48471 12.0119 3.75048 11.0447C4.44592 10.5132 5.13902 9.98358 5.81816 9.45558L17.9651 0ZM9.6651 10.427V19.8147H16.3721V5.29975L9.6651 10.427ZM19.5007 19.8147V5.29975L26.2657 10.427V19.8147H19.5007Z" fill="white" />
+      </svg>
+    ),
   },
   {
     title: "Stay",
     desc: "Create long-term income or more space for life.",
-    icon: <Home size={18} className="text-white" />,
+    icon: (
+      <svg width="36" height="30" viewBox="0 0 36 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path fillRule="evenodd" clipRule="evenodd" d="M14.1639 0.746419C13.838 0.480794 13.4808 0.18966 13.2124 0C11.9522 1.0315 10.65 2.05671 9.35544 3.07587C8.81879 3.49836 8.28347 3.9198 7.753 4.34023L0 10.4601L0.000387076 29.7L11.3513 29.6944L11.3545 20.1088L13.2141 20.1062L15.0739 20.105L15.076 29.6979L26.4031 29.6944L26.4078 10.4483L17.3462 3.27788L14.5712 1.07576C14.4488 0.97861 14.3095 0.865059 14.1639 0.746419ZM3.02606 12.0096V26.6359H8.37969V17.0484H18.1072V26.6359H23.4258V12.0096L13.2141 3.92672L3.02606 12.0096Z" fill="white"/>
+      </svg>
+      
+    ),
   },
 ];
 
@@ -29,38 +44,42 @@ function StepCard({ title, desc, icon }: StepCardProps) {
       style={{
         background: "linear-gradient(90deg, #0C1B2A 80%, #A2B8CE 280%)",
       }}
-      className="rounded-2xl  border border-[#33506E] p-6 shadow-[5px_10px_20px_rgba(0,0,0,0.10)] backdrop-blur-xl"
+      className="rounded-2xl flex flex-col border border-[#33506E] p-6 shadow-[5px_10px_20px_rgba(0,0,0,0.10)] backdrop-blur-xl"
     >
-      <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-lg border border-white/20 bg-white/10">
-        {icon}
-      </div>
+      <div className="mb-6 flex   items-center justify-center size-[60px] rounded-lg border border-white/20 bg-white/10">
+        <p className="size-[36px] flex items-center justify-center">
+          {icon}
 
-      <h3
-        style={{ fontFamily: "DM Sans" }}
-        className="card-title font-[600] text-white"
-      >
-        {title}
-      </h3>
-      <p
-        style={{ fontFamily: "DM Sans" }}
-        className="card-paragraph font-[400] text-[#CECECE]"
-      >
-        {desc}
-      </p>
+        </p>
+      </div>
+      <div className="flex-col flex gap-[10px]">
+        <h3
+          style={{ fontFamily: "DM Sans" }}
+          className="section-three-card-heading font-[600] text-white"
+        >
+          {title}
+        </h3>
+        <p
+          style={{ fontFamily: "DM Sans" }}
+          className="section-three-card-paragraph font-[400] text-[#CECECE]"
+        >
+          {desc}
+        </p>
+      </div>
     </div>
   );
 }
 
 export default function WeStaySection() {
   return (
-    <section className="w-full bg-[#0C1B2A] py-[136px] w-full px-4 py-20 sm:px-6 lg:px-8">
-      <div className="mx-auto flex flex-col gap-[50px] max-w-7xl  px-20">
+    <section className="w-full bg-[#0C1B2A] px-4 py-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
+      <div className="mx-auto  flex flex-col gap-[50px] max-w-7xl 2xl:max-w-none0">
         <h2
           style={{ fontFamily: "DM Sans" }}
-          className="section-heading text-center font-[500] text-white"
+          className="medium-heading  text-center font-[500] text-white"
         >
           That&apos;s where <span className="text-white">WeStay</span>{" "}
-          <span className="text-white/50">comes in.</span>
+          <span className="medium-heading  !text-[#93928E]">comes in.</span>
         </h2>
 
         <div className=" grid grid-cols-1 gap-[20px] sm:grid-cols-3">
