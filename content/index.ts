@@ -46,7 +46,7 @@ import Home2 from "./images/3dhome/Studio coastal milky white.svg";
 import Home3 from "./images/3dhome/Studio brushed sanstorm.svg";
 import Home4 from "./images/3dhome/Studio soft sage.svg";
 import Home5 from "./images/3dhome/Studio storm wood drift.svg";
-import FooterLogo from "./images/footer-logo.svg"
+import FooterLogo from "./images/footer1.svg"
 
 
 import About1 from "./images/about/Hero Img (1).svg"

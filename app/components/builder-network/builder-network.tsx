@@ -252,7 +252,7 @@ const BuilderNetwork = () => {
      </div>
      <div className='flex flex-col gap-[30px] '>
       <h3 className="westay-section-heading text-white ">Why Join</h3>
-      <p className="westay-para leading-relaxed ">
+      <p className="westay-para  text-[#CECECE] leading-relaxed ">
         Qualified leads | Better projects
         <br />
         Less sales friction | Operational support

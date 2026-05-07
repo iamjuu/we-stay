@@ -14,9 +14,8 @@ export default function Footer() {
 
           {/* Brand Section */}
           <div className="brand max-w-sm">
-            <div className="brand-logo mb-6">
-              <Image src={FooterLogo} alt="WeStay" priority />
-            </div>
+            <div className="">
+            <Image src={FooterLogo} className="w-[200px] mb-[30px] h-auto" alt="WeStay" priority />            </div>
             <p className="footer-section-one text-[#b0bec5] leading-relaxed">
               WeStay helps homeowners unlock the value of their property through smarter ADU pathways.
             </p>
