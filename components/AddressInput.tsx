@@ -168,16 +168,17 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
     return (
       <div className={`relative w-full ${wrapperClassName}`}>
         <div className="relative">
-        <input
-  ref={inputRef}
-  type="text"
-  value={input}
-  onChange={handleInputChange}
-  onKeyDown={handleKeyDown}
-  onFocus={() => predictions.length > 0 && setShowDropdown(true)}
-  disabled={disabled}
-  placeholder="Enter your O‘ahu, Hawai'i address"
-  className={`${baseInputClass} ${inputClassName} `}/>
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            onFocus={() => predictions.length > 0 && setShowDropdown(true)}
+            disabled={disabled}
+            placeholder="Enter your O‘ahu, Hawai'i address"
+            className={`${baseInputClass} ${inputClassName}`}
+          />
           {isLoading && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
               <div

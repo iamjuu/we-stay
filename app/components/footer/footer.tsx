@@ -1,4 +1,4 @@
-import { FooterLogo, Logo, WhiteLogo } from "@/content";
+import { FooterLogo } from "@/content";
 import Image from "next/image";
 import Link from "next/link";
 

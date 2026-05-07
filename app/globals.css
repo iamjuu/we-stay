@@ -435,7 +435,6 @@
   .animate-fadeIn {
     animation: scorecard-fade-in 0.35s ease forwards;
   }
-
   /* Diagonal sheen on hover (see homeowner question rows on home) */
   .homeowner-question-sheen::after {
     content: "";

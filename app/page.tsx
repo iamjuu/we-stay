@@ -59,7 +59,7 @@ export default function Home() {
           <Navbar />
           <div>
             <div className=" mt-[80px] mb-[120px] flex w-full flex-col items-center gap-[118px] md:items-start md:px-[80px] md:mt-[104px] lg:mt-[104px]">
-              <h1 className="hero-heading w-full font-playfair-display text-center font-[700] text-white ">
+              <h1 className="hero-heading w-full font-playfair-display text-center font-[700] text-white md:text-left">
                 See What Your
                 <br />
                 Backyard Can Build

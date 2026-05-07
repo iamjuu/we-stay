@@ -113,13 +113,13 @@ export default function HeroEligibility() {
             {inlineError}
           </p>
         )}
-        <p className="section-paragraph text-center  max-w-[570px]  font-[400] font-dm-sans text-white ">
+        <p className="section-paragraph max-w-[570px] text-center font-[400] font-dm-sans text-white md:text-left">
           Check your ADU eligibility,
-   
+          <br />
           explore your options, and
-  
+          <br />
           move forward with
-  
+          <br />
           guidance you can trust.
         </p>
       </div>
