@@ -23,6 +23,8 @@ export type AddressInputHandle = {
 
 interface AddressInputProps {
   onAddressSelect: (address: string) => void;
+  /** Enter runs eligibility check with the current input when not choosing a suggestion. */
+  onEnterCheck?: (trimmedInput: string) => void;
   disabled?: boolean;
   darkMode?: boolean;
   hideHelperText?: boolean;
@@ -34,6 +36,7 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
   function AddressInput(
     {
       onAddressSelect,
+      onEnterCheck,
       disabled,
       darkMode = false,
       hideHelperText = false,
@@ -134,24 +137,30 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (!showDropdown || predictions.length === 0) return;
+      if (disabled) return;
 
       switch (e.key) {
         case 'ArrowDown':
+          if (!showDropdown || predictions.length === 0) return;
           e.preventDefault();
           setSelectedIndex(prev => (prev < predictions.length - 1 ? prev + 1 : prev));
           break;
         case 'ArrowUp':
+          if (!showDropdown || predictions.length === 0) return;
           e.preventDefault();
           setSelectedIndex(prev => (prev > 0 ? prev - 1 : -1));
           break;
         case 'Enter':
           e.preventDefault();
-          if (selectedIndex >= 0 && selectedIndex < predictions.length) {
-            handleSelect(predictions[selectedIndex]);
+          if (showDropdown && predictions.length > 0) {
+            const idx = selectedIndex >= 0 ? selectedIndex : 0;
+            handleSelect(predictions[idx]);
+            return;
           }
+          onEnterCheck?.(input.trim());
           break;
         case 'Escape':
+          if (!showDropdown) return;
           setShowDropdown(false);
           break;
       }

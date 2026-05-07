@@ -8,7 +8,7 @@ import { FaStar } from "react-icons/fa6";
 import Image from "next/image";
 import PropertyCarousel from "./components/caroseal/caroseal";
 import RoofComponent from "./components/roof-component/roofcomponent";
-import ThreeDElement from "./components/3d-element/3delement";
+import { InteriorTourClient } from "@/app/components/interiorTour/InteriorTourClient";
 import BuilderNetwork from "./components/builder-network/builder-network";
 import TestimonialCarousel from "./components/testimonial/testimonail";
 import Eligibility from "./components/eligibility/eligibility";
@@ -181,7 +181,7 @@ export default function Home() {
       </div>
       <div>
 
-        <ThreeDElement />
+        <InteriorTourClient />
       </div>
       <div>
         <BuilderNetwork />

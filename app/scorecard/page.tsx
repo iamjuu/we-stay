@@ -54,6 +54,7 @@ export default function ScorecardPage() {
         <div className="mb-6 sm:mb-8">
           <AddressInput
             onAddressSelect={runPipeline}
+            onEnterCheck={(v) => void runPipeline(v)}
             disabled={isRunning}
             darkMode={true}
           />
