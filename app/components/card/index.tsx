@@ -42,9 +42,9 @@ function StepCard({ title, desc, icon }: StepCardProps) {
   return (
     <div
       style={{
-        background: "linear-gradient(90deg, #0C1B2A 80%, #A2B8CE 280%)",
+        background: "linear-gradient(90deg,  hover:scale-105 #0C1B2A 80%, #A2B8CE 280%)",
       }}
-      className="rounded-2xl flex flex-col border border-[#33506E] p-6 shadow-[5px_10px_20px_rgba(0,0,0,0.10)] backdrop-blur-xl"
+      className="rounded-2xl flex flex-col border border-[#33506E] p-6 shadow-[5px_10px_20px_rgba(0,0,0,0.10)] backdrop-blur-xl transition-transform duration-300 hover:scale-105"
     >
       <div className="mb-6 flex   items-center justify-center size-[60px] rounded-lg border border-white/20 bg-white/10">
         <p className="size-[36px] flex items-center justify-center">

@@ -35,9 +35,8 @@ function slideStyles(
   isNext: boolean,
   isPrev: boolean
 ): CSSProperties {
-  const transition =
-    "left 0.65s cubic-bezier(0.4, 0, 0.2, 1), width 0.65s cubic-bezier(0.4, 0, 0.2, 1), height 0.65s cubic-bezier(0.4, 0, 0.2, 1), top 0.65s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1)";
-
+  const transition = "all 0.65s cubic-bezier(0.4, 0, 0.2, 1)";
+  
   let left = "120%";
   let width = "68%";
   let height = "100%";
@@ -50,46 +49,28 @@ function slideStyles(
     if (isActive) {
       left = "0%";
       width = "100%";
-      height = "100%";
-      top = "0px";
       opacity = 1;
       zIndex = 10;
-      borderRadius = "24px";
     } else if (isNext) {
-      left = "82%";
-      width = "32%";
-      height = "78%";
-      top = "11%";
+      // Small gap for mobile to keep preview visible
+      left = "calc(100% + 16px)"; 
+      width = "100%";
       opacity = 1;
       zIndex = 5;
-      borderRadius = "24px 0px 0px 24px";
     } else if (isPrev) {
-      left = "-28%";
-      width = "32%";
-      height = "78%";
-      top = "11%";
+      left = "calc(-100% - 16px)";
+      width = "100%";
       opacity = 0;
-      zIndex = 1;
-      borderRadius = "0px 24px 24px 0px";
-    } else {
-      left = "120%";
-      opacity = 0;
-      zIndex = 0;
     }
-    return { left, width, height, top, opacity, zIndex, borderRadius, transition };
-  }
-
-  if (bp === "md") {
+  } 
+  else if (bp === "md") {
     if (isActive) {
       left = "0%";
       width = "72%";
-      height = "100%";
-      top = "0px";
       opacity = 1;
       zIndex = 10;
-      borderRadius = "24px";
     } else if (isNext) {
-      left = "68%";
+      left = "calc(72% + 40px)"; // 40px gap on tablet
       width = "38%";
       height = "78%";
       top = "11%";
@@ -97,52 +78,39 @@ function slideStyles(
       zIndex = 5;
       borderRadius = "24px 0px 0px 24px";
     } else if (isPrev) {
-      left = "-32%";
+      left = "-40%";
       width = "34%";
       height = "78%";
       top = "11%";
       opacity = 0;
-      zIndex = 1;
-      borderRadius = "0px 24px 24px 0px";
-    } else {
-      left = "120%";
-      opacity = 0;
-      zIndex = 0;
     }
-    return { left, width, height, top, opacity, zIndex, borderRadius, transition };
+  } 
+  else {
+    // LG and 2XL logic
+    if (isActive) {
+      left = "0%";
+      width = "68%";
+      opacity = 1;
+      zIndex = 10;
+    } else if (isNext) {
+      // This creates the 100px gap on 2xl width
+      left = "calc(68% + 100px)"; 
+      width = "30%";
+      height = "78%";
+      top = "11%";
+      opacity = 1;
+      zIndex = 5;
+      borderRadius = "24px 0px 0px 24px";
+    } else if (isPrev) {
+      left = "calc(-30% - 100px)";
+      width = "30%";
+      height = "78%";
+      top = "11%";
+      opacity = 0;
+    }
   }
 
-  if (isActive) {
-    left = "0%";
-    width = "68%";
-    height = "100%";
-    top = "0px";
-    opacity = 1;
-    zIndex = 10;
-    borderRadius = "24px";
-  } else if (isNext) {
-    left = "70%";
-    width = "30%";
-    height = "78%";
-    top = "11%";
-    opacity = 1;
-    zIndex = 5;
-    borderRadius = "24px 0px 0px 24px";
-  } else if (isPrev) {
-    left = "-35%";
-    width = "30%";
-    height = "78%";
-    top = "11%";
-    opacity = 0;
-    zIndex = 1;
-    borderRadius = "0px 24px 24px 0px";
-  } else {
-    left = "120%";
-    opacity = 0;
-    zIndex = 0;
-  }
-
-  return { left, width, height, top, opacity, zIndex, borderRadius, transition };
+  return { left, width, height, top, opacity, zIndex, borderRadius, transition, position: 'absolute' };
 }
 
 const properties = [
@@ -154,16 +122,10 @@ const properties = [
 export default function PropertyCarousel() {
   const [current, setCurrent] = useState(0);
   const bp = useCarouselBreakpoint();
-
-  const prev = () => {
-    setCurrent((c) => (c - 1 + properties.length) % properties.length);
-  };
-
-  const next = () => {
-    setCurrent((c) => (c + 1) % properties.length);
-  };
-
   const n = properties.length;
+
+  const prev = () => setCurrent((c) => (c - 1 + n) % n);
+  const next = () => setCurrent((c) => (c + 1) % n);
 
   return (
     <div className="w-full overflow-x-hidden px-4 pt-16 sm:pt-20 md:pt-24 lg:pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
@@ -173,105 +135,81 @@ export default function PropertyCarousel() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-6">
           <div>
             <h1 className="carousel-heading text-gray-900">Choose What Fits</h1>
-            <p className="carousel-heading text-gray-400 font-normal mt-1">Your Property</p>
+            <p className="carousel-subheading !text-[#93928E]">Your Property</p>
           </div>
           <div className="shrink-0 w-full sm:w-auto">
             <CtaButton buttonName="Explore My Options" />
           </div>
         </div>
 
-        {/* Nav Buttons */}
-        <div className="flex gap-2 mb-8">
-          <button
-            onClick={prev}
-            className="flex h-[42px] w-[42px] items-center justify-center rounded-[8px] border-[1.5px] border-[#ccc] bg-white hover:bg-gray-50 transition-colors"
-          >
-            <MoveLeft className="h-5 w-5 text-gray-500" />
-          </button>
-          <button
-            onClick={next}
-            className="flex h-[42px] w-[42px] items-center justify-center rounded-[8px] border-[1.5px] border-[#f05c4a] bg-white hover:bg-red-50 transition-colors"
-          >
-            <MoveRight className="h-5 w-5 text-[#f05c4a]" />
-          </button>
-        </div>
+        <div className="flex flex-row gap-16 2xl:gap-[100px]">          {/* Nav Buttons */}
+          <div className="flex shrink-0 gap-2 mb-8">
+            <button onClick={prev} className="flex h-[42px] w-[42px] items-center justify-center rounded-[8px] border-[1.5px] border-[#ccc] bg-white hover:bg-gray-50 transition-colors">
+              <MoveLeft className="h-5 w-5 text-gray-500" />
+            </button>
+            <button onClick={next} className="flex h-[42px] w-[42px] items-center justify-center rounded-[8px] border-[1.5px] border-[#f05c4a] bg-white hover:bg-red-50 transition-colors">
+              <MoveRight className="h-5 w-5 text-[#f05c4a]" />
+            </button>
+          </div>
 
-        {/* Carousel — bleeds to right edge */}
-        <div className="-mr-4 sm:-mr-6 lg:-mr-8 2xl:-mr-[100px]">
-          <div
-            className="relative overflow-hidden"
-            style={{ height: "clamp(280px, 55vw, 680px)" }}
-          >
-            {properties.map((property, index) => {
-              const isActive = index === current;
-              const isNext = index === (current + 1) % n;
-              const isPrev = index === (current - 1 + n) % n;
+          {/* Carousel — needs flex-1 + min-w-0: slides are position:absolute so this column has no in-flow width otherwise */}
+          <div className="min-w-0 flex-1 -mr-4 sm:-mr-6 lg:-mr-8 2xl:-mr-[100px]">
+            <div className="relative w-full" style={{ height: "clamp(300px, 50vw, 600px)" }}>
+              {properties.map((property, index) => {
+                const isActive = index === current;
+                const isNext = index === (current + 1) % n;
+                const isPrev = index === (current - 1 + n) % n;
 
-              return (
-                <div
-                  key={property.id}
-                  className="absolute overflow-hidden shadow-xl"
-                  style={slideStyles(bp, isActive, isNext, isPrev)}
-                >
-                  <div className="relative w-full h-full">
-                    <Image
-                      alt={property.title}
-                      src={property.image}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 70vw"
-                      priority={isActive}
-                    />
-
-                    {/* Bottom gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-                    {/* White right-fade on preview card */}
-                    {isNext && (
-                      <div
-                        className="absolute inset-0"
-                        style={{
-                          background:
-                            "linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 60%, rgba(255,255,255,0.93) 100%)",
-                          zIndex: 10,
-                          transition: "opacity 0.65s cubic-bezier(0.4, 0, 0.2, 1)",
-                        }}
+                return (
+                  <div
+                    key={property.id}
+                    className="shadow-xl"
+                    style={slideStyles(bp, isActive, isNext, isPrev)}
+                  >
+                    <div className="relative w-full h-full overflow-hidden rounded-[inherit]">
+                      <Image
+                        alt={property.title}
+                        src={property.image}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 70vw"
+                        priority={isActive}
                       />
-                    )}
+                      
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-                    {/* Label — active only */}
-                    {isActive && (
-                      <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-5">
-                        <div className="bg-black/30 backdrop-blur-sm rounded-[16px] px-3 py-2 sm:px-4 sm:py-3 inline-block max-w-[calc(100%-1.5rem)]">
-                          <h3 className="text-white font-bold text-lg sm:text-xl mb-1">
-                            {property.title}
-                          </h3>
-                          <p className="text-white/80 text-sm">
-                            {property.description}
-                          </p>
+                      {isNext && (
+                        <div className="absolute inset-0 z-10" style={{
+                            background: "linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 60%, rgba(255,255,255,0.93) 100%)",
+                        }} />
+                      )}
+
+                      {isActive && (
+                        <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-5">
+                          <div className="bg-black/30 backdrop-blur-sm rounded-[16px] px-3 py-2 sm:px-4 sm:py-3 inline-block max-w-[calc(100%-1.5rem)]">
+                            <h3 className="text-white font-bold text-lg sm:text-xl mb-1">{property.title}</h3>
+                            <p className="text-white/80 text-sm">{property.description}</p>
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
 
         {/* Dots */}
-        <div className="flex justify-center gap-1.5 mt-8">
+        <div className="flex justify-center gap-1.5 mt-12">
           {properties.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrent(index)}
-              className={`h-[6px] w-8 rounded-full transition-all duration-500 ${
-                index === current ? "bg-[#4DB6AC]" : "bg-gray-300"
-              }`}
+              className={`h-[6px] w-8 rounded-full transition-all duration-500 ${index === current ? "bg-[#4DB6AC]" : "bg-gray-300"}`}
             />
           ))}
         </div>
-
       </div>
     </div>
   );

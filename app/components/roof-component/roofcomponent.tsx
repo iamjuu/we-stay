@@ -1,5 +1,7 @@
 'use client';
 
+import { Home1, Home2, Home3, Home4, Home5 } from '@/content';
+import Image from 'next/image';
 import React, { useState, useEffect, useRef } from 'react';
 
 const colorOptions = [
@@ -95,83 +97,136 @@ const RoofComponent = () => {
     });
   }, [selectedColor, api, isModelReady]);
 
+// *******************************************
+  const roofVariants = [
+    { id: 1, name: 'White', color: '#F5F5F0', image: Home2, size: '400 sq. ft' },
+    { id: 2, name: 'Beige', color: '#E8DCC8', image: Home1, size: '400 sq. ft' },
+    { id: 3, name: 'Tan', color: '#C9A67A', image: Home3, size: '400 sq. ft' },
+    { id: 4, name: 'Brown', color: '#8B6F47', image: Home4, size: '400 sq. ft' },
+    { id: 5, name: 'Black', color: '#2C2C2C', image: Home5, size: '400 sq. ft' },
+  ];
+
+  const [selectedId, setSelectedId] = useState(1);
+const selectedVariant = roofVariants.find((item) => item.id === selectedId) ?? roofVariants[0];
   return (
-    <section className="w-full px-4 pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
-      <div className="mx-auto max-w-7xl 2xl:max-w-none">
-        <div className="flex flex-col gap-[50px]">
+    // <section className="w-full px-4 pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
+    //   <div className="mx-auto max-w-7xl 2xl:max-w-none">
+    //     <div className="flex flex-col gap-[50px]">
 
-          {/* Heading */}
-          <div className="mb-8 flex w-full sm:mb-10 lg:mb-12">
-            <h2 className="roof-section-heading text-gray-900">Four sizes.</h2>
-            <p className="roof-section-heading !text-[#93928E] mt-1">
-              Tons of Possibility.
-            </p>
-          </div>
+    //       {/* Heading */}
+    //       <div className="mb-8 flex w-full sm:mb-10 lg:mb-12">
+    //         <h2 className="roof-section-heading text-center w-full text-gray-900">Designed for your space. Finished for your style.</h2>
+           
+    //       </div>
 
-          {/* 3D Model */}
-          <div className="-mr-4 sm:-mr-6 w-full lg:-mr-8 2xl:-mr-[100px]">
-            <div className="relative w-full h-[220px] sm:h-[320px] md:h-[400px] lg:h-[480px] xl:h-[440px] overflow-hidden rounded-tl-[24px] rounded-bl-[24px]">
-              <iframe
-                ref={iframeRef}
-                frameBorder="0"
-                allowFullScreen
-                className="w-full h-full"
-                src="https://sketchfab.com/models/6b2ea63f0ab04abd9cc299197cb6a158/embed?autostart=1&ui_controls=1&ui_infos=0&ui_inspector=0&ui_watermark=0&background_color=ffffff"
-                allow="autoplay; fullscreen; xr-spatial-tracking"
-              />
+    //       {/* 3D Model */}
+    //       <div className="-mr-4 sm:-mr-6 w-full lg:-mr-8 2xl:-mr-[100px]">
+    //         <div className="relative w-full h-[220px] sm:h-[320px] md:h-[400px] lg:h-[480px] xl:h-[440px] overflow-hidden rounded-tl-[24px] rounded-bl-[24px]">
+    //           <iframe
+    //             ref={iframeRef}
+    //             frameBorder="0"
+    //             allowFullScreen
+    //             className="w-full h-full"
+    //             src="https://sketchfab.com/models/6b2ea63f0ab04abd9cc299197cb6a158/embed?autostart=1&ui_controls=1&ui_infos=0&ui_inspector=0&ui_watermark=0&background_color=ffffff"
+    //             allow="autoplay; fullscreen; xr-spatial-tracking"
+    //           />
 
-              {/* Bottom gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+    //           {/* Bottom gradient overlay */}
+    //           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
 
             
-            </div>
-          </div>
+    //         </div>
+    //       </div>
 
+    //     </div>
+
+    //     {/* Color swatches */}
+    //     <div className="flex w-full items-center justify-center mt-[30px]">
+    //       <div className="flex items-center gap-2 sm:gap-3 mb-8 flex-wrap">
+    //         {colorOptions.map((option, index) => (
+    //           <button
+    //             key={index}
+    //             onClick={() => setSelectedColor(index)}
+    //             className={`relative rounded-full transition-all duration-300 hover:scale-110 focus:outline-none ${selectedColor === index
+    //                 ? 'p-[3px] bg-[#4DB6AC]'
+    //                 : 'p-[3px] bg-transparent'
+    //               }`}
+    //             aria-label={`Select ${option.name} color`}
+    //           >
+    //             {/* White gap */}
+    //             <div
+    //               className={`rounded-full p-[3px] ${selectedColor === index ? 'bg-white' : 'bg-transparent'
+    //                 }`}
+    //             >
+    //               {/* Gray ring */}
+    //               <div
+    //                 className={`rounded-full p-[2px] ${selectedColor === index ? 'bg-gray-300' : 'bg-transparent'
+    //                   }`}
+    //               >
+    //                 {/* Color swatch */}
+    //                 <div
+    //                   className="w-8 h-8 sm:w-10 sm:h-10 rounded-full transition-all duration-300"
+    //                   style={{
+    //                     backgroundColor: option.color,
+    //                     boxShadow:
+    //                       selectedColor === index
+    //                         ? '0 4px 12px rgba(0,0,0,0.15)'
+    //                         : '0 2px 4px rgba(0,0,0,0.1)',
+    //                   }}
+    //                 />
+    //               </div>
+    //             </div>
+    //           </button>
+    //         ))}
+    //       </div>
+    //     </div>
+
+    //   </div>
+    // </section>
+
+
+
+    <section className="w-full px-4 pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
+    <div className="mx-auto max-w-7xl 2xl:max-w-none">
+      <h1 className="roof-section-heading mb-8 text-center text-gray-900 sm:mb-10 lg:mb-12">
+        Designed for your space. <span className="text-gray-500">Finished for your style.</span>
+      </h1>
+  
+      <div className="rounded-2xl bg-[#f4f5f7] px-4 py-8 sm:px-8">
+        <p className="text-center text-lg font-medium text-gray-900">Studio</p>
+        <p className="mb-4 text-center text-sm text-gray-500">The one space that does it all</p>
+  
+        <div className="mx-auto flex max-w-[720px] justify-center">
+          <Image
+            src={selectedVariant.image}
+            alt={selectedVariant.name}
+            className="h-auto w-full max-w-[520px] object-contain"
+            priority
+          />
         </div>
-
-        {/* Color swatches */}
-        <div className="flex w-full items-center justify-center mt-[30px]">
-          <div className="flex items-center gap-2 sm:gap-3 mb-8 flex-wrap">
-            {colorOptions.map((option, index) => (
+  
+        <div className="mt-6 flex items-center justify-center gap-2">
+          {roofVariants.map((item) => {
+            const isActive = item.id === selectedId;
+            return (
               <button
-                key={index}
-                onClick={() => setSelectedColor(index)}
-                className={`relative rounded-full transition-all duration-300 hover:scale-110 focus:outline-none ${selectedColor === index
-                    ? 'p-[3px] bg-[#4DB6AC]'
-                    : 'p-[3px] bg-transparent'
-                  }`}
-                aria-label={`Select ${option.name} color`}
-              >
-                {/* White gap */}
-                <div
-                  className={`rounded-full p-[3px] ${selectedColor === index ? 'bg-white' : 'bg-transparent'
-                    }`}
-                >
-                  {/* Gray ring */}
-                  <div
-                    className={`rounded-full p-[2px] ${selectedColor === index ? 'bg-gray-300' : 'bg-transparent'
-                      }`}
-                  >
-                    {/* Color swatch */}
-                    <div
-                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full transition-all duration-300"
-                      style={{
-                        backgroundColor: option.color,
-                        boxShadow:
-                          selectedColor === index
-                            ? '0 4px 12px rgba(0,0,0,0.15)'
-                            : '0 2px 4px rgba(0,0,0,0.1)',
-                      }}
-                    />
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
+                key={item.id}
+                type="button"
+                onClick={() => setSelectedId(item.id)}
+                aria-label={`Select ${item.name}`}
+                className={`h-6 w-6 rounded-full border transition ${
+                  isActive ? 'ring-2 ring-teal-400 ring-offset-2' : 'border-gray-300'
+                }`}
+                style={{ backgroundColor: item.color }}
+              />
+            );
+          })}
         </div>
-
+  
+        <p className="mt-4 text-center text-sm text-gray-700">{selectedVariant.size}</p>
       </div>
-    </section>
+    </div>
+  </section>
   );
 };
 

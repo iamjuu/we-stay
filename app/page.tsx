@@ -1,11 +1,6 @@
 import Navbar from "./components/navbar/navbar";
-import HeroButton from "./components/herobutton/herobutton";
-import {
-  ContainerImage1,
-  HeroImage,
-  PlaceholderImage,
-  SectionTwo,
-} from "@/content";
+import HeroEligibility from "./components/hero-eligibility/hero-eligibility";
+import { Avatar1, Avatar2, Avatar3, Avatar4, HeroImage, PlaceholderImage, SectionTwo } from "@/content";
 import WeStaySection from "./components/card";
 import JoinCard from "./components/westay";
 import Homeowners from "./components/Homeowners";
@@ -18,6 +13,8 @@ import BuilderNetwork from "./components/builder-network/builder-network";
 import TestimonialCarousel from "./components/testimonial/testimonail";
 import Eligibility from "./components/eligibility/eligibility";
 import Footer from "./components/footer/footer";
+import FlipClockHeadline from "./components/flip-clock-headline/flip-clock-headline";
+
 export default function Home() {
   const homeownerQuestions = [
     "If their property qualifies",
@@ -29,29 +26,22 @@ export default function Home() {
 
   const image = [
     {
-      src: PlaceholderImage,
+      src: Avatar1,
       alt: "Hero Image",
     },
     {
-      src: PlaceholderImage,
+      src: Avatar2,
       alt: "Hero Image",
     },
     {
-      src: PlaceholderImage,
+      src: Avatar3,
       alt: "Hero Image",
     },
     {
-      src: PlaceholderImage,
+    src: Avatar4,
       alt: "Hero Image",
     },
-    {
-      src: PlaceholderImage,
-      alt: "Hero Image",
-    },
-    {
-      src: PlaceholderImage,
-      alt: "Hero Image",
-    },
+  
   ];
 
   return (
@@ -65,29 +55,20 @@ export default function Home() {
         }}
         className="min-h-screen flex flex-col justify-between bg-gray-100 relative"
       >
-        <div className="">
+        <div className="relative z-20">
           <Navbar />
           <div>
-            <div className=" mt-[80px] flex flex-col items-center gap-[118px]">
-              <h1 className="hero-heading  font-playfair-display text-center font-[700] text-white">
+            <div className=" mt-[80px] mb-[120px] flex w-full flex-col items-center gap-[118px] md:items-start md:px-[80px] md:mt-[104px] lg:mt-[104px]">
+              <h1 className="hero-heading w-full font-playfair-display text-center font-[700] text-white ">
                 See What Your
                 <br />
                 Backyard Can Build
               </h1>
-              <HeroButton />
-            </div>
-
-            <div className="hidden lg:block px-[80px] lg:mt-[104px] mb-[120px] font-dm-sans text-white">
-              <p className="section-paragraph font-[400]">
-                Check your ADU eligibility, <br />
-                explore your options, and <br />
-                move forward with <br />
-                guidance you can trust.
-              </p>
+              <HeroEligibility />
             </div>
           </div>
         </div>
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10">
+        <div className="absolute  border-[10px] border border-[#0C1B2A] rounded-full bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10">
           <div className="bg-[#F3FFFE] rounded-full border-[5px] sm:border-[7px] border-white flex flex-row items-center gap-2 sm:gap-3 px-3 sm:px-4 py-[10px] sm:py-[15px]">
 
             {/* Avatar stack */}
@@ -103,10 +84,10 @@ export default function Home() {
             </div>
 
             {/* Stars + text — vertical stack */}
-            <div className="flex flex-col justify-center gap-0">
+            <div className="flex flex-col justify-center gap-2">
               <div className="flex flex-row items-center gap-[2px]">
                 {[...Array(5)].map((_, i) => (
-                  <FaStar key={i} color="#3D3D3D" size={10} />
+                  <FaStar key={i} color="#3D3D3D" className="size-[14px]" />
                 ))}
               </div>
               <p
@@ -128,13 +109,10 @@ export default function Home() {
           className="semi-heading text-white">
           No matter what your reason
         </h1>
-        <span
-          style={{
-            fontFamily: "DM Sans",
-          }}
-          className=" semi-heading text-[#F05C4A]">
-          Generate rental income
-        </span>
+        <FlipClockHeadline
+          style={{ fontFamily: "DM Sans" }}
+          className="semi-heading text-[#F05C4A]"
+        />
         <h1
           style={{
             fontFamily: "DM Sans",
@@ -147,12 +125,10 @@ export default function Home() {
       <div className="w-full px-4 py-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
         <div className="mx-auto max-w-7xl 2xl:max-w-none">
           <div className="flex flex-col overflow-hidden rounded-[20px] border border-[#E1E0DB] bg-[#F5F7FA] lg:flex-row">
-
-            {/* Image */}
-            <div className="w-full lg:w-[46%] shrink-0">
+            <div className="relative w-full min-h-[240px] shrink-0 lg:min-h-0 lg:w-[46%]">
               <Image
                 src={SectionTwo}
-                className="h-full w-full object-cover"
+                className="h-full min-h-[240px] w-full object-cover lg:min-h-full"
                 alt="Homeowners planning an ADU project"
               />
             </div>
@@ -173,10 +149,10 @@ export default function Home() {
                 {homeownerQuestions.map((item) => (
                   <div
                     key={item}
-                    className="flex h-[49px] w-full items-center rounded-[6px] border border-[#E2E2E2] bg-[#FAFAFA] shadow-[inset_0_1px_6px_rgba(0,0,0,0.18)]"
+                    className="homeowner-question-sheen relative flex h-[49px] w-full cursor-default items-center overflow-hidden rounded-[6px] border border-[#E2E2E2] bg-[#FAFAFA] shadow-[inset_0_1px_6px_rgba(0,0,0,0.18)]"
                   >
-                    <div className="h-full w-[4px] rounded-l-[6px] bg-[#8ED9D8]" />
-                    <span className="second-section-list-data py-[10px] px-6">
+                    <div className="relative z-[1] h-full w-[4px] shrink-0 rounded-l-[6px] bg-[#8ED9D8]" />
+                    <span className="relative z-[1] second-section-list-data py-[10px] px-6 text-left">
                       {item}
                     </span>
                   </div>
@@ -217,9 +193,8 @@ export default function Home() {
         <Eligibility />
       </div>
       <div className="pt-[120px]">
-
         <Footer />
       </div>
-      </>
-      );
+    </>
+  );
 }

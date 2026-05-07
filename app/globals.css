@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+@keyframes scorecard-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @theme {
   --breakpoint-desktop: 75rem;
 }
@@ -30,6 +41,26 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes homeowner-row-sheen {
+  0% {
+    opacity: 0%;
+    transform: rotateZ(60deg) translate(-12em, 15em);
+  }
+  7% {
+    opacity: 100%;
+  }
+  52% {
+    opacity: 100%;
+    transform: rotateZ(60deg) translate(7.5em, -14.5em);
+    /* Smooth fade-out for the rest of the timeline */
+    animation-timing-function: ease-out;
+  }
+  100% {
+    opacity: 0%;
+    transform: rotateZ(60deg) translate(7.5em, -14.5em);
   }
 }
 
@@ -85,7 +116,7 @@
     font-family: "DM Sans", sans-serif;
     font-weight: 600;
     font-size: clamp(32px, 2.7vw, 52px);
-    line-height: 100%;
+    line-height: 68px;
   }
 
 
@@ -164,13 +195,28 @@
   font-style: normal;
   font-size: clamp(17px, 2.361vw, 34px);
   line-height: clamp(24px, 3.125vw, 45px);
-  color: #0c1b2a;
 }
 
-/* Footer sits on dark bg (#0f1e2e) — light text only; dark #0C1B2A is invisible there */
+
+
+.join-the-westay {
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(36px, 3.2vw, 52px);
+  line-height: clamp(45px, 4vw, 65px);
+  font-weight: 500;
+  font-style: normal;
+
+}
+
+.join-partner-section {
+  font-weight: 600;
+  font-style: normal;
+  font-size: clamp(20px, 3vw, 36px);
+  line-height: clamp(19px, 2.7vw, 32.95px);
+}
+
 .footer-section-one {
   font-family: "DM Sans", sans-serif;
-  /* Scales from 20px on mobile to 27px on desktop */
   font-size: clamp(20px, 2vw, 27px);
   line-height: 1.6;
   font-weight: 400;
@@ -186,6 +232,59 @@
   color: #b0bec5;
 }
 
+.financing-network {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 28px on mobile to 36px on desktop */
+  font-size: clamp(28px, 2.5vw, 36px);
+  /* Scales from 26px on mobile to 32.95px on desktop */
+  line-height: clamp(26px, 2.2vw, 32.95px);
+  font-weight: 600; /* SemiBold */
+  font-style: normal;
+  letter-spacing: -0.02em; /* Slight negative tracking often looks better with tight line heights */
+}
+
+.financing-paragraph {
+  font-family: "DM Sans", sans-serif;
+  font-size: clamp(20px, 1.5vw, 28px);
+  line-height: clamp(26px, 1.8vw, 35px);
+  font-weight: 400; /* Regular */
+  font-style: normal;
+}
+
+
+.westay-section-heading {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 26px on mobile to 36px on desktop */
+  font-size: clamp(26px, 2.8vw, 36px);
+  /* Scales from 24px on mobile to 32.95px on desktop */
+  line-height: clamp(24px, 2.5vw, 32.95px);
+  font-weight: 600; /* SemiBold */
+  font-style: normal;
+  letter-spacing: -0.01em; /* Tight tracking pairs well with tight line-height */
+}
+
+.westay-para {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 18px on mobile to 28px on desktop */
+  font-size: clamp(18px, 1.6vw, 28px);
+  /* Scales from 24px on mobile to 35px on desktop */
+  line-height: clamp(24px, 2.2vw, 35px);
+  font-weight: 400; /* Regular */
+  font-style: normal;
+}
+
+
+
+.Hero-section-main {
+  font-family: "DM Sans", sans-serif;
+  /* Scales from 18px on mobile to 24px on desktop */
+  font-size: clamp(18px, 1.4vw, 24px);
+  /* Scales from 22px on mobile to 26px on desktop */
+  line-height: clamp(22px, 1.6vw, 26px);
+  font-weight: 400; /* Regular */
+  font-style: normal;
+  letter-spacing: -0.01em; /* Tightening the letters slightly to match the tight line-height */
+}
 /* **************steps************** */
 .steps-heading {
   font-family: "DM Sans", sans-serif;
@@ -247,17 +346,13 @@
 
 .step-four-content {
   font-family: "DM Sans", sans-serif;
-  /* Scales from 16px on mobile to 18px on 2xl screens */
   font-size: clamp(14px, 1.4vw, 18px);
-  /* 28.8px line height expressed as a unitless 1.6 ratio for better scaling */
   line-height: 1.6;
   font-weight: 400; /* Regular */
   font-style: normal;
   color: #FFFFFF; /* Assuming white based on your previous dark UI */
 }
-/* .caroseal-section-heading */
-  /* ***********************style for components ******************************* */
-  /* CARDS */
+
   .card-title {
     font-size: clamp(18px, 1.8vw, 36px);
     line-height: clamp(22px, 2vw, 33px);
@@ -305,5 +400,76 @@
 
   .scrollbar-thumb-teal-400\/40::-webkit-scrollbar-thumb {
     background: rgba(45, 212, 191, 0.4);
+  }
+
+  /* Thin scrollbar — e.g. address autocomplete (hover to reveal thumb) */
+  .scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .scrollbar:hover {
+    scrollbar-color: #e4e4e4 transparent;
+  }
+
+  .scrollbar::-webkit-scrollbar {
+    @apply size-1.5;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-transparent;
+  }
+
+  .scrollbar:hover::-webkit-scrollbar-thumb {
+    @apply bg-[#E4E4E4];
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-[#C4C4C4];
+  }
+
+  .animate-fadeIn {
+    animation: scorecard-fade-in 0.35s ease forwards;
+  }
+
+  /* Diagonal sheen on hover (see homeowner question rows on home) */
+  .homeowner-question-sheen::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    bottom: -50%;
+    left: -50%;
+    z-index: 0;
+    opacity: 0%;
+    background: linear-gradient(
+      to bottom,
+      rgba(77, 182, 172, 0) 10%,
+      rgba(77, 182, 172, 0.22) 38%,
+      rgba(178, 223, 219, 0.72) 50%,
+      rgba(77, 182, 172, 0.22) 62%,
+      rgba(77, 182, 172, 0) 90%
+    );
+    transform: rotateZ(60deg) translate(-12em, 15em);
+    pointer-events: none;
+  }
+
+  .homeowner-question-sheen:hover::after {
+    animation: homeowner-row-sheen 1.35s ease-in-out forwards;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .homeowner-question-sheen:hover::after {
+      animation: none;
+      opacity: 28%;
+    }
+
+    .homeowner-question-sheen:not(:hover)::after {
+      opacity: 0%;
+    }
   }
 }
