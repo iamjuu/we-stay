@@ -207,18 +207,26 @@ export async function runEligibilityPipeline(inputAddress: string): Promise<Elig
     geocodeData = geoMapped.display;
     const formattedAddress = geocodeData.formattedAddress;
 
-    let rentalData: EligibilityRentalPayload | null = null;
     const zipCode = extractZipCode(geoMapped.addressComponents as { types: string[]; short_name?: string }[]);
-    if (zipCode) {
-      const rentResult = await fetchRent(zipCode);
-      const rentMapped = mapRentFromApi(rentResult);
+
+    // Run rent + parcel in parallel — both only need geocode data
+    const [rentSettled, parcelSettled] = await Promise.allSettled([
+      zipCode ? fetchRent(zipCode) : Promise.resolve(null),
+      fetchParcel(geocodeData.lat, geocodeData.lng),
+    ]);
+
+    let rentalData: EligibilityRentalPayload | null = null;
+    if (rentSettled.status === 'fulfilled' && rentSettled.value) {
+      const rentMapped = mapRentFromApi(rentSettled.value);
       if (rentMapped) rentalData = rentMapped;
     }
 
-    const parcelResult = await fetchParcel(geocodeData.lat, geocodeData.lng);
-    const parcelMapped = mapParcelFromApi(parcelResult);
+    if (parcelSettled.status === 'rejected') {
+      return { ok: false, error: 'Parcel lookup failed' };
+    }
+    const parcelMapped = mapParcelFromApi(parcelSettled.value);
     if (!parcelMapped) {
-      return { ok: false, error: parcelResult.error || 'Parcel lookup failed' };
+      return { ok: false, error: parcelSettled.value?.error || 'Parcel lookup failed' };
     }
 
     parcelData = parcelMapped;

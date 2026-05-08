@@ -5,13 +5,13 @@ import { useRouter } from 'next/navigation';
 import AddressInput, { type AddressInputHandle } from '@/components/AddressInput';
 import CtaButton from '@/app/components/ctaButton/ctaButton';
 import RequirementsReviewModal from '@/app/components/requirements-review-modal/requirements-review-modal';
-import { useEligibilitySession } from '@/app/context/eligibility-session';
+import { eligibilityInputMatchesSnapshot, useEligibilitySession } from '@/app/context/eligibility-session';
 import { runEligibilityPipeline } from '@/lib/eligibility-pipeline';
 
 export default function HeroEligibility() {
   const router = useRouter();
   const addressRef = useRef<AddressInputHandle>(null);
-  const { setSnapshot, clearSnapshot } = useEligibilitySession();
+  const { snapshot, setSnapshot, clearSnapshot } = useEligibilitySession();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
@@ -28,6 +28,16 @@ export default function HeroEligibility() {
       }
 
       setInlineError(null);
+
+      // Same query as last successful run — reopen modal instantly, skip pipeline / APIs
+      if (snapshot && eligibilityInputMatchesSnapshot(trimmed, snapshot)) {
+        const issues = snapshot.eligibilityResult.failCount + snapshot.eligibilityResult.flagCount;
+        setIssuesFoundCount(issues);
+        setErrorMessage(null);
+        setModalOpen(true);
+        return;
+      }
+
       clearSnapshot();
       setModalOpen(true);
       setErrorMessage(null);
@@ -48,12 +58,13 @@ export default function HeroEligibility() {
 
       setSnapshot({
         address: outcome.address,
+        submittedAddress: trimmed,
         eligibilityResult: outcome.eligibilityResult,
         rentalData: outcome.rentalData,
         computedAt: Date.now(),
       });
     },
-    [clearSnapshot, setSnapshot]
+    [clearSnapshot, setSnapshot, snapshot]
   );
 
   const handleAddressSelect = useCallback(
@@ -89,6 +100,7 @@ export default function HeroEligibility() {
                   <AddressInput
                     ref={addressRef}
                     onAddressSelect={handleAddressSelect}
+                    onEnterCheck={(t) => void runCheck(t)}
                     disabled={isRunning}
                     darkMode
                     hideHelperText

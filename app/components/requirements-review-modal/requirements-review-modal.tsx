@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { createPortal } from 'react-dom';
+import { useLayoutEffect, useRef, useState } from 'react';
 
 import { AlertTriangle, CheckCircle, Info, Loader2, MapPin } from 'lucide-react';
 
@@ -49,6 +50,61 @@ export default function RequirementsReviewModal({
   issuesFoundCount = null,
   variant = 'centered',
 }: RequirementsReviewModalProps) {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const [subtitlePadLeft, setSubtitlePadLeft] = useState(0);
+
+  useLayoutEffect(() => {
+    if (!open) {
+      setSubtitlePadLeft(0);
+      return;
+    }
+
+    function getTextLeft(el: HTMLElement): number | null {
+      const doc = el.ownerDocument;
+      const walker = doc.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      const node = walker.nextNode() as Text | null;
+      if (!node?.data?.length) return null;
+      const r = doc.createRange();
+      r.setStart(node, 0);
+      r.setEnd(node, 0);
+      return r.getBoundingClientRect().left;
+    }
+
+    function measure() {
+      const titleEl = titleRef.current;
+      const subEl = subtitleRef.current;
+      if (!titleEl || !subEl) return;
+
+      const titleLeft = getTextLeft(titleEl);
+
+      // Zero dynamic padding before measuring subtitle base position,
+      // then restore — prevents oscillation on resize.
+      const savedPad = subEl.style.paddingLeft;
+      subEl.style.paddingLeft = '0px';
+      const subtitleLeft = getTextLeft(subEl);
+      subEl.style.paddingLeft = savedPad;
+
+      if (titleLeft == null || subtitleLeft == null) return;
+      const next = Math.max(0, Math.round(titleLeft - subtitleLeft));
+      setSubtitlePadLeft((prev) => (prev === next ? prev : next));
+    }
+
+    measure();
+    window.addEventListener('resize', measure);
+
+    let ro: ResizeObserver | undefined;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(measure);
+      if (titleRef.current) ro.observe(titleRef.current);
+    }
+
+    return () => {
+      window.removeEventListener('resize', measure);
+      ro?.disconnect();
+    };
+  }, [open]);
+
   if (!open) return null;
 
   const pipelineOk = !isRunning && !errorMessage;
@@ -159,29 +215,35 @@ export default function RequirementsReviewModal({
         boxShadow: '4.18px 8.36px 16.72px 0px #0000001A',
       }}
     >
-      {/* Header: title/subtitle right-aligned; issues pill outer-right */}
+      {/* Title stays right-aligned in column like original; subtitle block anchors right (ms-auto), lines wrap with text-left */}
       <div className="flex w-full shrink-0 flex-wrap items-start justify-end gap-[16.72px]">
         <div className="min-w-0 max-w-[calc(100%-8rem)] text-right">
           <h2
+            ref={titleRef}
             id="requirements-review-title"
-            className="font-dm-sans font-medium tracking-normal text-white"
+            className="font-dm-sans font-medium tracking-normal text-right text-white"
             style={{
               fontSize: '20.06px',
               lineHeight: '16.72px',
+              letterSpacing: '0px',
               fontVariationSettings: "'opsz' 14",
             }}
           >
             Requirements Review
           </h2>
           <p
-            className="font-dm-sans ms-auto mt-2 max-w-[340px] font-normal tracking-normal text-white/55"
+            ref={subtitleRef}
+            className="font-dm-sans mt-2 max-w-[340px] text-left font-normal tracking-normal"
             style={{
               fontSize: '13.37px',
               lineHeight: '18.39px',
+              letterSpacing: '0px',
+              color: '#C4C7C8',
               fontVariationSettings: "'opsz' 14",
+              paddingLeft: subtitlePadLeft,
             }}
           >
-            Review the following requirements. Items marked with ✘ or △ need attention.
+            Review the following requirements. Items marked with ✗ or ⚠ need attention.
           </p>
         </div>
         <div
@@ -257,7 +319,7 @@ export default function RequirementsReviewModal({
           }}
           disabled={ctaDisabled}
           style={{
-            background: 'linear-gradient(90deg,#E65100,#c44a00)',
+            background: '#F05C4AE5',
             height: '42px',
           }}
           className={`inline-flex max-w-[392.082px] w-auto items-center justify-center gap-[1.88px] rounded-[30px] px-[25px] py-[7px] font-dm-sans text-[15px] font-bold leading-none text-white transition-opacity ${

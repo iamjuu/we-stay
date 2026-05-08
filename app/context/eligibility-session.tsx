@@ -5,6 +5,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -16,10 +17,27 @@ const STORAGE_KEY = 'westay-eligibility-snapshot';
 
 export type EligibilitySnapshot = {
   address: string;
+  /** Trimmed hero input used for this run — match before re-fetching formatted `address`. */
+  submittedAddress?: string;
   eligibilityResult: FullEligibilityResult;
   rentalData: EligibilityRentalPayload | null;
   computedAt: number;
 };
+
+/** True when trimmed input equals the cached query (preferred) or legacy formatted-only snapshot. */
+export function eligibilityInputMatchesSnapshot(
+  trimmedInput: string,
+  snapshot: EligibilitySnapshot | null
+): boolean {
+  if (!snapshot?.address) return false;
+  const norm = (s: string) => s.trim().replace(/\s+/g, ' ').toLowerCase();
+  const query = norm(trimmedInput);
+  const baseline =
+    snapshot.submittedAddress != null && snapshot.submittedAddress.trim() !== ''
+      ? snapshot.submittedAddress
+      : snapshot.address;
+  return query === norm(baseline);
+}
 
 type EligibilitySessionContextValue = {
   snapshot: EligibilitySnapshot | null;
@@ -55,13 +73,14 @@ export function EligibilitySessionProvider({ children }: { children: ReactNode }
   const [snapshot, setSnapshotState] = useState<EligibilitySnapshot | null>(null);
   const [hydrated, setHydrated] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setSnapshotState(loadStoredSnapshot());
     setHydrated(true);
   }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (!hydrated) return;
     try {
       if (snapshot) {
         sessionStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
@@ -71,7 +90,7 @@ export function EligibilitySessionProvider({ children }: { children: ReactNode }
     } catch {
       /* quota / private mode */
     }
-  }, [snapshot]);
+  }, [snapshot, hydrated]);
 
   const setSnapshot = useCallback((next: EligibilitySnapshot | null) => {
     setSnapshotState(next);

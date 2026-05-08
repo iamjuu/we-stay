@@ -14,14 +14,26 @@ export function EquirectSphere({ imageUrl, radius = 500 }: EquirectSphereProps) 
   const map = useTexture(imageUrl);
 
   useLayoutEffect(() => {
+    const img = map.image as { width?: number; height?: number } | undefined;
+    const w = img?.width ?? 0;
+    const h = img?.height ?? 0;
+    /** NPOT (e.g. 7680×4320) textures must not use mipmaps or the GPU often shows nothing. */
+    const isPot =
+      w > 0 && h > 0 && THREE.MathUtils.isPowerOfTwo(w) && THREE.MathUtils.isPowerOfTwo(h);
+
     map.wrapS = THREE.ClampToEdgeWrapping;
     map.wrapT = THREE.ClampToEdgeWrapping;
-    // SphereGeometry UVs are already equirectangular — use UV mapping, not reflection mapping.
     map.mapping = THREE.UVMapping;
     map.colorSpace = THREE.SRGBColorSpace;
-    map.minFilter = THREE.LinearMipmapLinearFilter;
-    map.magFilter = THREE.LinearFilter;
-    map.generateMipmaps = true;
+    if (isPot) {
+      map.generateMipmaps = true;
+      map.minFilter = THREE.LinearMipmapLinearFilter;
+      map.magFilter = THREE.LinearFilter;
+    } else {
+      map.generateMipmaps = false;
+      map.minFilter = THREE.LinearFilter;
+      map.magFilter = THREE.LinearFilter;
+    }
     map.needsUpdate = true;
   }, [map]);
 

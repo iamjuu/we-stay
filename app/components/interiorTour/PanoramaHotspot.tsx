@@ -4,7 +4,6 @@ import { Billboard } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
-import type { RoomId } from "./tourHotspots";
 import { hotspotPosition } from "./tourHotspots";
 
 const ACCENT = "#5fb3b3";
@@ -23,8 +22,8 @@ const LABEL_Y = 26;
 type PanoramaHotspotProps = {
   azimuthDeg: number;
   elevationDeg: number;
-  onNavigate: (to: RoomId) => void;
-  to: RoomId;
+  onNavigate: (to: string) => void;
+  to: string;
   labelTexture: THREE.CanvasTexture | null;
 };
 
