@@ -53,17 +53,49 @@ export default function Home() {
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
-        className="min-h-screen flex flex-col justify-between bg-gray-100 relative"
+        id="home-hero"
+        className="relative min-h-screen bg-gray-100"
       >
+        {/* Modal dimmer portals here — above hero BG, below main hero content */}
+        <div
+          id="home-hero-modal-scrim-mount"
+          className="pointer-events-none absolute inset-0 z-[1]"
+          aria-hidden="true"
+        />
+        <div className="relative z-[2] flex min-h-screen flex-col justify-between">
         <div className="relative z-20">
           <Navbar />
           <div>
-            <div className=" mt-[80px] mb-[120px] flex w-full flex-col items-center gap-[118px] md:items-start md:px-[80px] md:mt-[104px] lg:mt-[104px]">
-              <h1 className="hero-heading w-full font-playfair-display text-center font-[700] text-white md:text-left">
-                See What Your
-                <br />
-                Backyard Can Build
-              </h1>
+            <div className="mx-auto mb-[120px] mt-[80px] flex w-full max-w-[1100px] flex-col items-center gap-14 px-4 md:mt-[104px] lg:mt-[104px] md:px-[80px] md:gap-20">
+              <div className="flex w-full flex-col items-center text-center">
+                <p
+                  className="mb-[4.5px] font-dm-sans font-normal tracking-tight text-white/95 max-w-xl"
+                  style={{
+                    fontSize: 'clamp(13px, 2vw, 16px)',
+                    lineHeight: 1.45,
+                    fontVariationSettings: "'opsz' 14",
+                  }}
+                >
+                  From one of the World&apos;s leading ADU Platform
+                </p>
+                {/* Figma underline: 275×1.49px gradient (same stops as border-image-source) */}
+                <div
+                  className="w-full shrink-0"
+                  style={{
+                    width: 'min(275px, 100%)',
+                    height: '1.49px',
+                    background:
+                      'linear-gradient(90deg, rgba(255,255,255,0) 0%, #FFFFFF 30%, #FFFFFF 70%, rgba(255,255,255,0) 100%)',
+                    opacity: 1,
+                  }}
+                  aria-hidden
+                />
+                <h1 className="hero-heading mt-0 w-full pt-0 font-playfair-display font-bold leading-[1.06] text-white tracking-tight">
+                  <span className="block leading-[1.06]">See What Your</span>
+                  <span className="block leading-[1.06]">Backyard Can Build</span>
+                </h1>
+              </div>
+
               <HeroEligibility />
             </div>
           </div>
@@ -99,6 +131,7 @@ export default function Home() {
             </div>
 
           </div>
+        </div>
         </div>
       </div>
       <div className="flex   py-[100px]   flex-col items-center bg-[#0C1B2A]">

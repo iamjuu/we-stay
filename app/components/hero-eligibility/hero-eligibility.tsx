@@ -75,37 +75,68 @@ export default function HeroEligibility() {
   return (
     <>
       <div className="flex w-full flex-col items-center gap-6 px-4">
-        <div className="relative z-[100] w-full max-w-[570px]">
-          <div
-            className="flex w-full flex-col gap-3 rounded-full bg-black/50 p-2 shadow-[0px_3px_10px_0px_rgba(0,0,0,0.15)] backdrop-blur-2xl sm:flex-row sm:items-center sm:gap-4 sm:pl-5"
-            data-node-id="11:8243"
-          >
-            <div className="min-w-0 flex-1">
-              <AddressInput
-                ref={addressRef}
-                onAddressSelect={handleAddressSelect}
-                disabled={isRunning}
-                darkMode
-                hideHelperText
-                inputClassName="!rounded-none !border-0 !bg-transparent !ring-0 !shadow-none px-4 py-3 text-center text-[clamp(18px,4vw,22px)] font-light leading-[1.2] text-[#adadad] placeholder:text-[#adadad] focus:!ring-0 sm:px-0 sm:py-0 sm:text-left"
+        <div
+          className={`relative z-[100] w-full mx-auto ${modalOpen ? 'mb-[128.1px] max-w-[1100px]' : 'max-w-[570px]'}`}
+        >
+          {/* Pill + modal stay centered (570); wide wrapper only reserves space for lg tagline */}
+          <div className="relative mx-auto w-full max-w-[570px]">
+            <div className="relative w-full">
+              <div
+                className="flex w-full flex-col gap-3 rounded-full bg-black/50 p-2 shadow-[0px_3px_10px_0px_rgba(0,0,0,0.15)] backdrop-blur-2xl sm:flex-row sm:items-center sm:gap-4 sm:pl-5"
+                data-node-id="11:8243"
+              >
+                <div className="min-w-0 flex-1">
+                  <AddressInput
+                    ref={addressRef}
+                    onAddressSelect={handleAddressSelect}
+                    disabled={isRunning}
+                    darkMode
+                    hideHelperText
+                    inputClassName="!rounded-none !border-0 !bg-transparent !ring-0 !shadow-none px-4 py-3 text-center text-[clamp(18px,4vw,22px)] font-light leading-[1.2] text-[#adadad] placeholder:text-[#adadad] focus:!ring-0 sm:px-0 sm:py-0 sm:text-left"
+                  />
+                </div>
+                <CtaButton
+                  buttonName="Check Eligibility"
+                  disabled={isRunning}
+                  onClick={handleCheckClick}
+                />
+              </div>
+
+              <RequirementsReviewModal
+                open={modalOpen}
+                onClose={() => setModalOpen(false)}
+                isRunning={isRunning}
+                errorMessage={errorMessage}
+                issuesFoundCount={issuesFoundCount}
+                onGamePlan={handleGamePlan}
+                variant="below-anchor"
               />
             </div>
-            <CtaButton
-              buttonName="Check Eligibility"
-              disabled={isRunning}
-              onClick={handleCheckClick}
-            />
+
+            {modalOpen && (
+              <div
+                aria-hidden
+                className="pointer-events-none w-full shrink-0"
+                style={{ minHeight: 'calc(369.903px + 9px)' }}
+              />
+            )}
           </div>
 
-          <RequirementsReviewModal
-            open={modalOpen}
-            onClose={() => setModalOpen(false)}
-            isRunning={isRunning}
-            errorMessage={errorMessage}
-            issuesFoundCount={issuesFoundCount}
-            onGamePlan={handleGamePlan}
-            variant="below-anchor"
-          />
+          {/* lg + modal open: absolutely positioned bottom-left — does not shift pill/modal */}
+          <p
+            className={`w-full font-dm-sans font-normal text-white text-pretty ${
+              modalOpen
+                ? 'mt-0 text-center lg:absolute lg:bottom-0 lg:-left-36 lg:z-[101] lg:mt-0 lg:max-w-[280px] lg:text-left xl:max-w-[300px]'
+                : 'mt-5 text-center'
+            }`}
+            style={{
+              fontSize: 'clamp(13px, 2.06vw, 17px)',
+              lineHeight: 1.45,
+              fontVariationSettings: "'opsz' 14",
+            }}
+          >
+            Check your ADU eligibility, explore your options, and move forward with guidance you can trust.
+          </p>
         </div>
 
         {inlineError && (
@@ -113,15 +144,6 @@ export default function HeroEligibility() {
             {inlineError}
           </p>
         )}
-        <p className="section-paragraph max-w-[570px] text-center font-[400] font-dm-sans text-white md:text-left">
-          Check your ADU eligibility,
-          <br />
-          explore your options, and
-          <br />
-          move forward with
-          <br />
-          guidance you can trust.
-        </p>
       </div>
     </>
   );

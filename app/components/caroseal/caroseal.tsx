@@ -1,7 +1,7 @@
 "use client";
 
 import { Caroeal1, Caroeal2, Caroeal3 } from "@/content";
-import { useState, useEffect, type CSSProperties } from "react";
+import { useState, useEffect, useRef, useCallback, type CSSProperties } from "react";
 import { MoveLeft, MoveRight } from "lucide-react";
 import Image from "next/image";
 import CtaButton from "../ctaButton/ctaButton";
@@ -121,11 +121,62 @@ const properties = [
 
 export default function PropertyCarousel() {
   const [current, setCurrent] = useState(0);
+  const [dragX, setDragX] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const bp = useCarouselBreakpoint();
   const n = properties.length;
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const dragStartXRef = useRef(0);
+  const draggingActiveRef = useRef(false);
+  const dragOffsetRef = useRef(0);
 
-  const prev = () => setCurrent((c) => (c - 1 + n) % n);
-  const next = () => setCurrent((c) => (c + 1) % n);
+  const prev = useCallback(() => setCurrent((c) => (c - 1 + n) % n), [n]);
+  const next = useCallback(() => setCurrent((c) => (c + 1) % n), [n]);
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return;
+    draggingActiveRef.current = true;
+    dragOffsetRef.current = 0;
+    dragStartXRef.current = e.clientX;
+    setDragX(0);
+    setIsDragging(true);
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!draggingActiveRef.current) return;
+    const dx = e.clientX - dragStartXRef.current;
+    dragOffsetRef.current = dx;
+    setDragX(dx);
+  };
+
+  const endDrag = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!draggingActiveRef.current) return;
+    draggingActiveRef.current = false;
+    const w = viewportRef.current?.offsetWidth ?? 320;
+    const threshold = Math.min(100, Math.max(56, w * 0.12));
+    const x = dragOffsetRef.current;
+    dragOffsetRef.current = 0;
+    try {
+      if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+        e.currentTarget.releasePointerCapture(e.pointerId);
+      }
+    } catch {
+      // ignore
+    }
+    setIsDragging(false);
+    setDragX(0);
+
+    if (x > threshold) prev();
+    else if (x < -threshold) next();
+  };
+
+  const onLostPointerCapture = () => {
+    draggingActiveRef.current = false;
+    dragOffsetRef.current = 0;
+    setIsDragging(false);
+    setDragX(0);
+  };
 
   return (
     <div className="w-full overflow-x-hidden px-4 pt-16 sm:pt-20 md:pt-24 lg:pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
@@ -154,48 +205,77 @@ export default function PropertyCarousel() {
 
           {/* Carousel — needs flex-1 + min-w-0: slides are position:absolute so this column has no in-flow width otherwise */}
           <div className="min-w-0 flex-1 -mr-4 sm:-mr-6 lg:-mr-8 2xl:-mr-[100px]">
-            <div className="relative w-full" style={{ height: "clamp(300px, 50vw, 600px)" }}>
-              {properties.map((property, index) => {
-                const isActive = index === current;
-                const isNext = index === (current + 1) % n;
-                const isPrev = index === (current - 1 + n) % n;
+            <div
+              ref={viewportRef}
+              role="presentation"
+              className="relative w-full cursor-grab touch-none select-none active:cursor-grabbing"
+              style={{ height: "clamp(300px, 50vw, 600px)" }}
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={endDrag}
+              onPointerCancel={endDrag}
+              onLostPointerCapture={onLostPointerCapture}
+            >
+              <div
+                className="absolute inset-0 will-change-transform"
+                style={{
+                  transform: `translateX(${dragX}px)`,
+                  transition: isDragging ? "none" : "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+                }}
+              >
+                <div className="relative h-full w-full">
+                  {properties.map((property, index) => {
+                    const isActive = index === current;
+                    const isNext = index === (current + 1) % n;
+                    const isPrev = index === (current - 1 + n) % n;
+                    const base = slideStyles(bp, isActive, isNext, isPrev);
 
-                return (
-                  <div
-                    key={property.id}
-                    className="shadow-xl"
-                    style={slideStyles(bp, isActive, isNext, isPrev)}
-                  >
-                    <div className="relative w-full h-full overflow-hidden rounded-[inherit]">
-                      <Image
-                        alt={property.title}
-                        src={property.image}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 70vw"
-                        priority={isActive}
-                      />
-                      
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                    return (
+                      <div
+                        key={property.id}
+                        className="shadow-xl"
+                        style={{
+                          ...base,
+                          transition: isDragging ? "none" : base.transition,
+                        }}
+                      >
+                        <div className="relative h-full w-full overflow-hidden rounded-[inherit]">
+                          <Image
+                            alt={property.title}
+                            src={property.image}
+                            fill
+                            className="pointer-events-none object-cover"
+                            sizes="(max-width: 768px) 100vw, 70vw"
+                            priority={isActive}
+                            draggable={false}
+                          />
 
-                      {isNext && (
-                        <div className="absolute inset-0 z-10" style={{
-                            background: "linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 60%, rgba(255,255,255,0.93) 100%)",
-                        }} />
-                      )}
+                          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-                      {isActive && (
-                        <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-5">
-                          <div className="bg-black/30 backdrop-blur-sm rounded-[16px] px-3 py-2 sm:px-4 sm:py-3 inline-block max-w-[calc(100%-1.5rem)]">
-                            <h3 className="text-white font-bold text-lg sm:text-xl mb-1">{property.title}</h3>
-                            <p className="text-white/80 text-sm">{property.description}</p>
-                          </div>
+                          {isNext && (
+                            <div
+                              className="pointer-events-none absolute inset-0 z-10"
+                              style={{
+                                background:
+                                  "linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 60%, rgba(255,255,255,0.93) 100%)",
+                              }}
+                            />
+                          )}
+
+                          {isActive && (
+                            <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-3 sm:p-5">
+                              <div className="inline-block max-w-[calc(100%-1.5rem)] rounded-[16px] bg-black/30 px-3 py-2 backdrop-blur-sm sm:px-4 sm:py-3">
+                                <h3 className="mb-1 text-lg font-bold text-white sm:text-xl">{property.title}</h3>
+                                <p className="text-sm text-white/80">{property.description}</p>
+                              </div>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </div>
         </div>

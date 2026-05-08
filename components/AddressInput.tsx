@@ -168,7 +168,7 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
 
     const baseInputClass = `w-full px-4 py-3 text-lg border-2 rounded-lg
                      outline-none transition-all duration-200
-                     disabled:cursor-not-allowed backdrop-blur-sm
+                     disabled:cursor-not-allowed 
                      ${darkMode
                        ? 'bg-black/60 border-white text-white placeholder:text-white/40 focus:border-[#42B0A8] focus:ring-2 focus:ring-[#42B0A8]/20 disabled:bg-black/30'
                        : 'bg-white border-black text-black placeholder:text-gray-400 focus:border-[#42B0A8] focus:ring-2 focus:ring-[#42B0A8]/20 disabled:bg-gray-100 shadow-md'
