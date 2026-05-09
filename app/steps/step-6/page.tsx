@@ -2,11 +2,13 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
 import { StepsSubmitBtn } from "../components/steps-submit-btn";
 import { StepFooter } from "../components/step-footer";
 import { useBuildPath } from "@/app/context/build-path-session";
+import { useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-progress";
+import { flowIndexFromPath, nextWizardPath, prevWizardPath } from "@/lib/wizard-flow";
 import clockIcon from "@/content/icons/clock.svg";
 import penIcon from "@/content/icons/pen.svg";
 import type { StaticImageData } from "next/image";
@@ -45,7 +47,11 @@ function SelectionToggle({ selected }: { selected: boolean }) {
 
 export default function StepSixBuildPreference() {
   const router = useRouter();
-  const { setSelections } = useBuildPath();
+  const pathname = usePathname();
+  const flowIdx = flowIndexFromPath(pathname) ?? 4;
+  const { maxNavIndex, recordFlowComplete } = useJourneyProgress();
+  useWizardRouteGuard(flowIdx);
+  const { setSelections, selections } = useBuildPath();
   const [selected, setSelected] = useState<"fast-track" | "custom" | "">("");
 
   return (
@@ -112,15 +118,31 @@ export default function StepSixBuildPreference() {
             isComplete={Boolean(selected)}
             idleText="Choose My Path"
             disabled={!selected}
-            onClick={() => {
+            onClick={async () => {
               if (!selected) return;
               setSelections({ buildPreferenceId: selected });
+              await recordFlowComplete(4, {
+                buildSelections: {
+                  ...selections,
+                  buildPreferenceId: selected,
+                },
+              });
               router.push("/3dpage");
             }}
           />
 
           <div className="w-full pt-4">
-            <StepFooter currentStep={6} totalSteps={7} variant="step6" />
+            <StepFooter
+              currentStep={6}
+              totalSteps={7}
+              variant="step6"
+              onBack={() => router.push(prevWizardPath(flowIdx))}
+              onForward={() => {
+                const n = nextWizardPath(flowIdx);
+                if (n) router.push(n);
+              }}
+              canGoForward={maxNavIndex > flowIdx}
+            />
           </div>
         </div>
       </div>

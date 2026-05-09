@@ -3,15 +3,26 @@ import React from "react";
 type CtaButtonProps = {
   buttonName: string;
   className?: string;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>;
+  /** When set, renders an anchor (e.g. external booking URL) with the same styling. */
+  href?: string;
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, "href"> &
+  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href" | "className" | "style" | "children">;
 
 const CtaButton = ({
   buttonName,
   className = "",
+  href,
   style,
   ...props
 }: CtaButtonProps) => {
-  return (
+  const sharedClassName = `${className} cta-animated-border flex h-[46px] shrink-0 items-center justify-center self-center overflow-hidden rounded-[25px] bg-[#ff6b5c] px-6 text-[14px] font-semibold leading-[14px] text-white transition-colors duration-200 hover:bg-[#f45c4d] lg:self-auto`;
+  const sharedStyle: React.CSSProperties = {
+    fontFamily: '"DM Sans", sans-serif',
+    fontVariationSettings: "'opsz' 14",
+    ...style,
+  };
+
+  const inner = (
     <>
      <style>{`
   @property --cta-angle {
@@ -77,20 +88,32 @@ const CtaButton = ({
   }
 `}</style>
 
-      <button
-        type="button"
-        {...props}
-        className={`${className} cta-animated-border flex h-[46px] shrink-0 items-center justify-center self-center overflow-hidden rounded-[25px] bg-[#ff6b5c] px-6 text-[14px] font-semibold leading-[14px] text-white transition-colors duration-200 hover:bg-[#f45c4d] lg:self-auto`}
-        style={{
-          fontFamily: '"DM Sans", sans-serif',
-          fontVariationSettings: "'opsz' 14",
-          ...style,
-        }}
-      >
-        <span className="relative z-10">{buttonName}</span>
-      </button>
+      {href ? (
+        <a
+          href={href}
+          className={sharedClassName}
+          style={sharedStyle}
+          {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
+          {...(href.startsWith("http")
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
+        >
+          <span className="relative z-10">{buttonName}</span>
+        </a>
+      ) : (
+        <button
+          type="button"
+          {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+          className={sharedClassName}
+          style={sharedStyle}
+        >
+          <span className="relative z-10">{buttonName}</span>
+        </button>
+      )}
     </>
   );
+
+  return inner;
 };
 
 export default CtaButton;

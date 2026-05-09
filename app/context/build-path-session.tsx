@@ -110,6 +110,21 @@ export function BuildPathProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const onClear = () => {
+      setSelectionsState(emptySelections());
+      setConfiguratorSummaryState(null);
+      try {
+        sessionStorage.removeItem(STORAGE_KEY);
+      } catch {
+        /* ignore */
+      }
+    };
+    window.addEventListener('westay-clear-build-path', onClear);
+    return () => window.removeEventListener('westay-clear-build-path', onClear);
+  }, []);
+
+  useEffect(() => {
     if (!hydrated || typeof window === 'undefined') return;
     try {
       sessionStorage.setItem(

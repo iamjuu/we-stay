@@ -6,12 +6,14 @@ import AddressInput, { type AddressInputHandle } from '@/components/AddressInput
 import CtaButton from '@/app/components/ctaButton/ctaButton';
 import RequirementsReviewModal from '@/app/components/requirements-review-modal/requirements-review-modal';
 import { eligibilityInputMatchesSnapshot, useEligibilitySession } from '@/app/context/eligibility-session';
+import { useJourneyProgress } from '@/app/context/journey-progress';
 import { runEligibilityPipeline } from '@/lib/eligibility-pipeline';
 
 export default function HeroEligibility() {
   const router = useRouter();
   const addressRef = useRef<AddressInputHandle>(null);
   const { snapshot, setSnapshot, clearSnapshot } = useEligibilitySession();
+  const { mergeJourney, syncJourneyForPropertyAddress } = useJourneyProgress();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
@@ -56,6 +58,7 @@ export default function HeroEligibility() {
       const issues = outcome.eligibilityResult.failCount + outcome.eligibilityResult.flagCount;
       setIssuesFoundCount(issues);
 
+      syncJourneyForPropertyAddress(trimmed);
       setSnapshot({
         address: outcome.address,
         submittedAddress: trimmed,
@@ -64,7 +67,7 @@ export default function HeroEligibility() {
         computedAt: Date.now(),
       });
     },
-    [clearSnapshot, setSnapshot, snapshot]
+    [clearSnapshot, setSnapshot, snapshot, syncJourneyForPropertyAddress]
   );
 
   const handleAddressSelect = useCallback(
@@ -79,9 +82,12 @@ export default function HeroEligibility() {
     void runCheck(v);
   }, [runCheck]);
 
-  const handleGamePlan = useCallback(() => {
+  const handleGamePlan = useCallback(async () => {
+    if (snapshot) {
+      await mergeJourney({ eligibilitySnapshot: snapshot });
+    }
     router.push('/steps/step-1');
-  }, [router]);
+  }, [router, snapshot, mergeJourney]);
 
   return (
     <>

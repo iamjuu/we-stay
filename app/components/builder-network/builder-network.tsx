@@ -13,6 +13,8 @@ import { partnerImage, Property } from '@/content';
 import { Info, Search } from 'lucide-react';
 import CtaButton from '../ctaButton/ctaButton';
 
+const LENDING_PARTNER_MAILTO = 'mailto:richie.westayhome@gmail.com';
+
 const SearchIcon = () => (
   <svg
     width="14"
@@ -261,7 +263,7 @@ const BuilderNetwork = () => {
       </p>
       </div>
       <div className='flex my-[60px] justify-center'>
-<CtaButton buttonName='Apply Now'  className='px-[100px] '/>
+<CtaButton buttonName='Apply Now' className='px-[100px] ' href={LENDING_PARTNER_MAILTO} />
       </div>
     </div>
   </div>
@@ -357,7 +359,7 @@ const BuilderNetwork = () => {
 
             <div className='flex mb-[100px] justify-center'>
 
-              <CtaButton buttonName='Become a Lending Partner' />
+              <CtaButton buttonName='Become a Lending Partner' href={LENDING_PARTNER_MAILTO} />
             </div>
           </div>
         </div>

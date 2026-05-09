@@ -3,16 +3,24 @@
 import { ConfiguratorCanvas } from "@/app/components/aduConfigurator/ConfiguratorCanvas";
 import { type PlanId, PLAN_MODEL_URL } from "@/app/components/aduConfigurator/planModelUrls";
 import { type SidingId } from "@/app/components/aduConfigurator/ConfiguratorModel";
+import Navbar from "@/app/components/navbar/navbar";
 import { Home, Layers, Maximize2, User } from "lucide-react";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useBuildPath } from "@/app/context/build-path-session";
+import { useEligibilitySession } from "@/app/context/eligibility-session";
+import { ensureJourneyUserId, useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-progress";
+import { useReportContact } from "@/app/context/report-contact";
+import { flowIndexFromPath } from "@/lib/wizard-flow";
+import type { FullEligibilityResult } from "@/lib/eligibility-gates";
 import kaiInterior from "@/content/interior/kai interior.png";
 import ainaInterior from "@/content/interior/aina interior.png";
 import laniInterior from "@/content/interior/lani interior.png";
 import anuInterior from "@/content/interior/Anu interior.png";
+
+const BOOKING_URL = "https://links.womcom.com/widget/bookings/westay-discovery-call";
 
 type RoofStyle = "asphalt" | "metal";
 
@@ -276,6 +284,12 @@ function ScoreRing({ value }: { value: number }) {
   );
 }
 
+function eligibilityScorePercent(result: FullEligibilityResult): number {
+  const n = result.gates.length;
+  if (n === 0) return 0;
+  return Math.round((result.passCount / n) * 100);
+}
+
 function OptionCard({
   selected,
   onClick,
@@ -308,9 +322,18 @@ function OptionCard({
 
 export function AduConfiguratorClient() {
   const router = useRouter();
+  const pathname = usePathname();
+  const flowIdx = flowIndexFromPath(pathname) ?? 5;
   const { setConfiguratorSummary } = useBuildPath();
+  const { userId, ensureActiveJourneyId } = useJourneyProgress();
+  useWizardRouteGuard(flowIdx);
+  const { snapshot } = useEligibilitySession();
+  const { contact: reportContact } = useReportContact();
   const [viewportReady, setViewportReady] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
+  const [finishSending, setFinishSending] = useState(false);
+  const [finishSuccess, setFinishSuccess] = useState(false);
+  const [finishError, setFinishError] = useState(false);
 
   const handleLoadIdle = useCallback(() => setViewportReady(true), []);
   const handleLoadProgress = useCallback((p: number) => setLoadProgress(p), []);
@@ -318,7 +341,7 @@ export function AduConfiguratorClient() {
   const [planId, setPlanId] = useState<PlanId>("two-office");
   const [sidingId, setSidingId] = useState<SidingId>("default-stucco");
   const [claddingId, setCladdingId] = useState<CladdingId>("coastal");
-  const [roofId, setRoofId] = useState<RoofStyle>("asphalt");
+  const [roofId, setRoofId] = useState<RoofStyle>("metal");
   const [features, setFeatures] = useState<OptionalFeatures>({
     deck: true,
     lanai: false,
@@ -340,6 +363,14 @@ export function AduConfiguratorClient() {
   const selectedPlan = PLANS.find((p) => p.id === planId)!;
   const selectedSiding = SIDING_OPTIONS.find((s) => s.id === sidingId)!;
   const fundingSel = FUNDING_OPTS.find((f) => f.id === fundingId)!;
+
+  const snapshotScore = useMemo(
+    () =>
+      snapshot?.eligibilityResult
+        ? eligibilityScorePercent(snapshot.eligibilityResult)
+        : 0,
+    [snapshot]
+  );
 
   const yourAduChips = useMemo(() => {
     const chips: string[] = [selectedPlan.title, selectedSiding.title, cladding.label, interior.label];
@@ -367,8 +398,8 @@ export function AduConfiguratorClient() {
     setUpgrades((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleFinish = () => {
-    setConfiguratorSummary({
+  const handleFinish = async () => {
+    const summary = {
       planId,
       sidingId,
       claddingId,
@@ -378,24 +409,53 @@ export function AduConfiguratorClient() {
       features: { deck: features.deck, lanai: features.lanai, shower: features.shower },
       upgrades: { ...upgrades },
       chipLabels: [...yourAduChips],
-    });
-    router.push("/steps/thank-you");
+    };
+    setConfiguratorSummary(summary);
+    setFinishError(false);
+    setFinishSending(true);
+    try {
+      const browserUserId = userId ?? ensureJourneyUserId();
+      const journeyId = ensureActiveJourneyId();
+      const r = await fetch("/api/journey/finish", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          journeyId,
+          browserUserId,
+          configuratorSummary: summary,
+          ...(reportContact
+            ? {
+                reportContact: {
+                  firstName: reportContact.firstName,
+                  lastName: reportContact.lastName,
+                  email: reportContact.email,
+                  phone: reportContact.phone,
+                },
+              }
+            : {}),
+        }),
+      });
+      if (!r.ok) throw new Error("finish failed");
+      setFinishSuccess(true);
+      window.open(BOOKING_URL, "_blank", "noopener,noreferrer");
+      setTimeout(() => router.push("/"), 2200);
+    } catch {
+      setFinishError(true);
+    } finally {
+      setFinishSending(false);
+    }
   };
 
   return (
     <div
-      className="font-dm-sans flex min-h-screen flex-col text-[#0f1412] lg:flex-row"
+      className="font-dm-sans flex min-h-screen flex-col text-[#0f1412]"
       style={{ background: "#0f1412" }}
     >
-      <header className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3 lg:hidden">
-        <Link
-          href="/"
-          className="text-sm font-medium tracking-wide text-white/90 underline-offset-4 hover:underline"
-        >
-          ← WeStay home
-        </Link>
-        <span className="truncate text-[13px] text-white/60">ADU configurator</span>
-      </header>
+      <div className="relative z-10 bg-white">
+        <Navbar />
+      </div>
+
+      <div className="flex flex-1 flex-col lg:flex-row">
 
       <aside
         className="order-2 flex w-full flex-1 flex-col gap-5 lg:order-2 lg:h-screen lg:w-[min(472px,40vw)] lg:shrink-0 lg:overflow-y-auto lg:border-l lg:border-white/10 lg:pb-12"
@@ -640,7 +700,7 @@ export function AduConfiguratorClient() {
                 <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#87908c]">
                   Score
                 </span>
-                <ScoreRing value={80} />
+                <ScoreRing value={snapshotScore} />
               </div>
               <SnapshotRow label="Intended Use" value="Primary residence extension" />
               <SnapshotRow label="Selected ADU Type" value={selectedPlan.title} />
@@ -655,12 +715,24 @@ export function AduConfiguratorClient() {
 
             <button
               type="button"
-              onClick={handleFinish}
-              className="font-dm-sans mt-6 w-full rounded-[14px] bg-[#ff6b5c] py-4 text-[15px] font-semibold text-white transition-colors hover:bg-[#ef5d4f] active:bg-[#e55548]"
+              onClick={() => void handleFinish()}
+              disabled={finishSending || finishSuccess}
+              className="font-dm-sans mt-6 w-full rounded-[14px] bg-[#ff6b5c] py-4 text-[15px] font-semibold text-white transition-colors hover:bg-[#ef5d4f] enabled:active:bg-[#e55548] disabled:opacity-60"
               style={{ fontVariationSettings: "'opsz' 14" }}
             >
-              Finish &amp; Book Discovery Call
+              {finishSending ? "Sending…" : "Finish & Book Discovery Call"}
             </button>
+            {finishSuccess ? (
+              <p className="font-dm-sans mt-4 text-center text-[13px] leading-relaxed text-[#2a6b5f]">
+                Thank you — we received your configuration. We&apos;ll verify the details and get back to you. Taking you
+                home…
+              </p>
+            ) : null}
+            {finishError ? (
+              <p className="font-dm-sans mt-4 text-center text-[13px] text-red-600">
+                We couldn&apos;t send the report. Check your connection and try again.
+              </p>
+            ) : null}
           </SidebarSection>
         </div>
       </aside>
@@ -714,6 +786,7 @@ export function AduConfiguratorClient() {
           className="pointer-events-none absolute inset-x-0 bottom-0 z-1 h-24 bg-linear-to-t from-[#eaecea] via-[#eaecea]/75 to-transparent"
         />
       </main>
+      </div>
     </div>
   );
 }

@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useId, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
 import { StepFooter } from "../components/step-footer";
 import { useEligibilitySession } from "@/app/context/eligibility-session";
+import { useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-progress";
+import { flowIndexFromPath, nextWizardPath, prevWizardPath } from "@/lib/wizard-flow";
 import type { EligibilityGate } from "@/lib/eligibility-gates";
 import type { FullEligibilityResult } from "@/lib/eligibility-gates";
 import RentAnalysisCard from "@/components/RentAnalysisCard";
@@ -233,6 +235,10 @@ function CircleProgress({
 
 export default function PropertyScorePage() {
   const router = useRouter();
+  const pathname = usePathname();
+  const flowIdx = flowIndexFromPath(pathname) ?? 1;
+  const { maxNavIndex, recordFlowComplete } = useJourneyProgress();
+  useWizardRouteGuard(flowIdx);
   const gradientId = useId().replace(/:/g, "");
   const { snapshot, hydrated } = useEligibilitySession();
 
@@ -351,7 +357,10 @@ export default function PropertyScorePage() {
           <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-3">
             <button
               type="button"
-              onClick={() => router.push("/steps/step-3")}
+              onClick={async () => {
+                await recordFlowComplete(1);
+                router.push("/steps/step-3");
+              }}
               className="flex w-full items-center justify-center gap-2 rounded-full bg-teal-400 py-4 text-sm font-semibold tracking-wide text-slate-900 shadow-lg shadow-teal-400/20 transition-all duration-200 hover:bg-teal-300 active:scale-[0.98]"
             >
               Continue My Build Path
@@ -367,7 +376,17 @@ export default function PropertyScorePage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </button>
-            <StepFooter currentStep={3} totalSteps={7} variant="step2" />
+            <StepFooter
+              currentStep={3}
+              totalSteps={7}
+              variant="step2"
+              onBack={() => router.push(prevWizardPath(flowIdx))}
+              onForward={() => {
+                const n = nextWizardPath(flowIdx);
+                if (n) router.push(n);
+              }}
+              canGoForward={maxNavIndex > flowIdx}
+            />
           </div>
         </div>
       </div>

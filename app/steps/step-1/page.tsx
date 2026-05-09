@@ -2,14 +2,20 @@
 
 import Navbar from "@/app/components/navbar/navbar";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { StepsInput } from "../components/steps-input";
 import { StepsSubmitBtn } from "../components/steps-submit-btn";
 import { StepFooter } from "../components/step-footer";
 import { useReportContact } from "@/app/context/report-contact";
+import { useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-progress";
+import { flowIndexFromPath, nextWizardPath, prevWizardPath } from "@/lib/wizard-flow";
 
 export default function ReportForm() {
   const router = useRouter();
+  const pathname = usePathname();
+  const flowIdx = flowIndexFromPath(pathname) ?? 0;
+  const { maxNavIndex, recordFlowComplete } = useJourneyProgress();
+  useWizardRouteGuard(flowIdx);
   const { contact, hydrated, setContact } = useReportContact();
   const [form, setForm] = useState({
     firstName: "",
@@ -64,6 +70,9 @@ export default function ReportForm() {
       savedAt: Date.now(),
     });
     await new Promise((r) => setTimeout(r, 400));
+    await recordFlowComplete(0, {
+      contact: { firstName, lastName, email, phone },
+    });
     setLoading(false);
     router.push("/steps/step-2");
   };
@@ -136,7 +145,16 @@ export default function ReportForm() {
               )}
             />
 
-            <StepFooter currentStep={2} totalSteps={7} />
+            <StepFooter
+              currentStep={2}
+              totalSteps={7}
+              onBack={() => router.push(prevWizardPath(flowIdx))}
+              onForward={() => {
+                const n = nextWizardPath(flowIdx);
+                if (n) router.push(n);
+              }}
+              canGoForward={maxNavIndex > flowIdx}
+            />
           </div>
         </div>
       </div>

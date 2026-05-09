@@ -3,10 +3,18 @@
 import { Logo } from "@/content";
 import CtaButton from "../ctaButton/ctaButton";
 import Image from "next/image";
-import Link from "next/link"; // Import Link for better Next.js navigation
+import Link from "next/link";
 import { useState } from "react";
 
-const navItems = ["How It Works", "ADU Options", "Peek Inside", "About"];
+const BOOK_DISCOVERY_CALL_URL =
+  "https://links.womcom.com/widget/bookings/westay-discovery-call";
+
+const navItems = [
+  { label: "How It Works", href: "/#how-it-works" },
+  { label: "ADU Options", href: "/#adu-options" },
+  { label: "Peek Inside", href: "/#peek-inside" },
+  { label: "About", href: "/about" },
+] as const;
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -20,13 +28,13 @@ const Navbar = () => {
         <div className="flex  items-center justify-between px-5 py-3 sm:px-7 lg:px-[42px] lg:py-[10px]">
           {/* Logo */}
           <div className=" flex items-center justify-between w-full">
-            <div className="">
+            <Link href="/" className="inline-flex shrink-0" aria-label="WeStay home">
               <Image
                 alt="WeStay logo"
                 className="h-full w-full object-contain"
                 src={Logo}
               />
-            </div>
+            </Link>
 
             {/* Desktop nav items */}
             <div
@@ -34,20 +42,20 @@ const Navbar = () => {
               style={{ fontFamily: '"DM Sans", sans-serif' }}
             >
               {navItems.map((item) => (
-                <Link // Fixed: Added Link/a tag
-                  key={item}
-                  href="#"
+                <Link
+                  key={item.label}
+                  href={item.href}
                   className="whitespace-nowrap transition-opacity duration-200 hover:opacity-70"
                   style={{ fontVariationSettings: "'opsz' 14" }}
                 >
-                  {item}
+                  {item.label}
                 </Link>
               ))}
             </div>
 
             {/* Desktop CTA */}
             <div className="hidden lg:block">
-              <CtaButton buttonName="Book A Call" />
+              <CtaButton buttonName="Book A Call" href={BOOK_DISCOVERY_CALL_URL} />
             </div>
           </div>
 
@@ -97,17 +105,17 @@ const Navbar = () => {
             style={{ fontFamily: '"DM Sans", sans-serif' }}
           >
             {navItems.map((item) => (
-              <Link // Fixed: Added Link/a tag
-                key={item}
-                href="#"
+              <Link
+                key={item.label}
+                href={item.href}
                 className="whitespace-nowrap transition-opacity duration-200 hover:opacity-70"
                 style={{ fontVariationSettings: "'opsz' 14" }}
                 onClick={() => setMenuOpen(false)}
               >
-                {item}
+                {item.label}
               </Link>
             ))}
-            <CtaButton buttonName="Book A Call" />
+            <CtaButton buttonName="Book A Call" href={BOOK_DISCOVERY_CALL_URL} />
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { useEffect, useMemo } from "react";
 import { EquirectSphere } from "./EquirectSphere";
 import { PanoramaHotspot } from "./PanoramaHotspot";
 import { createTapHereLabelTexture } from "./tapHereTexture";
+import type { FolderHotspotDef } from "./interiorFolderHotspots";
 import type { RoomId } from "./tourHotspots";
 import { ROOM_HOTSPOTS } from "./tourHotspots";
 

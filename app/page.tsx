@@ -1,6 +1,10 @@
 import Navbar from "./components/navbar/navbar";
 import HeroEligibility from "./components/hero-eligibility/hero-eligibility";
-import { Avatar1, Avatar2, Avatar3, Avatar4, HeroImage, PlaceholderImage, SectionTwo } from "@/content";
+import { Avatar1, Avatar2, Avatar3, Avatar4, SectionTwo } from "@/content";
+
+/** Hero background — `public/c7ce8d3f5b95b6b50f07aef058275d6266d8379d (1).png` */
+const HERO_BACKGROUND_URL =
+  "/c7ce8d3f5b95b6b50f07aef058275d6266d8379d%20(1).png";
 import WeStaySection from "./components/card";
 import JoinCard from "./components/westay";
 import Homeowners from "./components/Homeowners";
@@ -48,13 +52,13 @@ export default function Home() {
     <>
       <div
         style={{
-          backgroundImage: `url(${HeroImage.src})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundImage: `linear-gradient(to bottom, rgba(12, 27, 42, 0.58) 0%, rgba(12, 27, 42, 0.38) 42%, rgba(12, 27, 42, 0.72) 100%), url("${HERO_BACKGROUND_URL}")`,
+          backgroundSize: "cover, cover",
+          backgroundPosition: "center, center",
           backgroundRepeat: "no-repeat",
         }}
         id="home-hero"
-        className="relative min-h-screen bg-gray-100"
+        className="relative min-h-screen bg-[#0C1B2A]"
       >
         {/* Modal dimmer portals here — above hero BG, below main hero content */}
         <div
@@ -134,6 +138,9 @@ export default function Home() {
         </div>
         </div>
       </div>
+
+      <Eligibility />
+
       <div className="flex   py-[100px]   flex-col items-center bg-[#0C1B2A]">
         <h1
           style={{
@@ -197,7 +204,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div>
+      <div id="how-it-works">
         <WeStaySection />
       </div>
       <div>
@@ -209,11 +216,10 @@ export default function Home() {
       <div>
         <PropertyCarousel />
       </div>
-      <div>
+      <div id="adu-options">
         <RoofComponent />
       </div>
-      <div>
-
+      <div id="peek-inside">
         <InteriorTourClient />
       </div>
       <div>
@@ -221,9 +227,6 @@ export default function Home() {
       </div>
       <div>
         <TestimonialCarousel />
-      </div>
-      <div>
-        <Eligibility />
       </div>
       <div className="pt-[120px]">
         <Footer />

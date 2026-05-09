@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { Men1, Men2 } from "@/content";
@@ -203,9 +204,12 @@ export default function TestimonialCarousel() {
                 Building an ADU is a major decision. It involves your home, your money, and your
                 future. WeStay was built to make that journey clearer, smarter, and easier to
                 navigate.
-                <button className="inline-flex leading-[14px] items-center justify-center ml-2 bg-transparent border-2 border-[#F05C4A] text-[#F05C4A] hover:bg-[#F05C4A] hover:text-white transition-all duration-300 font-bold rounded-full text-[13px] py-2 px-6 whitespace-nowrap align-middle">
+                <Link
+                  href="/about"
+                  className="inline-flex leading-[14px] items-center justify-center ml-2 bg-transparent border-2 border-[#F05C4A] text-[#F05C4A] hover:bg-[#F05C4A] hover:text-white transition-all duration-300 font-bold rounded-full text-[13px] py-2 px-6 whitespace-nowrap align-middle"
+                >
                   Know More
-                </button>
+                </Link>
               </p>
             </div>
           </div>

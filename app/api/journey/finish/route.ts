@@ -1,0 +1,129 @@
+import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
+import { buildJourneyReportPdf } from "@/lib/build-report-pdf";
+import { getJourneyByJourneyId, mergeJourney } from "@/lib/journey-db";
+import type { JourneyConfiguratorSummary, JourneyContact, JourneyDocument } from "@/lib/journey-types";
+import { getMongoUri, getSmtpConfig } from "@/lib/server-config";
+import { buildUserFinishThankYouEmail } from "@/lib/user-finish-email";
+
+function ownedBy(doc: JourneyDocument, browserUserId: string): boolean {
+  const owner = doc.browserUserId ?? doc.userId;
+  if (!owner) return true;
+  return owner === browserUserId;
+}
+
+function parseReportContact(raw: unknown): JourneyContact | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  const firstName = typeof o.firstName === "string" ? o.firstName.trim() : "";
+  const lastName = typeof o.lastName === "string" ? o.lastName.trim() : "";
+  const email = typeof o.email === "string" ? o.email.trim() : "";
+  const phone = typeof o.phone === "string" ? o.phone.trim() : "";
+  if (!firstName || !lastName || !phone) return null;
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return null;
+  return { firstName, lastName, email, phone };
+}
+
+export async function POST(req: Request) {
+  try {
+    if (!getMongoUri()) {
+      return NextResponse.json({ error: "Database not configured" }, { status: 503 });
+    }
+    const smtp = getSmtpConfig();
+    if (!smtp) {
+      return NextResponse.json({ error: "Email not configured" }, { status: 503 });
+    }
+
+    const body = (await req.json()) as {
+      journeyId?: string;
+      browserUserId?: string;
+      /** @deprecated Use browserUserId */
+      userId?: string;
+      configuratorSummary?: JourneyConfiguratorSummary;
+      /** Client session contact — use when Mongo row has no contact (e.g. journey id changed mid-flow). */
+      reportContact?: unknown;
+    };
+    const journeyId = body.journeyId?.trim();
+    const browserUserId = (body.browserUserId ?? body.userId)?.trim();
+    if (!journeyId || !browserUserId) {
+      return NextResponse.json({ error: "journeyId and browserUserId required" }, { status: 400 });
+    }
+
+    if (body.configuratorSummary) {
+      const merged = await mergeJourney(journeyId, browserUserId, {
+        maxNavIndex: 6,
+        configuratorSummary: body.configuratorSummary,
+      });
+      if (!merged) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+    }
+
+    const reportContact = parseReportContact(body.reportContact);
+    if (reportContact) {
+      const merged = await mergeJourney(journeyId, browserUserId, { contact: reportContact });
+      if (!merged) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+    }
+
+    const journey = await getJourneyByJourneyId(journeyId);
+    if (!journey) {
+      return NextResponse.json({ error: "Journey not found" }, { status: 404 });
+    }
+    if (!ownedBy(journey, browserUserId)) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const pdfBuffer = await buildJourneyReportPdf(journey);
+
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: { user: smtp.user, pass: smtp.pass },
+    });
+
+    const contactEmail = journey.contact?.email?.trim() ?? "";
+    const hasUserInbox = contactEmail.includes("@");
+    const adminSubject = `WeStay ADU report — ${hasUserInbox ? contactEmail : journeyId.slice(0, 8)}`;
+    const filename = `westay-adu-report-${journeyId.slice(0, 8)}.pdf`;
+
+    const internalNote = `New ADU journey submission.\nJourney ID: ${journeyId}\nBrowser user: ${browserUserId}\nContact: ${contactEmail || "n/a"}`;
+    const attachment = { filename, content: pdfBuffer, contentType: "application/pdf" as const };
+
+    if (hasUserInbox) {
+      const firstName = journey.contact?.firstName ?? "there";
+      const userMail = buildUserFinishThankYouEmail(firstName);
+      /** Homeowner: styled thank-you only — no PDF (full snapshot PDF goes to admin). */
+      await transporter.sendMail({
+        from: smtp.from,
+        to: contactEmail,
+        replyTo: smtp.from,
+        subject: userMail.subject,
+        text: userMail.text,
+        html: userMail.html,
+      });
+      await transporter.sendMail({
+        from: smtp.from,
+        to: smtp.from,
+        subject: adminSubject,
+        text: internalNote,
+        attachments: [attachment],
+      });
+    } else {
+      await transporter.sendMail({
+        from: smtp.from,
+        to: smtp.from,
+        subject: adminSubject,
+        text: `${internalNote}\n\n(No contact email on file — user thank-you not sent.)`,
+        attachments: [attachment],
+      });
+    }
+
+    return NextResponse.json({ ok: true });
+  } catch (e) {
+    console.error("journey/finish", e);
+    return NextResponse.json({ error: "Failed to send report" }, { status: 500 });
+  }
+}
