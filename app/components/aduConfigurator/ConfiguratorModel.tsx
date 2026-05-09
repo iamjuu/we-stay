@@ -56,6 +56,7 @@ const DECK_SLAB_NAMES = ["Base_Support", "Wooden_Base", "Wooden_Step"] as const;
 /** Right sidebar “Covered Lanai”. */
 const LANAI_MESH_NAMES = ["Frontal_Roof", "Pillars"] as const;
 const SHOWER_PORTION_NAME = "Shower_Portion";
+const SURF_BOARD_NAME = "Surf_Board";
 
 type ConfiguratorModelProps = {
   url: string;
@@ -126,6 +127,7 @@ export function ConfiguratorModel({
       if ((DECK_SLAB_NAMES as readonly string[]).includes(o.name)) o.visible = showDeckSlab;
       if ((LANAI_MESH_NAMES as readonly string[]).includes(o.name)) o.visible = showLanaiMeshes;
       if (o.name === SHOWER_PORTION_NAME) o.visible = showShowerPortion;
+      if (o.name === SURF_BOARD_NAME) o.visible = !showShowerPortion;
       if ((WALL_PATTERN_MESH_NAMES as readonly string[]).includes(o.name)) {
         o.visible = patternVisible.has(o.name);
       }

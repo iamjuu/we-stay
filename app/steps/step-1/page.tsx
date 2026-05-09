@@ -127,9 +127,16 @@ export default function ReportForm() {
               <p className="w-full text-center font-dm-sans text-sm text-red-300">{error}</p>
             )}
 
-            <StepsSubmitBtn onClick={handleSubmit} loading={loading} />
+            <StepsSubmitBtn
+              onClick={handleSubmit}
+              loading={loading}
+              isComplete={Boolean(
+                form.firstName.trim() && form.lastName.trim() &&
+                form.email.trim() && form.phone.trim()
+              )}
+            />
 
-            <StepFooter currentStep={1} totalSteps={7} />
+            <StepFooter currentStep={2} totalSteps={7} />
           </div>
         </div>
       </div>

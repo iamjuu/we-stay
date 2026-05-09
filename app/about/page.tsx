@@ -15,8 +15,9 @@ const About = () => {
         paragraph="Building an ADU is a major decision. It involves your home, your money, and your future. WeStay was built to make that journey clearer, smarter, and easier to navigate."
       />
 
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-[80px] lg:gap-0">
         <AboutSection
+          featured
           titlePrimary="Helping Homeowners Build"
           titleSecondary="With Clarity & Confidence"
           paragraphs={[
@@ -41,13 +42,7 @@ const About = () => {
       </div>
 
       {/* Wide landscape image */}
-      <section className="w-full px-4 pt-16 sm:pt-20 md:pt-24 lg:pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
-        <div className="mx-auto max-w-7xl 2xl:max-w-none">
-          <div className="relative w-full aspect-video overflow-hidden rounded-3xl">
-            <Image src={About4} alt="WeStay ADU home exterior" fill className="object-cover" />
-          </div>
-        </div>
-      </section>
+     
 
       <Eligibility />
 

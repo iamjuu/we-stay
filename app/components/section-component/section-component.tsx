@@ -16,8 +16,8 @@ const Sectioncomponent = ({bgImage, heading, headingsecondary, paragraph}: {bgIm
         <div className="relative z-20">
           <Navbar />
           <div>
-            <div className=" mt-[80px] mb-[120px] flex w-full flex-col items-center gap-5 md:items-start md:px-[80px] md:mt-[104px] lg:mt-[104px]">
-              <h1 className="hero-heading w-full font-playfair-display text-center font-[700] text-white ">
+            <div className="mt-[80px] mb-[120px] flex w-full flex-col items-center gap-5 md:mt-[124px] md:items-center md:px-[80px] lg:mt-[140px] lg:items-center">
+              <h1 className="hero-heading w-full text-center font-playfair-display font-[700] text-white">
                {heading}
                 <br />
                 {headingsecondary}

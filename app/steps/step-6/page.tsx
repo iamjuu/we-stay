@@ -1,27 +1,35 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
 import { StepsSubmitBtn } from "../components/steps-submit-btn";
 import { StepFooter } from "../components/step-footer";
 import { useBuildPath } from "@/app/context/build-path-session";
-import { Gauge, PenTool } from "lucide-react";
+import clockIcon from "@/content/icons/clock.svg";
+import penIcon from "@/content/icons/pen.svg";
+import type { StaticImageData } from "next/image";
 
 const paths = [
   {
     id: "fast-track",
     title: "Fast Track",
     description: "Choose from standardized plans for a faster and simpler process.",
-    icon: Gauge,
+    icon: clockIcon,
   },
   {
     id: "custom",
     title: "Custom",
     description: "Work toward a more tailored design based on your property and goals.",
-    icon: PenTool,
+    icon: penIcon,
   },
-];
+] as const satisfies {
+  id: "fast-track" | "custom";
+  title: string;
+  description: string;
+  icon: StaticImageData;
+}[];
 
 function SelectionToggle({ selected }: { selected: boolean }) {
   return selected ? (
@@ -38,7 +46,7 @@ function SelectionToggle({ selected }: { selected: boolean }) {
 export default function StepSixBuildPreference() {
   const router = useRouter();
   const { setSelections } = useBuildPath();
-  const [selected, setSelected] = useState<"fast-track" | "custom">("fast-track");
+  const [selected, setSelected] = useState<"fast-track" | "custom" | "">("");
 
   return (
     <div className="relative flex min-h-screen bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
@@ -58,7 +66,6 @@ export default function StepSixBuildPreference() {
 
           <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
             {paths.map((opt) => {
-              const Icon = opt.icon;
               const isSelected = selected === opt.id;
               return (
                 <button
@@ -74,10 +81,21 @@ export default function StepSixBuildPreference() {
                   <div className="mb-4 flex items-start justify-between gap-2">
                     <div
                       className={`flex h-11 w-11 items-center justify-center rounded-full ${
-                        isSelected ? "bg-slate-900 text-white" : "bg-white/10 text-slate-400"
+                        isSelected ? "bg-[#0C1B2A]" : "bg-white/10"
                       }`}
                     >
-                      <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden />
+                      <Image
+                        src={opt.icon}
+                        alt=""
+                        width={17}
+                        height={14}
+                        className={
+                          isSelected
+                            ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(100%)_sepia(0%)_saturate(1%)_hue-rotate(332deg)_brightness(102%)_contrast(101%)]"
+                            : "opacity-85"
+                        }
+                        aria-hidden
+                      />
                     </div>
                     <SelectionToggle selected={isSelected} />
                   </div>
@@ -91,16 +109,18 @@ export default function StepSixBuildPreference() {
           </div>
 
           <StepsSubmitBtn
-            className="!bg-[#F05C4A] !text-white hover:!bg-[#e04d3f]"
+            isComplete={Boolean(selected)}
             idleText="Choose My Path"
+            disabled={!selected}
             onClick={() => {
+              if (!selected) return;
               setSelections({ buildPreferenceId: selected });
               router.push("/3dpage");
             }}
           />
 
           <div className="w-full pt-4">
-            <StepFooter currentStep={6} totalSteps={7} />
+            <StepFooter currentStep={6} totalSteps={7} variant="step6" />
           </div>
         </div>
       </div>

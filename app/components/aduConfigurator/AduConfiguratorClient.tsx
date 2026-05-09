@@ -4,10 +4,15 @@ import { ConfiguratorCanvas } from "@/app/components/aduConfigurator/Configurato
 import { type PlanId, PLAN_MODEL_URL } from "@/app/components/aduConfigurator/planModelUrls";
 import { type SidingId } from "@/app/components/aduConfigurator/ConfiguratorModel";
 import { Home, Layers, Maximize2, User } from "lucide-react";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useBuildPath } from "@/app/context/build-path-session";
+import kaiInterior from "@/content/interior/kai interior.png";
+import ainaInterior from "@/content/interior/aina interior.png";
+import laniInterior from "@/content/interior/lani interior.png";
+import anuInterior from "@/content/interior/Anu interior.png";
 
 type RoofStyle = "asphalt" | "metal";
 
@@ -130,7 +135,7 @@ type UpgradesPick = {
 
 type FundingId = "cash" | "financing" | "exploring";
 
-type InteriorId = "light-oak" | "kai" | "espresso" | "weathered";
+type InteriorId = "kai" | "aina" | "lani" | "anu";
 
 const FEATURE_LABELS: { key: keyof OptionalFeatures; label: string }[] = [
   { key: "deck", label: "Deck" },
@@ -184,34 +189,41 @@ const INTERIOR: {
   description: string;
 }[] = [
   {
-    id: "light-oak",
-    hex: "#d9c7a9",
-    swatchBg: "linear-gradient(135deg, #e9dcc8 40%, #c9aa85 100%)",
-    label: "Haven",
-    description: "Warm light oak tones for airy interiors.",
-  },
-  {
     id: "kai",
-    hex: "#8f5f3f",
-    swatchBg: "linear-gradient(135deg, #a6724d 35%, #6e4128 95%)",
+    hex: "#8B6B52",
+    swatchBg: "#8B6B52",
     label: "Kai",
     description: "A warm and simple material.",
   },
   {
-    id: "espresso",
-    hex: "#4a3023",
-    swatchBg: "linear-gradient(135deg, #5c3d2e 35%, #2e1a13 92%)",
-    label: "Koa night",
-    description: "Deep rich woodgrain character.",
+    id: "aina",
+    hex: "#5C4434",
+    swatchBg: "#5C4434",
+    label: "Aina",
+    description: "A grounded, rich interior tone.",
   },
   {
-    id: "weathered",
-    hex: "#9ea09a",
-    swatchBg: "linear-gradient(135deg, #b8bcb4 42%, #7e827a 94%)",
-    label: "Coastal drift",
-    description: "Soft grey reclaimed feel.",
+    id: "lani",
+    hex: "#C7AF8D",
+    swatchBg: "#C7AF8D",
+    label: "Lani",
+    description: "Light and calm finish for open, airy interiors.",
+  },
+  {
+    id: "anu",
+    hex: "#907D6B",
+    swatchBg: "#907D6B",
+    label: "Anu",
+    description: "Balanced earthy finish with soft depth.",
   },
 ];
+
+const INTERIOR_PREVIEW: Record<InteriorId, StaticImageData> = {
+  kai: kaiInterior,
+  aina: ainaInterior,
+  lani: laniInterior,
+  anu: anuInterior,
+};
 
 function SidebarSection({
   title,
@@ -324,6 +336,7 @@ export function AduConfiguratorClient() {
 
   const cladding = CLADDING.find((c) => c.id === claddingId)!;
   const interior = INTERIOR.find((i) => i.id === interiorId)!;
+  const interiorPreview = INTERIOR_PREVIEW[interiorId];
   const selectedPlan = PLANS.find((p) => p.id === planId)!;
   const selectedSiding = SIDING_OPTIONS.find((s) => s.id === sidingId)!;
   const fundingSel = FUNDING_OPTS.find((f) => f.id === fundingId)!;
@@ -522,6 +535,15 @@ export function AduConfiguratorClient() {
               />
             </div>
           </SidebarSection>
+
+          <section className="overflow-hidden rounded-[20px] border border-white bg-white p-3 shadow-[0_12px_40px_rgba(15,36,56,0.04)] sm:p-4">
+            <Image
+              src={interiorPreview}
+              alt={`${interior.label} interior preview`}
+              className="h-auto w-full object-cover"
+              priority
+            />
+          </section>
 
           <SidebarSection title="Interior Mood / Finish">
             <div className="mt-5 flex flex-wrap gap-3">

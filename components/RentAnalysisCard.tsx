@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { Adu1000SqFt } from '@/content';
 
 interface RentalData {
   bedrooms: number;
@@ -27,8 +28,8 @@ interface AduOption {
   label?: string;
 }
 
-/** ADU photos — /public/images (750 sq ft + 1000 sq ft cards) */
-const aduImages = ['/images/housepicture.png', '/images/Picture.png'];
+/** ADU photos — 750 sq ft uses public image, 1000 sq ft uses imported asset */
+const aduImages = ['/images/housepicture.png', Adu1000SqFt];
 
 export default function RentAnalysisCard({
   zipCode,
@@ -117,11 +118,6 @@ export default function RentAnalysisCard({
           Rental estimates for ZIP {effectiveZipCode} based on{' '}
           {(comparableCount > 0 ? comparableCount : effectiveRentals[0]?.comparableCount) || 15}+ comparable
           properties
-          {!usingLiveRentals && (
-            <span className="mt-1 block text-xs text-white/45">
-              Showing illustrative comparables until rent data loads for this ZIP.
-            </span>
-          )}
         </p>
         {maxAduSqFt != null && maxAduSqFt < 1000 && (
           <p className="mx-auto mt-2 max-w-md font-dm-sans text-xs text-amber-200/90">

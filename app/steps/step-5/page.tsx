@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -7,7 +8,10 @@ import Navbar from "@/app/components/navbar/navbar";
 import { StepsSubmitBtn } from "../components/steps-submit-btn";
 import { StepFooter } from "../components/step-footer";
 import { useBuildPath } from "@/app/context/build-path-session";
-import { Home, Building2, Layers } from "lucide-react";
+import backyardIcon from "@/content/icons/backyard.svg";
+import attachedIcon from "@/content/icons/attached.svg";
+import secondStoryIcon from "@/content/icons/seconsstory.svg";
+import type { StaticImageData } from "next/image";
 
 type AduTypeId = "backyard" | "attached" | "second-story";
 
@@ -15,26 +19,26 @@ const aduTypes: {
   id: AduTypeId;
   title: string;
   description: string;
-  icon: typeof Home;
+  icon: StaticImageData;
   wide?: boolean;
 }[] = [
   {
     id: "backyard",
     title: "Backyard Home",
     description: "A standalone structure built in your backyard, ideal for maximum privacy.",
-    icon: Home,
+    icon: backyardIcon,
   },
   {
     id: "attached",
     title: "Attached Addition",
     description: "Shares a wall with your main home—great for seamlessly expanding living space.",
-    icon: Building2,
+    icon: attachedIcon,
   },
   {
     id: "second-story",
     title: "Second Story Addition",
     description: "Built above an existing structure—perfect for smaller lots with limited ground space.",
-    icon: Layers,
+    icon: secondStoryIcon,
     wide: true,
   },
 ];
@@ -54,7 +58,7 @@ function SelectionToggle({ selected }: { selected: boolean }) {
 export default function StepFiveAduType() {
   const router = useRouter();
   const { setSelections } = useBuildPath();
-  const [selected, setSelected] = useState<AduTypeId>("backyard");
+  const [selected, setSelected] = useState<AduTypeId | "">("");
 
   return (
     <div className="relative flex min-h-screen bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
@@ -76,7 +80,6 @@ export default function StepFiveAduType() {
             {aduTypes
               .filter((t) => !t.wide)
               .map((opt) => {
-                const Icon = opt.icon;
                 const isSelected = selected === opt.id;
                 return (
                   <button
@@ -86,23 +89,30 @@ export default function StepFiveAduType() {
                     className={`relative flex min-h-[140px] flex-col rounded-2xl border px-5 py-4 text-left transition-all duration-200 md:min-h-[160px] ${
                       isSelected
                         ? "border-[#42B0A8] bg-white shadow-[0_0_0_1px_rgba(66,176,168,0.35)]"
-                        : "border-white/12 bg-white/5 hover:border-white/22 hover:bg-white/[0.07]"
+                        : "border-white/12 bg-[#FFFFFF33] hover:border-white/22 hover:bg-[#FFFFFF33]"
                     }`}
                   >
                     <div className="mb-3 flex items-start justify-between gap-2">
                       <div
                         className={`flex h-11 w-11 items-center justify-center rounded-full ${
-                          isSelected ? "bg-slate-900 text-white" : "bg-white/10 text-slate-300"
+                          isSelected ? "bg-[#0C1B2A]" : "bg-white/10"
                         }`}
                       >
-                        <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden />
+                        <Image
+                          src={opt.icon}
+                          alt=""
+                          width={19}
+                          height={16}
+                          className={isSelected ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]" : "opacity-85"}
+                          aria-hidden
+                        />
                       </div>
                       <SelectionToggle selected={isSelected} />
                     </div>
-                    <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-slate-900" : "text-white"}`}>
+                    <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-[#000000]" : "text-[#F5F7FA]"}`}>
                       {opt.title}
                     </p>
-                    <p className={`mt-2 font-dm-sans text-sm leading-relaxed ${isSelected ? "text-slate-600" : "text-slate-400"}`}>
+                    <p className={`mt-2 font-dm-sans text-sm leading-relaxed ${isSelected ? "text-[#93928E]" : "text-[#F5F7FA]"}`}>
                       {opt.description}
                     </p>
                   </button>
@@ -113,7 +123,6 @@ export default function StepFiveAduType() {
           {aduTypes
             .filter((t) => t.wide)
             .map((opt) => {
-              const Icon = opt.icon;
               const isSelected = selected === opt.id;
               return (
                 <button
@@ -123,21 +132,28 @@ export default function StepFiveAduType() {
                   className={`relative flex w-full flex-col rounded-2xl border px-5 py-4 text-left transition-all duration-200 ${
                     isSelected
                       ? "border-[#42B0A8] bg-white shadow-[0_0_0_1px_rgba(66,176,168,0.35)]"
-                      : "border-white/12 bg-white/5 hover:border-white/22 hover:bg-white/[0.07]"
+                      : "border-white/12 bg-[#FFFFFF33] hover:border-white/22 hover:bg-[#FFFFFF33]"
                   }`}
                 >
                   <div className="mb-3 flex items-start justify-between gap-2">
                     <div
                       className={`flex h-11 w-11 items-center justify-center rounded-full ${
-                        isSelected ? "bg-slate-900 text-white" : "bg-white/10 text-slate-300"
+                        isSelected ? "bg-[#0C1B2A]" : "bg-white/10"
                       }`}
                     >
-                      <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden />
+                      <Image
+                        src={opt.icon}
+                        alt=""
+                        width={19}
+                        height={16}
+                        className={isSelected ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]" : "opacity-85"}
+                        aria-hidden
+                      />
                     </div>
                     <SelectionToggle selected={isSelected} />
                   </div>
-                  <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-slate-900" : "text-white"}`}>{opt.title}</p>
-                  <p className={`mt-2 max-w-3xl font-dm-sans text-sm leading-relaxed ${isSelected ? "text-slate-600" : "text-slate-400"}`}>
+                  <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-[#000000]" : "text-[#F5F7FA]"}`}>{opt.title}</p>
+                  <p className={`mt-2 max-w-3xl font-dm-sans text-sm leading-relaxed ${isSelected ? "text-[#93928E]" : "text-[#F5F7FA]"}`}>
                     {opt.description}
                   </p>
                 </button>
@@ -145,9 +161,11 @@ export default function StepFiveAduType() {
             })}
 
           <StepsSubmitBtn
-            className="!bg-[#F05C4A] !text-white hover:!bg-[#e04d3f]"
+            isComplete={Boolean(selected)}
             idleText="Continue"
+            disabled={!selected}
             onClick={() => {
+              if (!selected) return;
               setSelections({ aduTypeId: selected });
               router.push("/steps/step-6");
             }}
@@ -161,8 +179,8 @@ export default function StepFiveAduType() {
             .
           </p>
 
-          <div className="w-full pt-4">
-            <StepFooter currentStep={5} totalSteps={7} />
+          <div className="w-full pt-4 ">
+            <StepFooter currentStep={6} totalSteps={7} variant="step5" />
           </div>
         </div>
       </div>

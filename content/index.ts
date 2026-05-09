@@ -49,14 +49,16 @@ import Home5 from "./images/3dhome/Studio storm wood drift.svg";
 import FooterLogo from "./images/footer1.svg"
 
 
+import Adu1000SqFt from "./assets/banner-card-user/26982776f616d0c9c081899531308d77b5fb085d (1).png"
 import About1 from "./images/about/Hero Img (1).svg"
-import About2 from "./images/about/Hero Img (2).svg"
-import About3 from "./images/about/Hero Img (3).svg"
+import About2 from "./images/about/richie-story.png"
+import About3 from "./images/about/adu-evening-duo.png"
 import About4 from "./images/about/Hero Img (4).svg"
 /** Card thumbnails until real exports exist; same asset as container hero. */
 const PlaceholderImage = ContainerImage1;
 
 export {
+  Adu1000SqFt,
   About1,
   About2,
   About3,

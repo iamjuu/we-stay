@@ -3,18 +3,20 @@
 import type { ButtonHTMLAttributes } from "react";
 
 const baseClassName =
-  "w-full py-4 rounded-full bg-teal-400 hover:bg-teal-300 text-slate-900 font-semibold text-sm tracking-wide flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-lg shadow-teal-400/20";
+  "w-full py-4 rounded-full text-white font-semibold text-sm tracking-wide flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed shadow-lg";
 
 export type StepsSubmitBtnProps = {
   loading?: boolean;
   loadingText?: string;
   idleText?: string;
+  isComplete?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 export function StepsSubmitBtn({
   loading = false,
   loadingText = "Preparing…",
   idleText = "Reveal My Score",
+  isComplete = false,
   className = "",
   children,
   disabled,
@@ -22,12 +24,14 @@ export function StepsSubmitBtn({
   ...props
 }: StepsSubmitBtnProps) {
   const isDisabled = disabled || loading;
+  const bgColor = isComplete ? "#4DB6AC" : "#F05C4A";
 
   return (
     <button
       type={type}
       disabled={isDisabled}
       className={`${baseClassName} ${className}`.trim()}
+      style={{ backgroundColor: bgColor, boxShadow: `0 8px 24px ${bgColor}40` }}
       {...props}
     >
       {loading ? (

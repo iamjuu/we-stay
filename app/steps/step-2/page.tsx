@@ -64,13 +64,13 @@ function eligibilityScorePercent(result: FullEligibilityResult): number {
 }
 
 function summaryCopy(address: string, result: FullEligibilityResult): string {
-  const short = address.split(",")[0]?.trim() || "This property";
   if (result.status === "ELIGIBLE") {
-    return `Excellent news. ${short} meets primary screening criteria on available data. You're well-positioned to explore an ADU addition. Always confirm final eligibility with DPP.`;
+    return "Excellent news. Your lot meets all primary zoning criteria. You are well-positioned to maximize property value through an ADU addition.";
   }
   if (result.status === "NEEDS_REVIEW") {
-    return `${short} clears several checks, but some items need verification or professional review before you commit to a build path.`;
+    return "Needs review. Your lot does not fully meet primary zoning criteria. Further assessment is required before planning an ADU.";
   }
+  const short = address.split(",")[0]?.trim() || "This property";
   return `Based on preliminary screening, ${short} may face significant eligibility constraints. Review failed gates below and consult DPP before proceeding.`;
 }
 
@@ -118,12 +118,12 @@ function GateCard({ gate }: { gate: EligibilityGate }) {
     );
 
   const shell = isPass
-    ? "bg-white/5 border-[#2E7D32]/60"
+    ? "bg-[#FFFFFF33] border-[#2E7D32]/60"
     : isFail
-      ? "bg-red-500/10 border-red-500/50"
+      ? "bg-[#FFFFFF33] border-red-500/50"
       : isFlag
-        ? "bg-orange-500/10 border-orange-500/50"
-        : "bg-white/[0.03] border-white/15";
+        ? "bg-[#FFFFFF33] border-orange-500/50"
+        : "bg-[#FFFFFF33] border-white/15";
 
   const titleClass =
     isPass ? "text-white" : isFail ? "text-red-100" : isFlag ? "text-orange-100" : "text-white/60";
@@ -147,13 +147,26 @@ function GateCard({ gate }: { gate: EligibilityGate }) {
   );
 }
 
-function CircleProgress({ score, gradientId }: { score: number; gradientId: string }) {
+function CircleProgress({
+  score,
+  gradientId,
+  status,
+}: {
+  score: number;
+  gradientId: string;
+  status: FullEligibilityResult["status"];
+}) {
   const [animated, setAnimated] = useState(0);
   const radius = 70;
   const stroke = 8;
   const normalizedRadius = radius - stroke / 2;
   const circumference = 2 * Math.PI * normalizedRadius;
   const offset = circumference - (animated / 100) * circumference;
+  const markerDeg = (animated / 100) * 360;
+  const ringStops =
+    status === "NEEDS_REVIEW"
+      ? { from: "#E65100", mid: "#FF8A4B", to: "#E65100" }
+      : { from: "#4DB6AC", mid: "#35AEA2", to: "#26A69A" };
 
   useEffect(() => {
     const timer = setTimeout(() => setAnimated(score), 100);
@@ -190,12 +203,26 @@ function CircleProgress({ score, gradientId }: { score: number; gradientId: stri
           style={{ transition: "stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)" }}
         />
         <defs>
-          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#4DB6AC" />
-            <stop offset="100%" stopColor="#26A69A" />
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%" gradientTransform="rotate(320.92)">
+            <stop offset="18.07%" stopColor={ringStops.from} />
+            <stop offset="50.05%" stopColor={ringStops.mid} />
+            <stop offset="82.03%" stopColor={ringStops.to} />
           </linearGradient>
         </defs>
       </svg>
+      <div
+        className="pointer-events-none absolute rounded-full"
+        style={{
+          width: 15.00000286102295,
+          height: 15.00000286102295,
+          border: "1.5px solid #FFFFFFB2",
+          backgroundColor: status === "NEEDS_REVIEW" ? "#E65100" : "#4DB6AC",
+          top: "50%",
+          left: "50%",
+          transform: `translate(-50%, -50%) rotate(${markerDeg}deg) translateY(-${normalizedRadius}px)`,
+          transition: "transform 1.2s cubic-bezier(0.4,0,0.2,1)",
+        }}
+      />
       <div className="absolute flex flex-col items-center justify-center">
         <span className="text-3xl font-bold leading-none text-white">{score}%</span>
         <span className="mt-1 text-xs tracking-wide text-slate-400">Your Score</span>
@@ -262,7 +289,7 @@ export default function PropertyScorePage() {
             <p className="max-w-2xl text-center font-dm-sans text-xs text-white/50">{addressLine}</p>
 
             <div className="flex w-full flex-col items-center gap-5">
-              <CircleProgress score={score} gradientId={gradientId} />
+              <CircleProgress score={score} gradientId={gradientId} status={result.status} />
               <StatusBadge result={result} />
               <p className="max-w-xl text-center font-dm-sans text-sm leading-relaxed text-slate-300">{summary}</p>
             </div>
@@ -276,25 +303,37 @@ export default function PropertyScorePage() {
             </div>
 
             {result.aduSize && (
-              <div className="w-full max-w-4xl rounded-xl border border-white/15 bg-white/[0.06] px-5 py-4">
-                <div className="flex flex-wrap items-start gap-2">
-                  <span className="font-dm-sans text-sm font-semibold text-[#4DB6AC]">Maximum ADU Size</span>
-                  <span className="font-dm-sans text-sm text-white">
-                    {result.aduSize.maxAduSizeSqFt.toLocaleString()} sq ft
-                    {result.aduSize.primaryDwellingSizeSqFt != null &&
-                      ` · Primary dwelling ${result.aduSize.primaryDwellingSizeSqFt.toLocaleString()} sq ft`}
-                  </span>
+              <div className="w-full max-w-4xl rounded-xl border border-white/15 bg-[#FFFFFF33] px-5 py-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-teal-400/20">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                      <path d="M3 9.5L12 3L21 9.5V20C21 20.5523 20.5523 21 20 21H15V15H9V21H4C3.44772 21 3 20.5523 3 20V9.5Z" stroke="#4DB6AC" strokeWidth="1.8" strokeLinejoin="round"/>
+                      <path d="M9 21V15H15V21" stroke="#4DB6AC" strokeWidth="1.8" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="font-dm-sans text-sm font-bold text-white">Maximum ADU Size</span>
+                    <span className="font-dm-sans text-sm text-white">
+                      <span className="font-semibold text-[#4DB6AC]">{result.aduSize.maxAduSizeSqFt.toLocaleString()} sq ft</span>
+                      {' '}based on lot size
+                    </span>
+                  </div>
                 </div>
                 {result.aduSize.sizeNote ? (
-                  <p className="mt-3 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 font-dm-sans text-xs text-amber-100/95">
-                    {result.aduSize.sizeNote}
-                  </p>
+                  <div className="mt-3 flex items-center gap-2 rounded-full border border-orange-500 bg-[#E6510033] px-4 py-2">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                      <circle cx="7" cy="7" r="6" stroke="#f97316" strokeWidth="1.4"/>
+                      <path d="M7 4.5V7.5" stroke="#f97316" strokeWidth="1.4" strokeLinecap="round"/>
+                      <circle cx="7" cy="9.5" r="0.7" fill="#f97316"/>
+                    </svg>
+                    <span className="font-dm-sans text-xs text-white">{result.aduSize.sizeNote}</span>
+                  </div>
                 ) : null}
               </div>
             )}
 
             {result.flagCount > 0 && (
-              <div className="flex w-full max-w-4xl items-start gap-3 rounded-lg border border-orange-500/45 bg-orange-500/10 px-4 py-3">
+              <div className="flex w-full max-w-4xl items-start gap-3 rounded-lg border border-orange-500/45 bg-[#E6510033] px-4 py-3">
                 <CriterionWarnIcon />
                 <p className="font-dm-sans text-sm leading-snug text-orange-100/95">
                   Additional verification required for flagged requirements
@@ -328,7 +367,7 @@ export default function PropertyScorePage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </button>
-            <StepFooter currentStep={2} totalSteps={7} />
+            <StepFooter currentStep={3} totalSteps={7} variant="step2" />
           </div>
         </div>
       </div>
