@@ -202,7 +202,7 @@ export default function GoalSelection() {
             <StepFooter
               currentStep={4}
               totalSteps={7}
-              variant="step2"
+              variant="step3"
               onBack={() => router.push(prevWizardPath(flowIdx))}
               onForward={() => {
                 const n = nextWizardPath(flowIdx);
