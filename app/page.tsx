@@ -52,7 +52,7 @@ export default function Home() {
     <>
       <div
         style={{
-          backgroundImage: `linear-gradient(to bottom, rgba(12, 27, 42, 0.58) 0%, rgba(12, 27, 42, 0.38) 42%, rgba(12, 27, 42, 0.72) 100%), url("${HERO_BACKGROUND_URL}")`,
+          backgroundImage: ` url("${HERO_BACKGROUND_URL}")`,
           backgroundSize: "cover, cover",
           backgroundPosition: "center, center",
           backgroundRepeat: "no-repeat",
