@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Suspense, useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 
+import CtaButton from "@/app/components/ctaButton/ctaButton";
 import { getFolderHotspotsForPano } from "./interiorFolderHotspots";
 import { INTERIOR_THEMES, type InteriorTheme, type InteriorThemeId } from "./interiorThemes";
 import { RoomTourScene } from "./RoomTourScene";
@@ -222,15 +223,11 @@ export function InteriorTourClient() {
 
                   <div className="flex justify-center pb-8 pt-4 sm:pb-10">
                     {phase === "splash" && (
-                      <button
-                        type="button"
+                      <CtaButton
+                        buttonName="Experience Your Backyard Interior In 3D"
+                        icon={<Globe className="size-[18px] shrink-0 text-white" aria-hidden />}
                         onClick={openPicker}
-                        className="inline-flex items-center gap-2.5 rounded-full px-5 py-3 text-left text-[13px] font-semibold text-white shadow-lg transition-opacity hover:opacity-95 active:scale-[0.99] sm:px-7 sm:text-[14px]"
-                        style={{ background: ACCENT }}
-                      >
-                        <Globe className="size-[18px] shrink-0 text-white" aria-hidden />
-                        Experience Your Backyard Interior In 3D
-                      </button>
+                      />
                     )}
                   </div>
                 </div>
