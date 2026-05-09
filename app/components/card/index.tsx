@@ -25,7 +25,7 @@ const steps = [
     title: "Stay",
     desc: "Create long-term income or more space for life.",
     icon: (
-      <svg width="36" height="30" viewBox="0 0 36 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg width="36" height="36" viewBox="0 0 36 30" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path fillRule="evenodd" clipRule="evenodd" d="M14.1639 0.746419C13.838 0.480794 13.4808 0.18966 13.2124 0C11.9522 1.0315 10.65 2.05671 9.35544 3.07587C8.81879 3.49836 8.28347 3.9198 7.753 4.34023L0 10.4601L0.000387076 29.7L11.3513 29.6944L11.3545 20.1088L13.2141 20.1062L15.0739 20.105L15.076 29.6979L26.4031 29.6944L26.4078 10.4483L17.3462 3.27788L14.5712 1.07576C14.4488 0.97861 14.3095 0.865059 14.1639 0.746419ZM3.02606 12.0096V26.6359H8.37969V17.0484H18.1072V26.6359H23.4258V12.0096L13.2141 3.92672L3.02606 12.0096Z" fill="currentColor"/>
       </svg>
       
@@ -47,7 +47,7 @@ function StepCard({ title, desc, icon }: StepCardProps) {
       className="group rounded-2xl flex flex-col border border-[#33506E] p-6 shadow-[5px_10px_20px_rgba(0,0,0,0.10)] backdrop-blur-xl transition-transform duration-300 hover:scale-105"
     >
       <div className="mb-6 flex items-center justify-center size-[60px] rounded-lg border border-white/20 bg-white/10 text-white transition-colors duration-300 group-hover:border-[#4DB6AC]/40 group-hover:text-[#4DB6AC]">
-        <span className="flex size-[36px] items-center justify-center">{icon}</span>
+        <span className="flex  items-center justify-center">{icon}</span>
       </div>
       <div className="flex-col flex gap-[10px]">
         <h3
