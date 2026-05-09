@@ -59,8 +59,8 @@ const MODEL_SLIDES: ModelSlide[] = [
   },
   {
     title: 'One bedroom',
-    subtitle: 'Room to stretch out',
-    specs: '600 sq. ft | 1 bedroom | 1 bath',
+    subtitle: 'The one and only for balanced living',
+    specs: '400 sq. ft.  | 1 bedroom | 1 bath',
     images: [
       Img600Coastal,
       Img600Sandstorm,
@@ -69,28 +69,29 @@ const MODEL_SLIDES: ModelSlide[] = [
       Img600Bronze,
     ],
   },
+
   {
-    title: 'Two bedroom',
-    subtitle: 'Space for living and working',
-    specs: 'Two bedroom with office',
-    images: [
-      Img2BrCoastal,
-      Img2BrSandstorm,
-      Img2BrSage,
-      Img2BrStormwood,
-      Img2BrBronze,
-    ],
-  },
-  {
-    title: 'Two bedroom 660',
-    subtitle: 'Extra room for the way you live',
-    specs: '660 sq. ft | 2 bedrooms | 2 baths',
+    title: 'Two bedroom ',
+    subtitle: 'The one and only for growing needs',
+    specs: '400 sq. ft. | 2 bedrooms | 2 baths',
     images: [
       Img660Coastal,
       Img660Sandstorm,
       Img660Sage,
       Img660Stormwood,
       Img660Bronze,
+    ],
+  },
+    {
+    title: 'Two bedroom with Office',
+    subtitle: 'Space for living and working',
+    specs: '400 sq. ft.  | 1 bedroom | 1 bath',
+    images: [
+      Img2BrCoastal,
+      Img2BrSandstorm,
+      Img2BrSage,
+      Img2BrStormwood,
+      Img2BrBronze,
     ],
   },
 ];
