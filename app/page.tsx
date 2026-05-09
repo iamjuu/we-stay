@@ -94,7 +94,7 @@ export default function Home() {
                   }}
                   aria-hidden
                 />
-                <h1 className="hero-heading mt-0 w-full pt-0 font-playfair-display font-bold leading-[1.06] text-white tracking-tight">
+                <h1 className="hero-heading mt-0 w-full pt-0 font-playfair-display font-bold leading-[1.06] text-white tracking-tight tran">
                   <span className="block leading-[1.06]">See What Your</span>
                   <span className="block leading-[1.06]">Backyard Can Build</span>
                 </h1>
