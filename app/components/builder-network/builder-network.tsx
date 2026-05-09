@@ -207,119 +207,121 @@ const BuilderNetwork = () => {
 
   return (
     <div className="w-full bg-[#0C1B2A]">
-   {/* Removed max-w constraints and adjusted padding */}
-<section className="w-full bg-[#0C1B2A] py-16 sm:py-20 lg:py-24">
-  <div className="w-full px-4 sm:px-6 lg:px-8 2xl:px-[100px]">
-    <h2
-      style={{ fontFamily: '"DM Sans", sans-serif' }}
-      className="join-the-westay mb-10 text-center text-white sm:mb-12"
-    >
-      Join the WeStay <span className="text-[#93928E]">Builder Network</span>
-    </h2>
+      {/* Removed max-w constraints and adjusted padding */}
+      <section className="w-full bg-[#0C1B2A] py-16 sm:py-20 lg:py-24">
+        <div className="w-full px-4 sm:px-6 lg:px-8 2xl:px-[100px]">
+          <h2
+            style={{ fontFamily: '"DM Sans", sans-serif' }}
+            className="join-the-westay mb-10 text-center text-white sm:mb-12"
+          >
+            Join the WeStay <span className="text-[#93928E]">Builder Network</span>
+          </h2>
 
-{/* Changed grid-cols-2 to grid-cols-10 for more granular control */}
-<div
-  className="grid grid-cols-1 gap-3 lg:grid-cols-10 lg:gap-4"
-  style={{ fontFamily: '"DM Sans", sans-serif' }}
->
-  {/* LEFT COLUMN: Takes up 3 out of 10 columns (30%) */}
-  <div className="flex flex-col gap-3 lg:col-span-4 lg:gap-4">
-    <div className="relative flex flex-col items-center gap-2 rounded-3xl border border-white/10 bg-[#162032]  text-center ">
-    <div className='w-full p-[10px]  flex justify-end'>
-     <div className='p-[15px] items-center justify-center flex rounded border border-[#F5F3ED1A]/20'>
-     <Search color='white' />
-     </div>
-     </div>
-     <div className='flex flex-col gap-[30px] mb-[60px]'>
-      <h3 className="westay-section-heading text-white ">Who We Want</h3>
-      <p className="westay-para leading-relaxed text-[#CECECE]">
-        Licensed builders | Reliable teams
-        <br />
-        Quality-first operators
-      </p>
-      </div>
-    </div>
+          {/* Changed grid-cols-2 to grid-cols-10 for more granular control */}
+          <div
+            className="grid grid-cols-1 gap-3 lg:grid-cols-10 lg:gap-4"
+            style={{ fontFamily: '"DM Sans", sans-serif' }}
+          >
+            {/* LEFT COLUMN: Takes up 3 out of 10 columns (30%) */}
+            <div className="flex flex-col  gap-3 lg:col-span-4 lg:gap-4">
+              <div className="relative flex flex-col items-center gap-2 rounded-3xl border border-white/10 bg-[#162032]  text-center ">
+                <div className='w-full p-[10px]  flex justify-end'>
+                  <div className='p-[15px] items-center justify-center flex rounded border border-[#F5F3ED1A]/20'>
+                    <Search color='white' />
+                  </div>
+                </div>
+                <div className='flex flex-col gap-[30px] mb-[60px]'>
+                  <h3 className="westay-section-heading text-white ">Who We Want</h3>
+                  <p className="westay-para leading-relaxed text-[#CECECE]">
+                    Licensed builders | Reliable teams
+                    <br />
+                    Quality-first operators
+                  </p>
+                </div>
+              </div>
 
-    {/* Why Join */}
-    <div
-      ref={whyJoinRef}
-      className="relative flex flex-1 flex-col overflow-visible rounded-3xl border border-white/10 bg-[#162032]  text-center   lg:z-10 lg:-mr-[160px]"
-    >
-     <div className='w-full p-[10px]  flex justify-end'>
-     <div className='p-[15px] items-center justify-center flex rounded border border-[#F5F3ED1A]/20'>
-     <Search color='white' />
-     </div>
-     </div>
-     <div className='flex flex-col gap-[30px] '>
-      <h3 className="westay-section-heading text-white ">Why Join</h3>
-      <p className="westay-para  text-[#CECECE] leading-relaxed ">
-        Qualified leads | Better projects
-        <br />
-        Less sales friction | Operational support
-        <br />
-        Growth pipeline
-      </p>
-      </div>
-      <div className='flex my-[60px] justify-center'>
-<CtaButton buttonName='Apply Now'  className='px-[100px] '/>
-      </div>
-    </div>
-  </div>
+              {/* Why Join */}
+              <div
+                ref={whyJoinRef}
+                className="relative  flex flex-col overflow-visible rounded-3xl border border-white/10 bg-[#162032]  text-center   lg:z-10 lg:-mr-[160px]"
+              >
+                <div className='w-full p-[10px]  flex justify-end'>
+                  <div className='p-[15px] items-center justify-center flex rounded border border-[#F5F3ED1A]/20'>
+                    <Search color='white' />
+                  </div>
+                </div>
+                <div className='flex flex-col gap-[30px] '>
+                  <h3 className="westay-section-heading text-white ">Why Join</h3>
+                  <p className="westay-para  text-[#CECECE] leading-relaxed ">
+                    Qualified leads | Better projects
+                    <br />
+                    Less sales friction | Operational support
+                    <br />
+                    Growth pipeline
+                  </p>
+                </div>
+                <div className='flex my-[60px] justify-center'>
+                  <CtaButton buttonName='Apply Now' className='px-[100px] ' />
+                </div>
+              </div>
+            </div>
 
-  {/* RIGHT COLUMN: Takes up 7 out of 10 columns (70%) */}
-  <div className="relative z-0 flex flex-col gap-3 lg:col-span-6 lg:gap-4">
-    <div className="relative z-0 aspect-video w-full overflow-visible">
-      <div
-        ref={imageWrapRef}
-        className="absolute inset-0 z-0 overflow-hidden rounded-3xl"
-        style={
-          clipPath
-            ? { clipPath, WebkitClipPath: clipPath }
-            : undefined
-        }
-      >
-        <Image
-          src={Property}
-          alt="Modern home at sunset"
-          fill
-          priority={false}
-          sizes="(min-width: 1024px) 70vw, 100vw"
-          className="object-cover"
-        />
-      </div>
-      {/* ... (Debug logic stays same) */}
-    </div>
+            {/* RIGHT COLUMN: Takes up 7 out of 10 columns (70%) */}
+            <div className="relative z-0 flex flex-col justify-between gap-3 lg:col-span-6 lg:gap-2">
+              <div className="relative z-0 aspect-video w-full overflow-visible">
+                <div
+                  ref={imageWrapRef}
+                  className="absolute inset-0 z-0 overflow-hidden rounded-3xl"
+                  style={
+                    clipPath
+                      ? { clipPath, WebkitClipPath: clipPath }
+                      : undefined
+                  }
+                >
+                  <Image
+                    src={Property}
+                    alt="Modern home at sunset"
+                    fill
+                    priority={false}
+                    sizes="(min-width: 1024px) 70vw, 100vw"
+                    className="object-cover"
+                  />
+                </div>
+                {/* ... (Debug logic stays same) */}
+              </div>
 
-    <div className="relative flex flex-1 flex-col justify-center rounded-3xl border border-white/10 bg-[#162032] px-5 py-6 sm:px-7 sm:py-7 lg:ml-[160px]">
-      <div className="mb-4 flex items-center justify-between">
-        <h4 className="text-lg font-bold text-white sm:text-xl">Process</h4>
-        <button
-          type="button"
-          aria-label="Refresh"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/4 text-white/65 transition-colors hover:border-white/35 hover:bg-white/10 hover:text-white"
-        >
-          <RefreshIcon />
-        </button>
-      </div>
-      <div className="flex items-center gap-2 text-xs text-white/65 sm:text-sm">
-        <span className="whitespace-nowrap text-white">Apply</span>
-        <span className="h-px flex-1 bg-white/25" />
-        <span className="whitespace-nowrap">Review</span>
-        <span className="h-px flex-1 bg-white/25" />
-        <span className="whitespace-nowrap">Approved Network</span>
-      </div>
-    </div>
-  </div>
-</div>
-  </div>
-</section>
+              <div className="relative flex  flex-col justify-center rounded-3xl border border-white/10 bg-[#313216] pl-5 pr-2   py-5 lg:ml-[160px]">
+                <div className="mb-4 flex items-center justify-between ">
+                  <h4 className="text-[32px] font-bold text-white ">Process</h4>
+                  <button
+                    type="button"
+                    aria-label="Refresh"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/4 text-white/65 transition-colors hover:border-white/35 hover:bg-white/10 hover:text-white"
+                  >
+                    <RefreshIcon />
+                  </button>
+                </div>
+                <div className="flex items-center px-2 gap-2 text-xs text-white/65 sm:text-sm">
+                  <span className="whitespace-nowrap  westay-para text-white">Apply</span>
+                  <span className="h-px flex-1 bg-white/25" />
+                  <span className="whitespace-nowrap westay-para">Review</span>
+                  <span className="h-px flex-1 bg-white/25" />
+                  <span className="whitespace-nowrap westay-para">Approved Network</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="w-full px-4  sm:px-6 lg:px-8 2xl:px-[100px]">
         <div className="mx-auto max-w-7xl 2xl:max-w-none">
           <div className='w-full flex flex-col gap-[50px]'>
             <h1 className='join-the-westay text-white text-center '>Partner With WeStay <span className='text-[#93928E]'>Financing Network</span></h1>
 
-            <Image src={partnerImage} className='block h-auto w-full' alt="partner" width={1000} height={1000} sizes="100vw" />
+            <Image
+              src={partnerImage}
+              className='block h-auto w-full' alt="partner" width={1000} height={1000} sizes="100vw" />
             <div className='grid grid-cols-2 gap-[20px] w-full'>
 
               <div className='flex border border-[#33506E] rounded-[20px] items-center flex-col'>

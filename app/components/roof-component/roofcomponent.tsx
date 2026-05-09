@@ -29,11 +29,11 @@ import Img660Stormwood from '@/content/images/two-660/two bedroom stormwood drif
 import Img660Bronze from '@/content/images/two-660/two bedroom dark bronze.svg';
 
 const FINISH_SWATCHES = [
-  { name: 'Coastal milky white', color: '#F5F5F0' },
-  { name: 'Sandstorm', color: '#C9A67A' },
-  { name: 'Soft sage', color: '#9CAF88' },
-  { name: 'Stormwood drift', color: '#8B6F47' },
-  { name: 'Dark bronze', color: '#2C2C2C' },
+  { name: 'Coastal milky white', color: '#F5F5F0', border: '#CFCFC7' },
+  { name: 'Sandstorm', color: '#C9A67A', border: '#9E7F57' },
+  { name: 'Soft sage', color: '#9CAF88', border: '#748A63' },
+  { name: 'Stormwood drift', color: '#8B6F47', border: '#6A5335' },
+  { name: 'Dark bronze', color: '#2C2C2C', border: '#111111' },
 ] as const;
 
 type ModelSlide = {
@@ -356,148 +356,160 @@ const RoofComponent = () => {
         <div className="relative rounded-2xl bg-[#F5F7FA] px-4 py-8 sm:px-6 sm:py-10">
           <div className="flex items-stretch gap-8 sm:gap-10 lg:gap-14">
             <aside
-              className="flex w-[72px] shrink-0 flex-col items-center justify-center gap-4 self-center rounded-2xl border border-black/6 bg-[#E8EAED] px-4 py-10 sm:w-[84px] sm:gap-5 sm:py-12 sm:px-5"
+              className="flex w-[72px] shrink-0 flex-col items-center justify-center gap-4 self-center rounded-2xl  px-4 py-10 sm:w-[84px] sm:gap-5 sm:py-12 sm:px-5"
               aria-label="Exterior finish"
             >
-              {FINISH_SWATCHES.map((opt, idx) => (
-                <button
-                  key={opt.name}
-                  type="button"
-                  onClick={() =>
-                    setFinishBySlide((prev) => {
-                      const next = [...prev];
-                      next[activeSlide] = idx;
-                      return next;
-                    })
-                  }
-                  aria-label={`${MODEL_SLIDES[activeSlide]?.title ?? 'Model'}: ${opt.name}`}
-                  className={`h-9 w-9 shrink-0 cursor-pointer rounded-full border-2 transition sm:h-10 sm:w-10 ${
-                    activeFinish === idx
-                      ? 'border-gray-900 scale-105'
-                      : 'border-gray-300'
-                  }`}
-                  style={{ backgroundColor: opt.color }}
-                />
-              ))}
+              <div className="flex flex-wrap bg-[#E3E3E3] py-12 items-center px-2 rounded-full gap-3">
+                {FINISH_SWATCHES.map((opt, idx) => {
+                  const isActive = activeFinish === idx;
+
+                  return (
+                    <button
+                      key={opt.name}
+                      type="button"
+                      onClick={() =>
+                        setFinishBySlide((prev) => {
+                          const next = [...prev];
+                          next[activeSlide] = idx;
+                          return next;
+                        })
+                      }
+                      aria-label={`${MODEL_SLIDES[activeSlide]?.title ?? "Model"}: ${opt.name}`}
+                      className={`h-10 w-10 rounded-full border-2 border-[#4DB6AC] p-[1px] transition ${isActive ? "scale-105" : ""
+                        }`}
+                    >
+                      <div
+                        className="h-full w-full rounded-full border-2 "
+                        style={{ borderColor: opt.border }}
+                      >
+                        <div
+                          className="h-full w-full rounded-full"
+                          style={{ backgroundColor: opt.color }}
+                        />
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
             </aside>
 
-          <div className="relative min-w-0 flex-1 overflow-hidden">
-            {/* Screen off neighbor thumbnails at viewport edges until scroll is centered */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-y-3 left-0 z-[6] w-[clamp(52px,9vw,120px)] bg-gradient-to-r from-[#F5F7FA] via-[#F5F7FA]/90 to-transparent"
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-y-3 right-0 z-[6] w-[clamp(52px,9vw,120px)] bg-gradient-to-l from-[#F5F7FA] via-[#F5F7FA]/90 to-transparent"
-            />
-            <div
-              ref={scrollRef}
-              role="presentation"
-              onPointerDown={onRailPointerDown}
-              onPointerMove={onRailPointerMove}
-              onPointerUp={endRailPointerDrag}
-              onPointerCancel={endRailPointerDrag}
-              onLostPointerCapture={onRailLostPointerCapture}
-              className="-mx-1 flex min-w-0 w-full cursor-pointer touch-none gap-4 overflow-x-auto pb-2 scroll-auto select-none active:cursor-grabbing [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-            >
-            <div
-              aria-hidden
-              className="shrink-0"
-              style={{
-                width: edgeSpacerPx,
-              }}
-            />
-            {MODEL_SLIDES.map((model, slideIndex) => {
-              const isActive = slideIndex === activeSlide;
-              const fIdx = finishBySlide[slideIndex] ?? 0;
-              const img =
-                model.images[Math.min(fIdx, model.images.length - 1)] ??
-                model.images[0];
-
-              return (
+            <div className="relative min-w-0 flex-1 overflow-hidden">
+              {/* Screen off neighbor thumbnails at viewport edges until scroll is centered */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-y-3 left-0 z-[6] w-[clamp(52px,9vw,120px)] bg-gradient-to-r from-[#F5F7FA] via-[#F5F7FA]/90 to-transparent"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-y-3 right-0 z-[6] w-[clamp(52px,9vw,120px)] bg-gradient-to-l from-[#F5F7FA] via-[#F5F7FA]/90 to-transparent"
+              />
+              <div
+                ref={scrollRef}
+                role="presentation"
+                onPointerDown={onRailPointerDown}
+                onPointerMove={onRailPointerMove}
+                onPointerUp={endRailPointerDrag}
+                onPointerCancel={endRailPointerDrag}
+                onLostPointerCapture={onRailLostPointerCapture}
+                className="-mx-1 flex min-w-0 w-full cursor-pointer touch-none gap-4 overflow-x-auto pb-2 scroll-auto select-none active:cursor-grabbing [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              >
                 <div
-                  key={model.title}
-                  ref={(el) => setSlideRef(el, slideIndex)}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => {
-                    if (railDragMovedRef.current) return;
-                    goToSlide(slideIndex);
+                  aria-hidden
+                  className="shrink-0"
+                  style={{
+                    width: edgeSpacerPx,
                   }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      goToSlide(slideIndex);
-                    }
-                  }}
-                  aria-label={`Select ${model.title}`}
-                  aria-current={isActive ? 'true' : undefined}
-                  className="min-w-[min(100%,520px)] shrink-0 cursor-pointer sm:min-w-[min(90%,560px)] lg:min-w-[min(85%,600px)] xl:min-w-[min(75%,640px)]"
-                >
-                  <div className="px-4 py-8 sm:px-8">
-                    <p className="text-center text-lg font-medium text-gray-900">
-                      {model.title}
-                    </p>
-                    <p className="mb-4 text-center text-sm text-gray-500">
-                      {model.subtitle}
-                    </p>
+                />
+                {MODEL_SLIDES.map((model, slideIndex) => {
+                  const isActive = slideIndex === activeSlide;
+                  const fIdx = finishBySlide[slideIndex] ?? 0;
+                  const img =
+                    model.images[Math.min(fIdx, model.images.length - 1)] ??
+                    model.images[0];
 
-                    <div className="mx-auto flex min-h-0 w-full max-w-[720px] justify-center overflow-hidden">
-                      <span
-                        key={`${slideIndex}-${fIdx}`}
-                        className="roof-finish-img-mount block w-full max-w-[520px] origin-center"
-                      >
-                        <Image
-                          src={img}
-                          alt={`${model.title} — ${FINISH_SWATCHES[fIdx]?.name ?? 'render'}`}
-                          className="h-auto w-full object-contain pointer-events-none"
-                          draggable={false}
-                          priority={slideIndex === 0}
-                          onLoadingComplete={updateEdgeSpacers}
-                        />
-                      </span>
+                  return (
+                    <div
+                      key={model.title}
+                      ref={(el) => setSlideRef(el, slideIndex)}
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => {
+                        if (railDragMovedRef.current) return;
+                        goToSlide(slideIndex);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          goToSlide(slideIndex);
+                        }
+                      }}
+                      aria-label={`Select ${model.title}`}
+                      aria-current={isActive ? 'true' : undefined}
+                      className="min-w-[min(100%,520px)] shrink-0 cursor-pointer sm:min-w-[min(90%,560px)] lg:min-w-[min(85%,600px)] xl:min-w-[min(75%,640px)]"
+                    >
+                      <div className="px-4 py-8 sm:px-8">
+                        <p className="text-center text-lg font-medium text-gray-900">
+                          {model.title}
+                        </p>
+                        <p className="mb-4 text-center text-sm text-gray-500">
+                          {model.subtitle}
+                        </p>
+
+                        <div className="mx-auto flex min-h-0 w-full max-w-[720px] justify-center overflow-hidden">
+                          <span
+                            key={`${slideIndex}-${fIdx}`}
+                            className="roof-finish-img-mount block w-full max-w-[520px] origin-center"
+                          >
+                            <Image
+                              src={img}
+                              alt={`${model.title} — ${FINISH_SWATCHES[fIdx]?.name ?? 'render'}`}
+                              className="h-auto w-full object-contain pointer-events-none transition-opacity duration-800  delay-500 opacity-100"
+                              draggable={false}
+                              priority={slideIndex === 0}
+                              onLoadingComplete={updateEdgeSpacers}
+                            />
+                          </span>
+                        </div>
+
+                        <p className="mt-6 text-center text-sm text-gray-700">
+                          {model.specs}
+                        </p>
+                      </div>
                     </div>
+                  );
+                })}
+                <div
+                  aria-hidden
+                  className="shrink-0"
+                  style={{
+                    width: edgeSpacerPx,
+                  }}
+                />
+              </div>
 
-                    <p className="mt-6 text-center text-sm text-gray-700">
-                      {model.specs}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-            <div
-              aria-hidden
-              className="shrink-0"
-              style={{
-                width: edgeSpacerPx,
-              }}
-            />
-          </div>
-
-            {/* Tap left / right of viewport to center previous or next model (center band stays clear for drag + card tap) */}
-            <div className="pointer-events-none absolute inset-0 z-5 flex items-stretch">
-              <button
-                type="button"
-                aria-label="Show previous model"
-                className="pointer-events-auto h-full w-[20%] max-w-[132px] shrink-0 cursor-pointer bg-transparent sm:max-w-[160px]"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  scrollCarousel(-1);
-                }}
-              />
-              <span className="pointer-events-none min-h-0 min-w-0 flex-1" aria-hidden />
-              <button
-                type="button"
-                aria-label="Show next model"
-                className="pointer-events-auto h-full w-[20%] max-w-[132px] shrink-0 cursor-pointer bg-transparent sm:max-w-[160px]"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  scrollCarousel(1);
-                }}
-              />
+              {/* Tap left / right of viewport to center previous or next model (center band stays clear for drag + card tap) */}
+              <div className="pointer-events-none absolute inset-0 z-5 flex items-stretch">
+                <button
+                  type="button"
+                  aria-label="Show previous model"
+                  className="pointer-events-auto h-full w-[20%] max-w-[132px] shrink-0 cursor-pointer bg-transparent sm:max-w-[160px]"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    scrollCarousel(-1);
+                  }}
+                />
+                <span className="pointer-events-none min-h-0 min-w-0 flex-1" aria-hidden />
+                <button
+                  type="button"
+                  aria-label="Show next model"
+                  className="pointer-events-auto h-full w-[20%] max-w-[132px] shrink-0 cursor-pointer bg-transparent sm:max-w-[160px]"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    scrollCarousel(1);
+                  }}
+                />
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
@@ -506,7 +518,7 @@ const RoofComponent = () => {
         @keyframes roofFinishZoom {
           from {
             opacity: 0.88;
-            transform: scale(0.9);
+
           }
           to {
             opacity: 1;
