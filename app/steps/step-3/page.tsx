@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
 import { StepsSubmitBtn } from "../components/steps-submit-btn";
@@ -49,8 +49,15 @@ export default function GoalSelection() {
   const flowIdx = flowIndexFromPath(pathname) ?? 2;
   const { maxNavIndex, recordFlowComplete } = useJourneyProgress();
   useWizardRouteGuard(flowIdx);
-  const { setSelections, selections } = useBuildPath();
+  const { setSelections, selections, hydrated: buildPathHydrated } = useBuildPath();
   const [selected, setSelected] = useState("");
+
+  useEffect(() => {
+    if (!buildPathHydrated) return;
+    const id = selections.goalId;
+    if (!id || !options.some((o) => o.id === id)) return;
+    setSelected((prev) => (prev === "" ? id : prev));
+  }, [buildPathHydrated, selections.goalId]);
 
   const rows: (typeof options)[] = [
     options.slice(0, 2),

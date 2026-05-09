@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
@@ -63,8 +63,15 @@ export default function StepFiveAduType() {
   const flowIdx = flowIndexFromPath(pathname) ?? 3;
   const { maxNavIndex, recordFlowComplete } = useJourneyProgress();
   useWizardRouteGuard(flowIdx);
-  const { setSelections, selections } = useBuildPath();
+  const { setSelections, selections, hydrated: buildPathHydrated } = useBuildPath();
   const [selected, setSelected] = useState<AduTypeId | "">("");
+
+  useEffect(() => {
+    if (!buildPathHydrated) return;
+    const id = selections.aduTypeId;
+    if (!id || !aduTypes.some((t) => t.id === id)) return;
+    setSelected((prev) => (prev === "" ? (id as AduTypeId) : prev));
+  }, [buildPathHydrated, selections.aduTypeId]);
 
   return (
     <div className="relative flex min-h-screen bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">

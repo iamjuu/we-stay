@@ -9,8 +9,6 @@ import { useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-p
 import { flowIndexFromPath, nextWizardPath, prevWizardPath } from "@/lib/wizard-flow";
 import type { EligibilityGate } from "@/lib/eligibility-gates";
 import type { FullEligibilityResult } from "@/lib/eligibility-gates";
-import RentAnalysisCard from "@/components/RentAnalysisCard";
-
 function CriterionPassIcon() {
   return (
     <svg width={30} height={30} viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
@@ -270,9 +268,6 @@ export default function PropertyScorePage() {
 
   const addressLine = snapshot.address;
   const summary = summaryCopy(addressLine, result);
-  const zipCode = snapshot.rentalData?.zipCode ?? "";
-  const rentals = snapshot.rentalData?.rentals ?? [];
-  const maxAduSqFt = result.aduSize?.maxAduSizeSqFt ?? null;
 
   return (
     <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534]">
@@ -346,10 +341,6 @@ export default function PropertyScorePage() {
                 </p>
               </div>
             )}
-
-            <div className="w-full max-w-4xl pb-2">
-              <RentAnalysisCard zipCode={zipCode || "96706"} rentals={rentals} maxAduSqFt={maxAduSqFt} />
-            </div>
           </div>
         </div>
 

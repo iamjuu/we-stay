@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
 import { StepsSubmitBtn } from "../components/steps-submit-btn";
@@ -51,8 +51,15 @@ export default function StepSixBuildPreference() {
   const flowIdx = flowIndexFromPath(pathname) ?? 4;
   const { maxNavIndex, recordFlowComplete } = useJourneyProgress();
   useWizardRouteGuard(flowIdx);
-  const { setSelections, selections } = useBuildPath();
+  const { setSelections, selections, hydrated: buildPathHydrated } = useBuildPath();
   const [selected, setSelected] = useState<"fast-track" | "custom" | "">("");
+
+  useEffect(() => {
+    if (!buildPathHydrated) return;
+    const id = selections.buildPreferenceId;
+    if (id !== "fast-track" && id !== "custom") return;
+    setSelected((prev) => (prev === "" ? id : prev));
+  }, [buildPathHydrated, selections.buildPreferenceId]);
 
   return (
     <div className="relative flex min-h-screen bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
