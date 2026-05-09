@@ -311,18 +311,20 @@ export default function RequirementsReviewModal({
         )}
       </div>
 
-      <div className="flex shrink-0 justify-end pt-[6px]">
+      <div className="flex shrink-0 justify-end  px-[20px] pt-[6px]">
         <button
+
           type="button"
           onClick={() => {
             if (!ctaDisabled) onGamePlan();
           }}
           disabled={ctaDisabled}
           style={{
+            fontFamily: 'DM Sans, sans-serif',
             background: '#F05C4AE5',
             height: '42px',
           }}
-          className={`inline-flex max-w-[392.082px] w-auto items-center justify-center gap-[1.88px] rounded-[30px] px-[25px] py-[7px] font-dm-sans text-[15px] font-bold leading-none text-white transition-opacity ${
+          className={`inline-flex max-w-[392.082px] w-auto items-center justify-center gap-[1.88px] leading-[27px] rounded-[30px] px-[55px] py-[7px] font-dm-sans text-[14px] font-bold leading-none text-white transition-opacity ${
             ctaDisabled ? 'cursor-not-allowed opacity-45' : 'cursor-pointer hover:opacity-95'
           }`}
         >
