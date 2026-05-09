@@ -99,7 +99,7 @@ export default function HeroEligibility() {
           <div className="relative mx-auto w-full max-w-[570px]">
             <div className="relative w-full">
               <div
-                className="flex w-full flex-col gap-3 rounded-full bg-black/50 p-2 shadow-[0px_3px_10px_0px_rgba(0,0,0,0.15)] backdrop-blur-2xl sm:flex-row sm:items-center sm:gap-4 sm:pl-5"
+                className="flex w-full  gap-3 rounded-full bg-black/50 p-2 shadow-[0px_3px_10px_0px_rgba(0,0,0,0.15)] backdrop-blur-2xl sm:flex-row sm:items-center sm:gap-4 sm:pl-5"
                 data-node-id="11:8243"
               >
                 <div className="min-w-0 flex-1">
