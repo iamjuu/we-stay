@@ -141,8 +141,9 @@ export default function HeroEligibility() {
           </div>
 
           {/* lg + modal open: absolutely positioned bottom-left — does not shift pill/modal */}
+          <div className={`${modalOpen ? 'mt-0' : 'mt-[400px]'} flex items-center justify-center`}>
           <p
-            className={`w-full font-dm-sans font-normal text-white text-pretty ${
+            className={`w-full  font-dm-sans font-normal text-white text-pretty ${
               modalOpen
                 ? 'mt-0 text-center lg:absolute lg:bottom-0 lg:-left-36 lg:z-[101] lg:mt-0 lg:max-w-[280px] lg:text-left xl:max-w-[300px]'
                 : 'mt-5 text-center'
@@ -155,6 +156,8 @@ export default function HeroEligibility() {
           >
             Check your ADU eligibility, explore your options, and move forward with guidance you can trust.
           </p>
+            </div>
+     
         </div>
 
         {inlineError && (

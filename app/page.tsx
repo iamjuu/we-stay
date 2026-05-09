@@ -139,7 +139,7 @@ export default function Home() {
         </div>
       </div>
 
-      <Eligibility />
+      {/* <Eligibility /> */}
 
       <div className="flex   py-[100px]   flex-col items-center bg-[#0C1B2A]">
         <h1
@@ -228,7 +228,10 @@ export default function Home() {
       <div>
         <TestimonialCarousel />
       </div>
-      <div className="pt-[120px]">
+      <div>
+      <Eligibility />
+      </div>
+      <div className="">
         <Footer />
       </div>
     </>

@@ -207,7 +207,7 @@ export default function RequirementsReviewModal({
 
   const panelInner = (
     <div
-      className="relative isolate flex w-full flex-col gap-[16.72px] overflow-hidden rounded-[16.72px] border border-white/12 p-[15.83px] backdrop-blur-2xl"
+      className="relative   isolate flex w-full flex-col  overflow-hidden rounded-[16.72px] border border-white/12 p-[15.83px] backdrop-blur-2xl"
       style={{
         maxWidth: '643.568px',
         minHeight: '369.903px',
