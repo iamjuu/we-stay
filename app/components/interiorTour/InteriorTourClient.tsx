@@ -166,7 +166,7 @@ export function InteriorTourClient() {
     );
 
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 2xl:px-50">
+    <div className="w-full px-4 sm:px-6 lg:px-8 2xl:px-50 mt-25 mb-25">
       <div className="mx-auto max-w-7xl 2xl:max-w-none">
         <div className="font-dm-sans w-full py-10 text-[#141a18]">
           {(phase === "splash" || phase === "pick") && (

@@ -12,7 +12,7 @@ const BOOK_DISCOVERY_CALL_URL =
 const navItems = [
   { label: "How It Works", href: "/#how-it-works" },
   { label: "ADU Options", href: "/#adu-options" },
-  { label: "Peek Inside", href: "/#peek-inside" },
+  { label: "Step Inside", href: "/#peek-inside" },
   { label: "About", href: "/about" },
 ] as const;
 
@@ -20,14 +20,7 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <>
-      {/* Reserves space on lg when bar is fixed so page content is not covered */}
-      <div
-        className="hidden shrink-0 lg:block"
-        style={{ height: "calc(1rem + 70px)" }}
-        aria-hidden
-      />
-      <nav className="w-full px-4 py-4 sm:px-6 lg:fixed lg:inset-x-0 lg:top-4 lg:z-[100] lg:px-8 lg:py-0">
+    <nav className="w-full px-4 py-4 sm:px-6 lg:fixed lg:inset-x-0 lg:top-4 lg:z-[100] lg:px-8 lg:py-0">
       <div
         className="mx-auto flex w-full max-w-[1280px] flex-col rounded-[34px] border-b border-r border-[#bdbdbd] bg-[rgba(255,255,255,0.3)] shadow-[0px_3px_10px_0px_rgba(0,0,0,0.05),0px_3px_10px_0px_rgba(0,0,0,0.1)] backdrop-blur-[10px] sm:rounded-[40px] lg:rounded-[50px]"
       >
@@ -127,7 +120,6 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
-    </>
   );
 };
 

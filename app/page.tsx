@@ -62,6 +62,15 @@ export default function Home() {
         id="home-hero"
         className="relative min-h-screen bg-[#0C1B2A]"
       >
+        {/* Gradient overlay — top half of hero */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-1/2"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(0, 0, 0, 0.9) -5.47%, rgba(0, 0, 0, 0) 121.87%)",
+          }}
+        />
+
         {/* Modal dimmer portals here — above hero BG, below main hero content */}
         <div
           id="home-hero-modal-scrim-mount"

@@ -230,7 +230,7 @@ const BuilderNetwork = () => {
           >
             {/* LEFT COLUMN: Takes up 3 out of 10 columns (30%) */}
             <div className="flex flex-col gap-3 lg:col-span-4 lg:gap-4">
-              <div className="group relative flex flex-col items-center gap-2 rounded-3xl border border-white/10 bg-[#162032]  text-center ">
+              <div className="group relative flex flex-col items-center gap-2 rounded-3xl border border-white/10 bg-[#162032] text-center transition-transform duration-300 ease-out hover:scale-[1.02]">
                 <div className="w-full p-[10px]  flex justify-end">
                   <div className="flex items-center justify-center rounded-lg border border-[#F5F3ED1A]/20 bg-white/10 p-[15px] text-white backdrop-blur-md transition-colors duration-300 group-hover:text-[#4DB6AC]">
                     <Search className="transition-colors duration-300" />
@@ -251,7 +251,7 @@ const BuilderNetwork = () => {
               {/* Why Join */}
                <div
                 ref={whyJoinRef}
-                className="group relative flex flex-1 flex-col overflow-visible rounded-3xl border border-white/10 bg-[#162032]  text-center   lg:z-10 lg:-mr-[160px]"
+                className="group relative flex flex-1 flex-col overflow-visible rounded-3xl border border-white/10 bg-[#162032] text-center transition-transform duration-300 ease-out hover:scale-[1.02] lg:z-10 lg:-mr-40"
               >
                 <div className="w-full p-[10px]  flex justify-end">
                   <div className="flex items-center justify-center rounded-lg border border-[#F5F3ED1A]/20 bg-white/10 p-[15px] text-white backdrop-blur-md transition-colors duration-300 group-hover:text-[#4DB6AC]">
@@ -282,7 +282,7 @@ const BuilderNetwork = () => {
 
             {/* RIGHT COLUMN: Takes up 7 out of 10 columns (70%) */}
             <div className="relative z-0 flex flex-col gap-3 lg:col-span-6 lg:gap-4">
-              <div className="relative z-0 aspect-video lg:aspect-[4/3] w-full overflow-visible">
+              <div className="group relative z-0 aspect-video lg:aspect-[4/3] w-full overflow-visible">
                 <div
                   ref={imageWrapRef}
                   className="absolute inset-0 z-0 overflow-hidden rounded-3xl"
@@ -298,13 +298,13 @@ const BuilderNetwork = () => {
                     fill
                     priority={false}
                     sizes="(min-width: 1024px) 70vw, 100vw"
-                    className="object-cover"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                 </div>
                 {/* ... (Debug logic stays same) */}
               </div>
 
-              <div className="group relative flex flex-col justify-between rounded-3xl border border-white/10 bg-[#162032] pr-2 pl-8 py-6 sm:py-7 lg:ml-[160px] lg:min-h-[160px] lg:py-12">
+              <div className="group relative flex flex-col justify-between rounded-3xl border border-white/10 bg-[#162032] pr-2 pl-8 py-6 sm:py-7 lg:ml-[160px] lg:min-h-[160px] lg:py-12 transition-transform duration-300 ease-out hover:scale-[1.02]">
                 <div className="mb-4 flex items-center justify-between">
                   <h4 className="text-xl font-bold westay-section-heading text-white transition-colors duration-300 group-hover:text-[#4DB6AC] lg:text-2xl">
                     Process
@@ -343,7 +343,7 @@ const BuilderNetwork = () => {
               sizes="100vw"
             />
             <div className="grid grid-cols-2 gap-[20px] w-full">
-              <div className="group flex border border-[#33506E] rounded-[20px] items-center flex-col">
+              <div className="group flex border border-[#33506E] rounded-[20px] items-center flex-col transition-transform duration-300 ease-out hover:scale-[1.02]">
                 <div className="flex w-full  p-[10px] justify-end">
                   <p className="flex w-fit items-center gap-2 rounded-md bg-white/10 p-2 text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
                     <Info />
@@ -359,7 +359,7 @@ const BuilderNetwork = () => {
                   </p>
                 </div>
               </div>
-              <div className="group flex border border-[#33506E] rounded-[20px] items-center flex-col">
+              <div className="group flex border border-[#33506E] rounded-[20px] items-center flex-col transition-transform duration-300 ease-out hover:scale-[1.02]">
                 <div className="flex w-full  p-[10px] justify-end">
                   <p className="flex w-fit items-center gap-2 rounded-md bg-white/10 p-2 text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
                     <Image

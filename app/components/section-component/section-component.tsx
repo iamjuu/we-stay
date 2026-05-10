@@ -13,6 +13,9 @@ const Sectioncomponent = ({bgImage, heading, headingsecondary, paragraph}: {bgIm
         }}
         className="min-h-screen flex flex-col justify-between bg-gray-100 relative"
       >
+        {/* Gradient overlay — top half of hero */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-1/2 bg-linear-to-b from-black/90 to-transparent" />
+
         <div className="relative z-20">
           <Navbar />
           <div>

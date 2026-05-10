@@ -29,11 +29,11 @@ import Img660Stormwood from '@/content/images/two-660/two bedroom stormwood drif
 import Img660Bronze from '@/content/images/two-660/two bedroom dark bronze.svg';
 
 const FINISH_SWATCHES = [
-  { name: 'Coastal milky white', color: '#F5F5F0' },
-  { name: 'Sandstorm', color: '#C9A67A' },
-  { name: 'Soft sage', color: '#9CAF88' },
-  { name: 'Stormwood drift', color: '#8B6F47' },
-  { name: 'Dark bronze', color: '#2C2C2C' },
+  { name: 'Coastal milky white', color: '#EDE7E1' },
+  { name: 'Sandstorm', color: '#CBC7B5' },
+  { name: 'Soft sage', color: '#A28D71' },
+  { name: 'Stormwood drift', color: '#D9CBBB' },
+  { name: 'Dark bronze', color: '#2E2E2C' },
 ] as const;
 
 type ModelSlide = {
@@ -48,7 +48,7 @@ const MODEL_SLIDES: ModelSlide[] = [
   {
     title: 'Studio',
     subtitle: 'The one space that does it all',
-    specs: '400 sq. ft | 1 bedroom | 1 bath',
+    specs: '400 sq.ft',
     images: [
       Img400Coastal,
       Img400Sandstorm,
@@ -60,7 +60,7 @@ const MODEL_SLIDES: ModelSlide[] = [
   {
     title: 'One bedroom',
     subtitle: 'Room to stretch out',
-    specs: '600 sq. ft | 1 bedroom | 1 bath',
+    specs: '600 sq.ft ',
     images: [
       Img600Coastal,
       Img600Sandstorm,
@@ -84,7 +84,7 @@ const MODEL_SLIDES: ModelSlide[] = [
   {
     title: 'Two bedroom 660',
     subtitle: 'Extra room for the way you live',
-    specs: '660 sq. ft | 2 bedrooms | 2 baths',
+    specs: '660 sq.ft',
     images: [
       Img660Coastal,
       Img660Sandstorm,
@@ -360,24 +360,28 @@ const RoofComponent = () => {
               aria-label="Exterior finish"
             >
               {FINISH_SWATCHES.map((opt, idx) => (
-                <button
-                  key={opt.name}
-                  type="button"
-                  onClick={() =>
-                    setFinishBySlide((prev) => {
-                      const next = [...prev];
-                      next[activeSlide] = idx;
-                      return next;
-                    })
-                  }
-                  aria-label={`${MODEL_SLIDES[activeSlide]?.title ?? 'Model'}: ${opt.name}`}
-                  className={`h-9 w-9 shrink-0 cursor-pointer rounded-full border-2 transition sm:h-10 sm:w-10 ${
-                    activeFinish === idx
-                      ? 'border-gray-900 scale-105'
-                      : 'border-gray-300'
-                  }`}
-                  style={{ backgroundColor: opt.color }}
-                />
+                <div key={opt.name} className="group relative flex items-center">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFinishBySlide((prev) => {
+                        const next = [...prev];
+                        next[activeSlide] = idx;
+                        return next;
+                      })
+                    }
+                    aria-label={`${MODEL_SLIDES[activeSlide]?.title ?? 'Model'}: ${opt.name}`}
+                    className={`h-9 w-9 shrink-0 cursor-pointer rounded-full border-2 transition sm:h-10 sm:w-10 ${
+                      activeFinish === idx
+                        ? 'border-gray-900 scale-105'
+                        : 'border-gray-300'
+                    }`}
+                    style={{ backgroundColor: opt.color }}
+                  />
+                  <span className="pointer-events-none absolute left-full ml-3 whitespace-nowrap text-xs text-black">
+                    {opt.name}
+                  </span>
+                </div>
               ))}
             </aside>
 
@@ -436,22 +440,25 @@ const RoofComponent = () => {
                   className="min-w-[min(100%,520px)] shrink-0 cursor-pointer sm:min-w-[min(90%,560px)] lg:min-w-[min(85%,600px)] xl:min-w-[min(75%,640px)]"
                 >
                   <div className="px-4 py-8 sm:px-8">
-                    <p className="text-center text-lg font-medium text-gray-900">
+                    <p className="text-center text-[30px] leading-[36px] font-normal text-gray-900">
                       {model.title}
                     </p>
-                    <p className="mb-4 text-center text-sm text-gray-500">
+                    <p className="text-center text-[18px] leading-[23.94px] font-normal text-black">
+                      {model.specs}
+                    </p>
+                    <p className="mb-4 text-center text-[18px] leading-[23.94px] font-normal text-gray-500">
                       {model.subtitle}
                     </p>
 
-                    <div className="mx-auto flex min-h-0 w-full max-w-[720px] justify-center overflow-hidden">
+                    <div className="mx-auto flex h-[280px] w-full max-w-[720px] items-center justify-center overflow-hidden sm:h-[320px]">
                       <span
                         key={`${slideIndex}-${fIdx}`}
-                        className="roof-finish-img-mount block w-full max-w-[520px] origin-center"
+                        className={`roof-finish-img-mount block h-full w-full max-w-[520px] origin-center${slideIndex === 2 ? ' scale-[1.14] ' : 'scale-[0.65]'}`}
                       >
                         <Image
                           src={img}
                           alt={`${model.title} — ${FINISH_SWATCHES[fIdx]?.name ?? 'render'}`}
-                          className="h-auto w-full object-contain pointer-events-none"
+                          className="h-full w-full object-contain pointer-events-none"
                           draggable={false}
                           priority={slideIndex === 0}
                           onLoadingComplete={updateEdgeSpacers}
@@ -459,9 +466,6 @@ const RoofComponent = () => {
                       </span>
                     </div>
 
-                    <p className="mt-6 text-center text-sm text-gray-700">
-                      {model.specs}
-                    </p>
                   </div>
                 </div>
               );

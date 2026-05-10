@@ -58,28 +58,27 @@ const index = () => {
     },
   ];
 
-  /** Card typography: max sizes at ~1980px; fluid below (clamp + vw). */
   const cardNumberStyle: React.CSSProperties = {
     fontFamily: '"Playfair Display", serif',
     fontWeight: 600,
-    fontSize: "clamp(40px, calc(40px + 2.222vw), 64px)",
-    lineHeight: 32.95 / 84,
+    fontSize: "clamp(48px, 7vw, 130px)",
+    lineHeight: 1,
     letterSpacing: 0,
   };
 
   const cardTitleStyle: React.CSSProperties = {
     fontFamily: '"DM Sans", sans-serif',
     fontWeight: 900,
-    fontSize: "clamp(16px, calc(16px + 1.01vw), 16px)",
-    lineHeight: 32.95 / 36,
+    fontSize: "clamp(16px, 2.2vw, 42px)",
+    lineHeight: 1.2,
     letterSpacing: 0,
   };
 
   const cardDescriptionStyle: React.CSSProperties = {
     fontFamily: '"DM Sans", sans-serif',
     fontWeight: 400,
-    fontSize: "clamp(13px, calc(13px + 0.758vw), 16px)",
-    lineHeight: 38.94 / 28,
+    fontSize: "clamp(13px, 1.4vw, 28px)",
+    lineHeight: 1.5,
     letterSpacing: "-0.0429em",
     color: "#93928E",
   };
@@ -105,15 +104,18 @@ const index = () => {
         {/* Two-column layout */}
         <div className="grid grid-cols-1 gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-[100px] items-stretch">
 
-          {/* Feature Grid — max height 559px; 40px gap between number and copy */}
-          <div className="grid h-full max-h-[559px] min-h-0 grid-cols-2 grid-rows-2 overflow-visible rounded-[20px] border border-[#E3E3E3]">
+          {/* Feature Grid */}
+          <div className="grid grid-cols-2 grid-rows-[1fr_1fr] overflow-visible rounded-[20px] ring-1 ring-[#E3E3E3]">
             {features.map((feature, idx) => (
               <div
                 key={feature.number}
                 className={`
-                  group relative flex flex-col gap-[40px] bg-[#F5F7FA]
-                  p-5 sm:p-6 lg:pt-[31px] lg:px-[24px] lg:pb-[31px]
-                  xl:px-[38px] min-h-[200px] lg:min-h-0
+                  group relative flex flex-col justify-between gap-6 lg:gap-8 xl:gap-10 2xl:gap-14 bg-[#F5F7FA]
+                  p-5 sm:p-6
+                  lg:pt-10 lg:px-8 lg:pb-8
+                  xl:pt-14 xl:px-10 xl:pb-10
+                  2xl:pt-20 2xl:px-14 2xl:pb-14
+                  min-h-[200px] lg:min-h-[300px] xl:min-h-[340px] 2xl:min-h-[400px]
                   transition-shadow duration-300 ease-in-out
                   hover:shadow-[0_10px_28px_rgba(12,27,42,0.12)]
                   ${idx === 0 ? "rounded-tl-[20px]" : ""}
@@ -130,9 +132,9 @@ const index = () => {
                 >
                   {feature.number}
                 </span>
-                <div className="flex min-h-0 flex-col gap-2 sm:gap-[10px]">
+                <div className="flex min-h-0 flex-col gap-2 sm:gap-3 lg:gap-4 xl:gap-5 2xl:gap-6">
                   <h3
-                    className="card-title text-[#0C1B2A] transition-colors duration-300 ease-in-out group-hover:text-[#4DB6AC]"
+                    className="card-title text-[#0C1B2A] transition-colors duration-300 ease-in-out group-hover:text-[#4DB6AC] lg:text-lg"
                     style={cardTitleStyle}
                   >
                     {feature.title}
@@ -143,8 +145,8 @@ const index = () => {
             ))}
           </div>
 
-      {/* Image as background with parallax — same max height as feature grid */}
-<div className="relative h-full max-h-[559px] min-h-[400px] w-full lg:min-h-0 rounded-[20px] overflow-hidden">
+      {/* Image as background with parallax */}
+<div className="relative min-h-[400px] lg:min-h-0 lg:h-full w-full rounded-[20px] overflow-hidden">
   
   {/* Parallax image layer */}
   <div
