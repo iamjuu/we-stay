@@ -53,6 +53,7 @@ export default function StepSixBuildPreference() {
   useWizardRouteGuard(flowIdx);
   const { setSelections, selections, hydrated: buildPathHydrated } = useBuildPath();
   const [selected, setSelected] = useState<"fast-track" | "custom" | "">("");
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!buildPathHydrated) return;
@@ -125,16 +126,23 @@ export default function StepSixBuildPreference() {
             isComplete={Boolean(selected)}
             idleText="Choose My Path"
             disabled={!selected}
+            loading={submitting}
+            loadingText="Opening configurator…"
             onClick={async () => {
               if (!selected) return;
-              setSelections({ buildPreferenceId: selected });
-              await recordFlowComplete(4, {
-                buildSelections: {
-                  ...selections,
-                  buildPreferenceId: selected,
-                },
-              });
-              router.push("/3dpage");
+              setSubmitting(true);
+              try {
+                setSelections({ buildPreferenceId: selected });
+                await recordFlowComplete(4, {
+                  buildSelections: {
+                    ...selections,
+                    buildPreferenceId: selected,
+                  },
+                });
+                router.push("/3dpage");
+              } catch {
+                setSubmitting(false);
+              }
             }}
           />
 

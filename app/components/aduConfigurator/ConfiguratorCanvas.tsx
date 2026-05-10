@@ -1,8 +1,10 @@
 "use client";
 
-import { Environment, OrbitControls, useGLTF, useProgress } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
+import { OrbitControls, useGLTF, useProgress } from "@react-three/drei";
+import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useEffect } from "react";
+import * as THREE from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { ConfiguratorModel, type RoofStyle, type SidingId } from "./ConfiguratorModel";
 import { PLAN_MODEL_URL } from "./planModelUrls";
 
@@ -18,11 +20,30 @@ type ConfiguratorCanvasProps = {
   showDeckSlab: boolean;
   showLanaiMeshes: boolean;
   showShowerPortion: boolean;
+  showSolarMeshes: boolean;
+  showEvChargingMeshes: boolean;
+  showAcMeshes: boolean;
   /** When loading manager goes idle (model + env, etc.). */
   onLoadIdle?: () => void;
-  /** Approximate load progress 0–100. */
+  /** Approximate load progress 0-100. */
   onLoadProgress?: (progress: number) => void;
 };
+
+function SceneEnvironment() {
+  const { scene, gl } = useThree();
+  useEffect(() => {
+    const pmrem = new THREE.PMREMGenerator(gl);
+    scene.environment = pmrem.fromScene(new RoomEnvironment()).texture;
+    pmrem.dispose();
+    return () => {
+      if (scene.environment) {
+        scene.environment.dispose();
+        scene.environment = null;
+      }
+    };
+  }, [scene, gl]);
+  return null;
+}
 
 function LoadProgressReporter({
   onIdle,
@@ -55,6 +76,9 @@ export function ConfiguratorCanvas({
   showDeckSlab,
   showLanaiMeshes,
   showShowerPortion,
+  showSolarMeshes,
+  showEvChargingMeshes,
+  showAcMeshes,
   onLoadIdle,
   onLoadProgress,
 }: ConfiguratorCanvasProps) {
@@ -64,10 +88,14 @@ export function ConfiguratorCanvas({
         shadows
         className="h-full w-full touch-none [&>div]:outline-none"
         camera={{ position: [0, 3, 8], fov: 42, near: 0.05, far: 500 }}
-        gl={{ antialias: true }}
+        gl={{
+          antialias: true,
+          toneMapping: THREE.ACESFilmicToneMapping,
+          toneMappingExposure: 1.0,
+        }}
       >
         <color attach="background" args={["#eaecea"]} />
-        {/* Low fill so the directional “sun” casts readable shadows */}
+        <SceneEnvironment />
         <ambientLight intensity={0.22} />
         <directionalLight
           castShadow
@@ -85,8 +113,12 @@ export function ConfiguratorCanvas({
           shadow-bias={-0.0004}
           shadow-normalBias={0.03}
         />
-        <LoadProgressReporter onIdle={onLoadIdle} onProgress={onLoadProgress} />
         <Suspense fallback={null}>
+          <LoadProgressReporter onIdle={onLoadIdle} onProgress={onLoadProgress} />
+          <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+            <planeGeometry args={[60, 60]} />
+            <shadowMaterial opacity={0.18} />
+          </mesh>
           <ConfiguratorModel
             key={modelUrl}
             url={modelUrl}
@@ -96,9 +128,10 @@ export function ConfiguratorCanvas({
             showDeckSlab={showDeckSlab}
             showLanaiMeshes={showLanaiMeshes}
             showShowerPortion={showShowerPortion}
+            showSolarMeshes={showSolarMeshes}
+            showEvChargingMeshes={showEvChargingMeshes}
+            showAcMeshes={showAcMeshes}
           />
-          {/* Softer IBL so the sun direction reads more clearly */}
-          <Environment preset="city" environmentIntensity={0.55} />
         </Suspense>
         <OrbitControls
           enableDamping

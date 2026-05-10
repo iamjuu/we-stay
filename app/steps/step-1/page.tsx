@@ -88,7 +88,7 @@ export default function ReportForm() {
 
         <div className="relative mx-auto w-full max-w-7xl">
           <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10">
-            <div className="space-y-2 text-center">
+            <div className="space-y-2 text-center mt-36">
               <h1 className="steps-heading whitespace-nowrap !text-white">
                 Your Report Is Being Prepared
               </h1>

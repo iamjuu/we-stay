@@ -239,6 +239,7 @@ export default function PropertyScorePage() {
   useWizardRouteGuard(flowIdx);
   const gradientId = useId().replace(/:/g, "");
   const { snapshot, hydrated } = useEligibilitySession();
+  const [continueLoading, setContinueLoading] = useState(false);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -348,24 +349,42 @@ export default function PropertyScorePage() {
           <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-3">
             <button
               type="button"
+              disabled={continueLoading}
               onClick={async () => {
-                await recordFlowComplete(1);
-                router.push("/steps/step-3");
+                setContinueLoading(true);
+                try {
+                  await recordFlowComplete(1);
+                  router.push("/steps/step-3");
+                } catch {
+                  setContinueLoading(false);
+                }
               }}
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-teal-400 py-4 text-sm font-semibold tracking-wide text-slate-900 shadow-lg shadow-teal-400/20 transition-all duration-200 hover:bg-teal-300 active:scale-[0.98]"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-teal-400 py-4 text-sm font-semibold tracking-wide text-slate-900 shadow-lg shadow-teal-400/20 transition-all duration-200 hover:bg-teal-300 enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
             >
-              Continue My Build Path
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2.5}
-                aria-hidden
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
+              {continueLoading ? (
+                <>
+                  <svg className="h-4 w-4 shrink-0 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden>
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                  </svg>
+                  Continuing…
+                </>
+              ) : (
+                <>
+                  Continue My Build Path
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                    aria-hidden
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </>
+              )}
             </button>
             <StepFooter
               currentStep={3}

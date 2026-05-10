@@ -8,7 +8,7 @@ import { Home, Layers, Maximize2, User } from "lucide-react";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useLayoutEffect, useMemo, useState } from "react";
 import { useBuildPath } from "@/app/context/build-path-session";
 import { useEligibilitySession } from "@/app/context/eligibility-session";
 import { ensureJourneyUserId, useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-progress";
@@ -74,28 +74,15 @@ const SIDING_OPTIONS: { id: SidingId; title: string; sub: string }[] = [
   { id: "horizontal-lap", title: "Horizontal lap", sub: "Cladding material" },
 ];
 
-type CladdingId =
-  | "original"
-  | "coastal"
-  | "soft-sage"
-  | "stormwood"
-  | "brushed-sandstorm"
-  | "deep-umber";
+type CladdingId = "coastal" | "soft-sage" | "stormwood" | "brushed-sandstorm" | "deep-umber";
 
 const CLADDING: {
   id: CladdingId;
-  tint: string | null;
+  tint: string;
   swatchBg: string;
   label: string;
   description: string;
 }[] = [
-  {
-    id: "original",
-    tint: null,
-    swatchBg: "#ffffff",
-    label: "Imported (GLB)",
-    description: "No cladding override — textures and colors straight from your model file.",
-  },
   {
     id: "coastal",
     tint: "#EDE7E1",
@@ -132,6 +119,12 @@ const CLADDING: {
     description: "Rich dark brown-grey for strong contrast and curb appeal.",
   },
 ];
+
+const DEFAULT_CLADDING_ID: CladdingId = "coastal";
+
+function isCladdingId(id: string): id is CladdingId {
+  return CLADDING.some((c) => c.id === id);
+}
 
 type UpgradesPick = {
   solar: boolean;
@@ -396,7 +389,13 @@ export function AduConfiguratorClient() {
   });
   const [fundingId, setFundingId] = useState<FundingId>("cash");
 
-  const cladding = CLADDING.find((c) => c.id === claddingId)!;
+  useLayoutEffect(() => {
+    if (!isCladdingId(claddingId)) {
+      setCladdingId(DEFAULT_CLADDING_ID);
+    }
+  }, [claddingId]);
+
+  const cladding = CLADDING.find((c) => c.id === claddingId) ?? CLADDING[0];
   const interior = INTERIOR.find((i) => i.id === interiorId)!;
   const interiorPreview = INTERIOR_PREVIEW[interiorId];
   const selectedPlan = PLANS.find((p) => p.id === planId)!;
@@ -441,7 +440,7 @@ export function AduConfiguratorClient() {
     const summary = {
       planId,
       sidingId,
-      claddingId,
+      claddingId: isCladdingId(claddingId) ? claddingId : DEFAULT_CLADDING_ID,
       roofStyle: roofId,
       interiorId,
       fundingId,
@@ -571,10 +570,7 @@ export function AduConfiguratorClient() {
                     style={{
                       borderColor: selected ? ACCENT : "transparent",
                       boxShadow: selected ? `0 0 0 1px ${ACCENT}40` : "inset 0 0 0 1px rgba(0,0,0,0.06)",
-                      background:
-                        c.id === "original"
-                          ? "repeating-conic-gradient(from 0deg, #f8f8f8 0deg 8deg, #ececec 8deg 16deg)"
-                          : c.swatchBg,
+                      background: c.swatchBg,
                     }}
                     aria-label={c.label}
                     aria-pressed={selected}
@@ -781,6 +777,9 @@ export function AduConfiguratorClient() {
           showDeckSlab={features.deck}
           showLanaiMeshes={features.lanai}
           showShowerPortion={features.shower}
+          showSolarMeshes={upgrades.solar}
+          showEvChargingMeshes={upgrades.evCharging}
+          showAcMeshes={upgrades.ac}
           onLoadIdle={handleLoadIdle}
           onLoadProgress={handleLoadProgress}
         />

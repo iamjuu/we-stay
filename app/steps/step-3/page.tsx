@@ -51,6 +51,7 @@ export default function GoalSelection() {
   useWizardRouteGuard(flowIdx);
   const { setSelections, selections, hydrated: buildPathHydrated } = useBuildPath();
   const [selected, setSelected] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!buildPathHydrated) return;
@@ -191,16 +192,23 @@ export default function GoalSelection() {
               isComplete={Boolean(selected)}
               idleText="Continue"
               disabled={!selected}
+              loading={submitting}
+              loadingText="Continuing…"
               onClick={async () => {
                 if (!selected) return;
-                setSelections({ goalId: selected });
-                await recordFlowComplete(2, {
-                  buildSelections: {
-                    ...selections,
-                    goalId: selected,
-                  },
-                });
-                router.push("/steps/step-5");
+                setSubmitting(true);
+                try {
+                  setSelections({ goalId: selected });
+                  await recordFlowComplete(2, {
+                    buildSelections: {
+                      ...selections,
+                      goalId: selected,
+                    },
+                  });
+                  router.push("/steps/step-5");
+                } catch {
+                  setSubmitting(false);
+                }
               }}
             />
 <div className="pt-[90px]  w-full">

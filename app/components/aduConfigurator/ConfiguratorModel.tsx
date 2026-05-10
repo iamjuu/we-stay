@@ -39,10 +39,14 @@ const ASPHALT_ROOF_NAMES = [
   "Asphalt_Roof",
   "Asphalt_Side_Room_Roof",
   "Asphalt_Side_Roof",
+  /** Side-room variant (scene graph name from GLB export). */
+  "Asphalt_Roof_For_Side_Room",
 ] as const;
 
 const METAL_ROOF_NAMES = [
   "Metal_Roof_Sheet",
+  "Metal_Roof_Sheet_For_Side_Room",
+  "Metal_Roof_Base_For_Side_Room",
   "SideRoom_Meatal_Root_Sheet",
   "SideRoom_Metal_Roof_Base",
   "SideRoom__Metal_Roof_Base",
@@ -58,6 +62,18 @@ const LANAI_MESH_NAMES = ["Frontal_Roof", "Pillars"] as const;
 const SHOWER_PORTION_NAME = "Shower_Portion";
 const SURF_BOARD_NAME = "Surf_Board";
 
+/**
+ * Solar assembly roots in `public/3dmodels/*.glb` — toggling these shows/hides
+ * all child geometry (panels, holder, hardware). Do not rely on leaf mesh names only.
+ */
+const SOLAR_ASSEMBLY_ROOT_NAMES = ["Solar_Panel", "Solar_Panel1"] as const;
+
+/** EV charging meshes in the same GLBs. */
+const EV_CHARGING_MESH_NAMES = ["BMW_Charger", "EV_Charge_Port", "EV_Charge_Port1"] as const;
+
+/** Outdoor AC unit — “AC” upgrade in sidebar. */
+const AC_MESH_NAMES = ["Ac_Outer", "Ac_Outer_Shield", "Ac_Top"] as const;
+
 type ConfiguratorModelProps = {
   url: string;
   roofStyle: RoofStyle;
@@ -67,6 +83,9 @@ type ConfiguratorModelProps = {
   showDeckSlab: boolean;
   showLanaiMeshes: boolean;
   showShowerPortion: boolean;
+  showSolarMeshes: boolean;
+  showEvChargingMeshes: boolean;
+  showAcMeshes: boolean;
 };
 
 function wallMaterials(mesh: THREE.Mesh): THREE.Material[] {
@@ -84,6 +103,9 @@ export function ConfiguratorModel({
   showDeckSlab,
   showLanaiMeshes,
   showShowerPortion,
+  showSolarMeshes,
+  showEvChargingMeshes,
+  showAcMeshes,
 }: ConfiguratorModelProps) {
   const { scene } = useGLTF(url);
   const cloned = useMemo(() => scene.clone(true), [scene]);
@@ -92,7 +114,10 @@ export function ConfiguratorModel({
   useLayoutEffect(() => {
     cloned.traverse((o) => {
       const mesh = o as THREE.Mesh;
-      if (mesh.isMesh && mesh.geometry) mesh.castShadow = true;
+      if (mesh.isMesh && mesh.geometry) {
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+      }
     });
 
     const map = new Map<THREE.Material, THREE.Color>();
@@ -111,28 +136,40 @@ export function ConfiguratorModel({
     wallColorBaseRef.current = map;
   }, [cloned]);
 
+  /** One traversal so roof / siding / upgrades never overwrite each other across effects. */
   useLayoutEffect(() => {
     const showAsphalt = roofStyle === "asphalt";
     const showMetal = roofStyle === "metal";
-    cloned.traverse((o) => {
-      if ((ASPHALT_ROOF_NAMES as readonly string[]).includes(o.name)) o.visible = showAsphalt;
-      if ((METAL_ROOF_NAMES as readonly string[]).includes(o.name)) o.visible = showMetal;
-    });
-  }, [cloned, roofStyle]);
-
-  useLayoutEffect(() => {
     const patternVisible = sidingPatternVisibleNames(sidingId);
 
     cloned.traverse((o) => {
-      if ((DECK_SLAB_NAMES as readonly string[]).includes(o.name)) o.visible = showDeckSlab;
-      if ((LANAI_MESH_NAMES as readonly string[]).includes(o.name)) o.visible = showLanaiMeshes;
-      if (o.name === SHOWER_PORTION_NAME) o.visible = showShowerPortion;
-      if (o.name === SURF_BOARD_NAME) o.visible = !showShowerPortion;
-      if ((WALL_PATTERN_MESH_NAMES as readonly string[]).includes(o.name)) {
-        o.visible = patternVisible.has(o.name);
+      const n = o.name;
+      if ((ASPHALT_ROOF_NAMES as readonly string[]).includes(n)) o.visible = showAsphalt;
+      if ((METAL_ROOF_NAMES as readonly string[]).includes(n)) o.visible = showMetal;
+
+      if ((DECK_SLAB_NAMES as readonly string[]).includes(n)) o.visible = showDeckSlab;
+      if ((LANAI_MESH_NAMES as readonly string[]).includes(n)) o.visible = showLanaiMeshes;
+      if (n === SHOWER_PORTION_NAME) o.visible = showShowerPortion;
+      if (n === SURF_BOARD_NAME) o.visible = !showShowerPortion;
+      if ((WALL_PATTERN_MESH_NAMES as readonly string[]).includes(n)) {
+        o.visible = patternVisible.has(n);
       }
+
+      if ((SOLAR_ASSEMBLY_ROOT_NAMES as readonly string[]).includes(n)) o.visible = showSolarMeshes;
+      if ((EV_CHARGING_MESH_NAMES as readonly string[]).includes(n)) o.visible = showEvChargingMeshes;
+      if ((AC_MESH_NAMES as readonly string[]).includes(n)) o.visible = showAcMeshes;
     });
-  }, [cloned, sidingId, showDeckSlab, showLanaiMeshes, showShowerPortion]);
+  }, [
+    cloned,
+    roofStyle,
+    sidingId,
+    showDeckSlab,
+    showLanaiMeshes,
+    showShowerPortion,
+    showSolarMeshes,
+    showEvChargingMeshes,
+    showAcMeshes,
+  ]);
 
   useLayoutEffect(() => {
     const wallRoot = cloned.getObjectByName(OUTER_WALL_NAME);

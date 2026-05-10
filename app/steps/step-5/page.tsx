@@ -65,6 +65,7 @@ export default function StepFiveAduType() {
   useWizardRouteGuard(flowIdx);
   const { setSelections, selections, hydrated: buildPathHydrated } = useBuildPath();
   const [selected, setSelected] = useState<AduTypeId | "">("");
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!buildPathHydrated) return;
@@ -177,16 +178,23 @@ export default function StepFiveAduType() {
             isComplete={Boolean(selected)}
             idleText="Continue"
             disabled={!selected}
+            loading={submitting}
+            loadingText="Continuing…"
             onClick={async () => {
               if (!selected) return;
-              setSelections({ aduTypeId: selected });
-              await recordFlowComplete(3, {
-                buildSelections: {
-                  ...selections,
-                  aduTypeId: selected,
-                },
-              });
-              router.push("/steps/step-6");
+              setSubmitting(true);
+              try {
+                setSelections({ aduTypeId: selected });
+                await recordFlowComplete(3, {
+                  buildSelections: {
+                    ...selections,
+                    aduTypeId: selected,
+                  },
+                });
+                router.push("/steps/step-6");
+              } catch {
+                setSubmitting(false);
+              }
             }}
           />
 
