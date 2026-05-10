@@ -3,6 +3,7 @@
 import { ContainerImage1 } from "@/content";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 const joinSteps = [
   {
@@ -50,7 +51,7 @@ const joinSteps = [
     // paragraph: "Schedule a free call with one of our ADU specialists. We'll walk you through your options and answer every question you have.",
     icon: (
       <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9 48V27H15V48H9ZM27 48V27H33V48H27ZM0 60V54H60V60H0ZM45 48V27H51V48H45ZM0 21V15L30 0L60 15V21H0ZM13.35 15H30H46.65H13.35ZM13.35 15H46.65L30 6.75L13.35 15Z" fill="#0C1B2A"/>
+        <path d="M9 48V27H15V48H9ZM27 48V27H33V48H27ZM0 60V54H60V60H0ZM45 48V27H51V48H45ZM0 21V15L30 0L60 15V21H0ZM13.35 15H30H46.65H13.35ZM13.35 15H46.65L30 6.75L13.35 15Z" fill="currentColor"/>
       </svg>
     ),
     rotation: "5deg",
@@ -63,7 +64,7 @@ const joinSteps = [
     // paragraph: "Receive a detailed cost estimate tailored to your property. No surprises, no commitments — just a clear picture of what's ahead.",
     icon: (
       <svg width="60" height="67" viewBox="0 0 60 67" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M6.66667 66.6667C4.83333 66.6667 3.26389 66.0139 1.95833 64.7083C0.652778 63.4028 0 61.8333 0 60V13.3333C0 11.5 0.652778 9.93056 1.95833 8.625C3.26389 7.31944 4.83333 6.66667 6.66667 6.66667H10V0H16.6667V6.66667H43.3333V0H50V6.66667H53.3333C55.1667 6.66667 56.7361 7.31944 58.0417 8.625C59.3472 9.93056 60 11.5 60 13.3333V60C60 61.8333 59.3472 63.4028 58.0417 64.7083C56.7361 66.0139 55.1667 66.6667 53.3333 66.6667H6.66667ZM6.66667 60H53.3333V26.6667H6.66667V60ZM6.66667 20H53.3333V13.3333H6.66667V20ZM6.66667 20V13.3333V20Z" fill="#0C1B2A"/>
+        <path d="M6.66667 66.6667C4.83333 66.6667 3.26389 66.0139 1.95833 64.7083C0.652778 63.4028 0 61.8333 0 60V13.3333C0 11.5 0.652778 9.93056 1.95833 8.625C3.26389 7.31944 4.83333 6.66667 6.66667 6.66667H10V0H16.6667V6.66667H43.3333V0H50V6.66667H53.3333C55.1667 6.66667 56.7361 7.31944 58.0417 8.625C59.3472 9.93056 60 11.5 60 13.3333V60C60 61.8333 59.3472 63.4028 58.0417 64.7083C56.7361 66.0139 55.1667 66.6667 53.3333 66.6667H6.66667ZM6.66667 60H53.3333V26.6667H6.66667V60ZM6.66667 20H53.3333V13.3333H6.66667V20ZM6.66667 20V13.3333V20Z" fill="currentColor"/>
       </svg>
     ),
     rotation: "-2deg",
@@ -75,7 +76,7 @@ const joinSteps = [
     description: "Talk with our team and take the next step.",
     icon: (
       <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M6 60C4.35 60 2.9375 59.4125 1.7625 58.2375C0.5875 57.0625 0 55.65 0 54V12C0 10.35 0.5875 8.9375 1.7625 7.7625C2.9375 6.5875 4.35 6 6 6H12V0H18V6H42V0H48V6H54C55.65 6 57.0625 6.5875 58.2375 7.7625C59.4125 8.9375 60 10.35 60 12V54C60 55.65 59.4125 57.0625 58.2375 58.2375C57.0625 59.4125 55.65 60 54 60H6ZM6 54H54V24H6V54ZM6 18H54V12H6V18ZM30 36C28.7 36 27.625 35.575 26.775 34.725C25.925 33.875 25.5 32.8 25.5 31.5C25.5 30.2 25.925 29.125 26.775 28.275C27.625 27.425 28.7 27 30 27C31.3 27 32.375 27.425 33.225 28.275C34.075 29.125 34.5 30.2 34.5 31.5C34.5 32.8 34.075 33.875 33.225 34.725C32.375 35.575 31.3 36 30 36ZM18 36C16.7 36 15.625 35.575 14.775 34.725C13.925 33.875 13.5 32.8 13.5 31.5C13.5 30.2 13.925 29.125 14.775 28.275C15.625 27.425 16.7 27 18 27C19.3 27 20.375 27.425 21.225 28.275C22.075 29.125 22.5 30.2 22.5 31.5C22.5 32.8 22.075 33.875 21.225 34.725C20.375 35.575 19.3 36 18 36ZM42 36C40.7 36 39.625 35.575 38.775 34.725C37.925 33.875 37.5 32.8 37.5 31.5C37.5 30.2 37.925 29.125 38.775 28.275C39.625 27.425 40.7 27 42 27C43.3 27 44.375 27.425 45.225 28.275C46.075 29.125 46.5 30.2 46.5 31.5C46.5 32.8 46.075 33.875 45.225 34.725C44.375 35.575 43.3 36 42 36ZM30 48C28.7 48 27.625 47.575 26.775 46.725C25.925 45.875 25.5 44.8 25.5 43.5C25.5 42.2 25.925 41.125 26.775 40.275C27.625 39.425 28.7 39 30 39C31.3 39 32.375 39.425 33.225 40.275C34.075 41.125 34.5 42.2 34.5 43.5C34.5 44.8 34.075 45.875 33.225 46.725C32.375 47.575 31.3 48 30 48ZM18 48C16.7 48 15.625 47.575 14.775 46.725C13.925 45.875 13.5 44.8 13.5 43.5C13.5 42.2 13.925 41.125 14.775 40.275C15.625 39.425 16.7 39 18 39C19.3 39 20.375 39.425 21.225 40.275C22.075 41.125 22.5 42.2 22.5 43.5C22.5 44.8 22.075 45.875 21.225 46.725C20.375 47.575 19.3 48 18 48Z" fill="#0C1B2A"/>
+        <path d="M6 60C4.35 60 2.9375 59.4125 1.7625 58.2375C0.5875 57.0625 0 55.65 0 54V12C0 10.35 0.5875 8.9375 1.7625 7.7625C2.9375 6.5875 4.35 6 6 6H12V0H18V6H42V0H48V6H54C55.65 6 57.0625 6.5875 58.2375 7.7625C59.4125 8.9375 60 10.35 60 12V54C60 55.65 59.4125 57.0625 58.2375 58.2375C57.0625 59.4125 55.65 60 54 60H6ZM6 54H54V24H6V54ZM6 18H54V12H6V18ZM30 36C28.7 36 27.625 35.575 26.775 34.725C25.925 33.875 25.5 32.8 25.5 31.5C25.5 30.2 25.925 29.125 26.775 28.275C27.625 27.425 28.7 27 30 27C31.3 27 32.375 27.425 33.225 28.275C34.075 29.125 34.5 30.2 34.5 31.5C34.5 32.8 34.075 33.875 33.225 34.725C32.375 35.575 31.3 36 30 36ZM18 36C16.7 36 15.625 35.575 14.775 34.725C13.925 33.875 13.5 32.8 13.5 31.5C13.5 30.2 13.925 29.125 14.775 28.275C15.625 27.425 16.7 27 18 27C19.3 27 20.375 27.425 21.225 28.275C22.075 29.125 22.5 30.2 22.5 31.5C22.5 32.8 22.075 33.875 21.225 34.725C20.375 35.575 19.3 36 18 36ZM42 36C40.7 36 39.625 35.575 38.775 34.725C37.925 33.875 37.5 32.8 37.5 31.5C37.5 30.2 37.925 29.125 38.775 28.275C39.625 27.425 40.7 27 42 27C43.3 27 44.375 27.425 45.225 28.275C46.075 29.125 46.5 30.2 46.5 31.5C46.5 32.8 46.075 33.875 45.225 34.725C44.375 35.575 43.3 36 42 36ZM30 48C28.7 48 27.625 47.575 26.775 46.725C25.925 45.875 25.5 44.8 25.5 43.5C25.5 42.2 25.925 41.125 26.775 40.275C27.625 39.425 28.7 39 30 39C31.3 39 32.375 39.425 33.225 40.275C34.075 41.125 34.5 42.2 34.5 43.5C34.5 44.8 34.075 45.875 33.225 46.725C32.375 47.575 31.3 48 30 48ZM18 48C16.7 48 15.625 47.575 14.775 46.725C13.925 45.875 13.5 44.8 13.5 43.5C13.5 42.2 13.925 41.125 14.775 40.275C15.625 39.425 16.7 39 18 39C19.3 39 20.375 39.425 21.225 40.275C22.075 41.125 22.5 42.2 22.5 43.5C22.5 44.8 22.075 45.875 21.225 46.725C20.375 47.575 19.3 48 18 48Z" fill="currentColor"/>
       </svg>
     ),
     rotation: "3deg",
@@ -84,7 +85,58 @@ const joinSteps = [
   },
 ];
 
+/** Matches the inline `top: ${stickyTop}px` set on each sticky card */
+const getStickyTop = (index: number) => 100 + index * 16;
+
 export default function JoinCard() {
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  /**
+   * Index of the card currently pinned at the top of the sticky stack.
+   * `-1` means no card has docked yet (section is below the viewport).
+   */
+  const [activeIndex, setActiveIndex] = useState(-1);
+
+  useEffect(() => {
+    const compute = () => {
+      let next = -1;
+
+      for (let i = 0; i < cardRefs.current.length; i++) {
+        const el = cardRefs.current[i];
+        if (!el) continue;
+
+        const rect = el.getBoundingClientRect();
+        const stickyTop = getStickyTop(i);
+
+        // Card is "docked" the moment its top reaches its own sticky-top.
+        // The last index that satisfies this is the visually topmost card
+        // in the stack (later cards have higher zIndex by design).
+        if (rect.top <= stickyTop + 1) {
+          next = i;
+        }
+      }
+
+      setActiveIndex((prev) => (prev === next ? prev : next));
+    };
+
+    let raf = 0;
+    const onScrollOrResize = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(compute);
+    };
+
+    compute();
+
+    window.addEventListener("scroll", onScrollOrResize, { passive: true });
+    window.addEventListener("resize", onScrollOrResize);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScrollOrResize);
+      window.removeEventListener("resize", onScrollOrResize);
+    };
+  }, []);
+
   return (
     <section className="w-full px-4 pt-16 sm:pt-20 md:pt-24 lg:pt-[120px] sm:px-6 lg:px-8 2xl:px-50">
       <div className="mx-auto max-w-7xl 2xl:max-w-none">
@@ -126,11 +178,18 @@ export default function JoinCard() {
             }}
           >
             {joinSteps.map((step, index) => {
-              const stickyTop = 100 + index * 16;
+              const stickyTop = getStickyTop(index);
+              const isActive = index === activeIndex;
+              const accentClass = isActive
+                ? "text-[#4DB6AC]"
+                : "text-[#0C1B2A]";
 
               return (
                 <div
                   key={`join-step-${index}`}
+                  ref={(el) => {
+                    cardRefs.current[index] = el;
+                  }}
                   style={{
                     top: `${stickyTop}px`,
                     zIndex: step.zIndex,
@@ -152,7 +211,9 @@ export default function JoinCard() {
                   "
                 >
                   {/* Icon */}
-                  <div className="flex items-center text-[#0C1B2A]">
+                  <div
+                    className={`flex items-center transition-colors duration-300 ${accentClass}`}
+                  >
                     {step.icon}
                   </div>
 
@@ -160,7 +221,7 @@ export default function JoinCard() {
                   <div className="flex flex-col gap-[6px] sm:gap-[8px] lg:gap-[10px]">
                     <h3
                       style={{ fontFamily: "DM Sans" }}
-                      className="font-[600] text-[#0C1B2A] text-sm sm:text-base lg:text-lg xl:text-xl"
+                      className={`font-[600] transition-colors duration-300 text-sm sm:text-base lg:text-lg xl:text-xl ${accentClass}`}
                     >
                       {step.title}
                     </h3>

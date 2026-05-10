@@ -224,8 +224,13 @@ export default function TestimonialCarousel() {
                 navigate.
                 <Link
                   href="/about"
-                  className="inline-flex leading-[14px] items-center justify-center ml-2 bg-transparent border-2 border-[#F05C4A] text-[#F05C4A] hover:bg-[#F05C4A] hover:text-white transition-all duration-300 font-bold rounded-full text-[13px] py-2 px-6 whitespace-nowrap align-middle"
+                  className="know-more-shiny inline-flex leading-[14px] items-center justify-center ml-2 border-2 border-[#F05C4A] bg-[#F05C4A] text-white  transition-all duration-300 font-bold rounded-full text-[13px] py-2 px-6 whitespace-nowrap align-middle relative overflow-hidden"
                 >
+                  <span className="km-border-t" aria-hidden="true" />
+                  <span className="km-border-l" aria-hidden="true" />
+                  <span className="km-border-b" aria-hidden="true" />
+                  <span className="km-border-r" aria-hidden="true" />
+                  <span className="km-sheen"    aria-hidden="true" />
                   Know More
                 </Link>
               </p>
@@ -291,7 +296,7 @@ export default function TestimonialCarousel() {
         </div>
       </section>
 
-      <style jsx>{`
+      <style>{`
         @keyframes marqueeScroll {
           0%   { transform: translateX(0); }
           100% { transform: translateX(-50%); }
@@ -299,6 +304,35 @@ export default function TestimonialCarousel() {
         @media (prefers-reduced-motion: reduce) {
           @keyframes marqueeScroll { to { transform: none; } }
         }
+
+        .km-border-t, .km-border-l, .km-border-b, .km-border-r {
+          position: absolute;
+          display: block;
+          background: rgba(255,255,255,0.85);
+          transition: 0.5s ease;
+          pointer-events: none;
+          z-index: 3;
+        }
+        .km-border-t { top: 0; left: 0; width: 0; height: 2px; }
+        .know-more-shiny:hover .km-border-t { width: 100%; transform: translateX(100%); }
+        .km-border-l { top: 0; left: 0; width: 2px; height: 0; }
+        .know-more-shiny:hover .km-border-l { height: 100%; transform: translateY(100%); }
+        .km-border-b { bottom: 0; right: 0; width: 0; height: 2px; }
+        .know-more-shiny:hover .km-border-b { width: 100%; transform: translateX(-100%); }
+        .km-border-r { bottom: 0; right: 0; width: 2px; height: 0; }
+        .know-more-shiny:hover .km-border-r { height: 100%; transform: translateY(-100%); }
+
+        .km-sheen {
+          position: absolute;
+          top: 0; left: -100%;
+          width: 100%; height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+          transition: left 0.5s ease;
+          transition-delay: 0.5s;
+          pointer-events: none;
+          z-index: 2;
+        }
+        .know-more-shiny:hover .km-sheen { left: 100%; }
       `}</style>
     </>
   );

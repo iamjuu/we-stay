@@ -139,7 +139,7 @@ export function InteriorTourClient() {
             onClick={backToSplash}
             className="pointer-events-auto rounded-full bg-black/50 px-4 py-2 text-[12px] font-medium text-white backdrop-blur-md transition-colors hover:bg-black/60 sm:text-[13px]"
           >
-            ← Start over
+            ← Return
           </button>
           <div className="pointer-events-auto flex flex-wrap justify-end gap-2">
             {INTERIOR_THEMES.map((t) => (

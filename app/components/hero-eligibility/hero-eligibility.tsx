@@ -18,8 +18,9 @@ export default function HeroEligibility() {
   const [modalOpen, setModalOpen] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [issuesFoundCount, setIssuesFoundCount] = useState<number | null>(null);
   const [inlineError, setInlineError] = useState<string | null>(null);
+
+  const ELIGIBILITY_MIN_LOAD_MS = 3000;
 
   const runCheck = useCallback(
     async (rawAddress: string) => {
@@ -33,8 +34,6 @@ export default function HeroEligibility() {
 
       // Same query as last successful run — reopen modal instantly, skip pipeline / APIs
       if (snapshot && eligibilityInputMatchesSnapshot(trimmed, snapshot)) {
-        const issues = snapshot.eligibilityResult.failCount + snapshot.eligibilityResult.flagCount;
-        setIssuesFoundCount(issues);
         setErrorMessage(null);
         setModalOpen(true);
         return;
@@ -43,20 +42,22 @@ export default function HeroEligibility() {
       clearSnapshot();
       setModalOpen(true);
       setErrorMessage(null);
-      setIssuesFoundCount(null);
       setIsRunning(true);
 
+      const startedAt = Date.now();
       const outcome = await runEligibilityPipeline(trimmed);
-      setIsRunning(false);
 
       if (!outcome.ok) {
+        setIsRunning(false);
         setErrorMessage(outcome.error);
-        setIssuesFoundCount(null);
         return;
       }
 
-      const issues = outcome.eligibilityResult.failCount + outcome.eligibilityResult.flagCount;
-      setIssuesFoundCount(issues);
+      const remaining = ELIGIBILITY_MIN_LOAD_MS - (Date.now() - startedAt);
+      if (remaining > 0) {
+        await new Promise((r) => setTimeout(r, remaining));
+      }
+      setIsRunning(false);
 
       syncJourneyForPropertyAddress(trimmed);
       setSnapshot({
@@ -125,7 +126,6 @@ export default function HeroEligibility() {
                 onClose={() => setModalOpen(false)}
                 isRunning={isRunning}
                 errorMessage={errorMessage}
-                issuesFoundCount={issuesFoundCount}
                 onGamePlan={handleGamePlan}
                 variant="below-anchor"
               />

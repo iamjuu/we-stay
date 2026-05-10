@@ -290,6 +290,45 @@ function eligibilityScorePercent(result: FullEligibilityResult): number {
   return Math.round((result.passCount / n) * 100);
 }
 
+function ConfiguratorModelSkeleton({ loadProgress }: { loadProgress: number }) {
+  const bar = Math.min(100, Math.max(0, Math.round(loadProgress)));
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      aria-busy="true"
+      className="absolute inset-0 z-30 flex flex-col bg-[#eaecea]"
+    >
+      <div className="flex min-h-0 flex-1 flex-col gap-5 px-5 py-8 sm:px-8 lg:px-12 lg:py-10">
+        <div className="space-y-2">
+          <div className="h-3.5 w-[min(220px,55%)] rounded-md bg-[#d5dcd8] motion-safe:animate-pulse" />
+          <div className="h-3 w-[min(160px,40%)] rounded-md bg-[#dfe5e1] motion-safe:animate-pulse" />
+        </div>
+        <div className="relative flex min-h-[200px] flex-1 overflow-hidden rounded-[20px] border border-[#dce2de] bg-[#eef0ee] shadow-inner">
+          <div className="absolute inset-x-[10%] top-[12%] h-[42%] rounded-2xl bg-[#d5dcd8]/90 motion-safe:animate-pulse" />
+          <div className="absolute inset-x-[18%] bottom-[14%] h-[26%] rounded-xl bg-[#c9d1cc]/95 motion-safe:animate-pulse" />
+          <div className="absolute left-[22%] top-[28%] h-[14%] w-[18%] rounded-lg bg-[#b8c2bc]/80 motion-safe:animate-pulse" />
+          <div className="absolute right-[24%] top-[32%] h-[10%] w-[14%] rounded-md bg-[#b8c2bc]/70 motion-safe:animate-pulse" />
+        </div>
+        <div className="mt-auto flex flex-col items-center gap-3 pb-2">
+          <p
+            className="text-center text-[14px] font-semibold tracking-tight text-[#3d4945]"
+            style={{ fontVariationSettings: "'opsz' 14" }}
+          >
+            Loading your ADU model
+          </p>
+          <div className="h-1.5 w-full max-w-[260px] overflow-hidden rounded-full bg-[#d8dfe0]">
+            <div
+              className="h-full rounded-full bg-[#5fb3b3] transition-[width] duration-300 ease-out"
+              style={{ width: `${bar}%` }}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function OptionCard({
   selected,
   onClick,
@@ -462,12 +501,7 @@ export function AduConfiguratorClient() {
         style={{ background: PANEL_BG }}
       >
         <div className="hidden px-8 pb-2 pt-8 lg:block">
-          <Link
-            href="/"
-            className="text-[13px] font-medium tracking-wide text-[#5f6663] underline-offset-4 hover:underline"
-          >
-            ← Back to site
-          </Link>
+          
         </div>
 
         <div className="flex flex-col gap-5 px-4 py-8 sm:px-6 lg:gap-6 lg:px-8 lg:pb-12">
@@ -738,38 +772,7 @@ export function AduConfiguratorClient() {
       </aside>
 
       <main className="relative order-1 h-[52svh] min-h-[300px] w-full shrink-0 bg-[#eaecea] lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch">
-        {!viewportReady ? (
-          <div
-            role="status"
-            aria-live="polite"
-            aria-busy="true"
-            className="absolute inset-0 z-30 flex flex-col items-center justify-center gap-5 bg-[#eaecea] px-6"
-          >
-            <div
-              className="h-11 w-11 shrink-0 rounded-full border-2 border-[#d8dfe0] border-t-[#5fb3b3] motion-safe:animate-spin"
-              aria-hidden
-            />
-            <div className="flex flex-col items-center gap-2 text-center">
-              <p
-                className="text-[15px] font-semibold tracking-tight text-[#1c2321]"
-                style={{ fontVariationSettings: "'opsz' 14" }}
-              >
-                Loading your ADU model
-              </p>
-              <p className="max-w-[280px] text-[13px] leading-snug text-[#6f7673]">
-                Preparing the 3D preview — this may take a moment on slower connections.
-              </p>
-            </div>
-            <div className="h-1.5 w-full max-w-[240px] overflow-hidden rounded-full bg-[#e8ebe9]">
-              <div
-                className="h-full rounded-full bg-[#5fb3b3] transition-[width] duration-300 ease-out"
-                style={{
-                  width: `${Math.min(100, Math.max(0, Math.round(loadProgress)))}%`,
-                }}
-              />
-            </div>
-          </div>
-        ) : null}
+        {!viewportReady ? <ConfiguratorModelSkeleton loadProgress={loadProgress} /> : null}
         <ConfiguratorCanvas
           modelUrl={PLAN_MODEL_URL[planId]}
           roofStyle={roofId}

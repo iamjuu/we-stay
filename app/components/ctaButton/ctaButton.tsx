@@ -251,105 +251,28 @@ const GlassSurface: React.FC<GlassSurfaceProps> = ({
    ───────────────────────────────────────────────────────────── */
 
 const CTA_CSS = `
-  /* ── Custom property for sweep animation ── */
-  @property --cta-angle {
-    syntax: '<angle>';
-    initial-value: 0deg;
-    inherits: false;
-  }
-
-  /* ── Sweep border: spins once then fades ── */
-  @keyframes cta-spin-and-fade {
-    0%   { --cta-angle: 0deg;   opacity: 1; }
-    90%  { opacity: 1; }
-    100% { --cta-angle: 360deg; opacity: 0; }
-  }
-
-  /* ── Sheen slides across once on load ── */
-  @keyframes cta-sheen {
-    0%   { transform: translateX(-130%) skewX(-18deg); opacity: 0;   }
-    15%  { opacity: 1; }
-    85%  { opacity: 1; }
-    100% { transform: translateX(230%)  skewX(-18deg); opacity: 0;   }
-  }
-
-  /* ── Gentle ambient pulse ── */
-  @keyframes cta-pulse {
-    0%, 100% { box-shadow:
-      inset 0 1.5px 0 rgba(255,255,255,0.60),
-      inset 0 -1px  0 rgba(0,0,0,0.20),
-      inset 0 0 14px rgba(255,255,255,0.06),
-      0 4px 18px rgba(255,107,92,0.42),
-      0 1px 4px  rgba(0,0,0,0.22); }
-    50% { box-shadow:
-      inset 0 1.5px 0 rgba(255,255,255,0.60),
-      inset 0 -1px  0 rgba(0,0,0,0.20),
-      inset 0 0 14px rgba(255,255,255,0.06),
-      0 7px 26px rgba(255,107,92,0.55),
-      0 1px 4px  rgba(0,0,0,0.22); }
-  }
-
   /* ── Base button ── */
   .cta-animated-border {
     position: relative;
     isolation: isolate;
-    /* Layered shadow stack: rim highlight + glow + drop */
-    box-shadow:
-      inset 0 1.5px 0 rgba(255,255,255,0.60),
-      inset 0 -1px  0 rgba(0,0,0,0.20),
-      inset 0 0 14px rgba(255,255,255,0.06),
-      0 4px 18px rgba(255,107,92,0.42),
-      0 1px 4px  rgba(0,0,0,0.22);
-    animation: cta-pulse 3.5s ease-in-out infinite;
-    /* Prevent Tailwind hover:bg from fighting the gradient */
+    box-shadow: 0 0 18px rgba(240,92,74,0.55), 0 4px 10px rgba(0,0,0,0.18);
     transition: filter 0.2s, transform 0.1s;
   }
 
   .cta-animated-border:hover  { filter: brightness(1.06); }
   .cta-animated-border:active { transform: scale(0.975); filter: brightness(0.97); }
 
-  /* Sweep border (once on mount) */
-  .cta-animated-border::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 27px;
-    background: conic-gradient(
-      from var(--cta-angle, 0deg),
-      transparent 0deg,
-      transparent 60deg,
-      white 80deg,
-      white 100deg,
-      transparent 120deg,
-      transparent 240deg,
-      white 260deg,
-      white 280deg,
-      transparent 300deg,
-      transparent 360deg
-    );
-    animation: cta-spin-and-fade 2s linear 1 forwards;
-    z-index: -1;
-  }
-
-  /* Coral fill with vertical gradient for glass depth */
+  /* Coral fill */
   .cta-animated-border::after {
     content: '';
     position: absolute;
-    inset: 2px;
-    border-radius: 23px;
-    background: linear-gradient(
-      175deg,
-      #ff8070 0%,
-      #ff6b5c 35%,
-      #f55f50 68%,
-      #e85244 100%
-    );
-    transition: background 0.2s;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(175deg, #ff8070 0%, #ff6b5c 35%, #f55f50 68%, #e85244 100%);
     z-index: -1;
   }
 
-  /* ── Glass layer 1: top dome highlight ──
-     Simulates light hitting the upper curved surface of a pill-shaped glass */
+  /* Sheen container */
   .cta-glass-top {
     position: absolute;
     inset: 0;
@@ -359,58 +282,41 @@ const CTA_CSS = `
     pointer-events: none;
   }
 
-  /* Upper dome */
-  .cta-glass-top::before {
-    content: '';
-    position: absolute;
-    top: 1px;
-    left: 4%;
-    right: 4%;
-    height: 46%;
-    border-radius: 22px 22px 58% 58% / 22px 22px 38px 38px;
-    background: linear-gradient(
-      180deg,
-      rgba(255,255,255,0.36) 0%,
-      rgba(255,255,255,0.14) 55%,
-      rgba(255,255,255,0.00) 100%
-    );
-  }
-
-  /* One-shot sheen sweep */
+  /* Hover-triggered sheen sweep */
   .cta-glass-top::after {
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
-    width: 32%;
+    left: -100%;
+    width: 100%;
     height: 100%;
-    background: linear-gradient(
-      100deg,
-      rgba(255,255,255,0.00) 0%,
-      rgba(255,255,255,0.26) 50%,
-      rgba(255,255,255,0.00) 100%
-    );
-    animation: cta-sheen 2s ease 0.4s 1 forwards;
-    transform: translateX(-130%) skewX(-18deg);
-    opacity: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+    transition: left 0.5s ease;
+    transition-delay: 0.5s;
+  }
+  .cta-animated-border:hover .cta-glass-top::after { left: 100%; }
+
+  /* ── 4 border-line spans ── */
+  .cta-border-t, .cta-border-l, .cta-border-b, .cta-border-r {
+    position: absolute;
+    display: block;
+    background: rgba(255,255,255,0.75);
+    transition: 0.5s ease;
+    pointer-events: none;
+    z-index: 3;
   }
 
-  /* ── Glass layer 2: bottom edge micro-reflection ── */
-  .cta-glass-bottom {
-    position: absolute;
-    bottom: 1px;
-    left: 10%;
-    right: 10%;
-    height: 28%;
-    border-radius: 0 0 22px 22px;
-    background: linear-gradient(
-      0deg,
-      rgba(255,255,255,0.12) 0%,
-      rgba(255,255,255,0.00) 100%
-    );
-    z-index: 1;
-    pointer-events: none;
-  }
+  .cta-border-t { top: 0; left: 0; width: 0; height: 1px; }
+  .cta-animated-border:hover .cta-border-t { width: 100%; transform: translateX(100%); }
+
+  .cta-border-l { top: 0; left: 0; width: 1px; height: 0; }
+  .cta-animated-border:hover .cta-border-l { height: 100%; transform: translateY(100%); }
+
+  .cta-border-b { bottom: 0; right: 0; width: 0; height: 1px; }
+  .cta-animated-border:hover .cta-border-b { width: 100%; transform: translateX(-100%); }
+
+  .cta-border-r { bottom: 0; right: 0; width: 1px; height: 0; }
+  .cta-animated-border:hover .cta-border-r { height: 100%; transform: translateY(-100%); }
 
   /* ── Label always on top ── */
   .cta-label {
@@ -455,11 +361,13 @@ const CtaButton: React.FC<CtaButtonProps> = ({
     ...(style as React.CSSProperties),
   };
 
-  /* Pure-CSS glass: two absolutely-positioned spans */
   const glassLayers = (
     <>
-      <span className="cta-glass-top"    aria-hidden="true" />
-      <span className="cta-glass-bottom" aria-hidden="true" />
+      <span className="cta-glass-top" aria-hidden="true" />
+      <span className="cta-border-t"  aria-hidden="true" />
+      <span className="cta-border-l"  aria-hidden="true" />
+      <span className="cta-border-b"  aria-hidden="true" />
+      <span className="cta-border-r"  aria-hidden="true" />
     </>
   );
 

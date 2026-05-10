@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { createPortal } from 'react-dom';
 import { useLayoutEffect, useRef, useState } from 'react';
 
-import { AlertTriangle, CheckCircle, Info, Loader2, MapPin } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Loader2, MapPin } from 'lucide-react';
 
 type Requirement = {
   status: 'pass' | 'warning' | 'fail';
@@ -36,7 +36,6 @@ type RequirementsReviewModalProps = {
   /** Set when runEligibilityPipeline fails — shows error; CTA disabled. */
   errorMessage?: string | null;
   score?: number;
-  issuesFoundCount?: number | null;
   variant?: 'centered' | 'below-anchor';
 };
 
@@ -47,7 +46,6 @@ export default function RequirementsReviewModal({
   isRunning = false,
   errorMessage = null,
   score = 60,
-  issuesFoundCount = null,
   variant = 'centered',
 }: RequirementsReviewModalProps) {
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -114,13 +112,6 @@ export default function RequirementsReviewModal({
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (circumference * score) / 100;
   const knobDeg = (score / 100) * 360 - 90;
-
-  const badgeIssuesText =
-    typeof issuesFoundCount === 'number'
-      ? `${issuesFoundCount} ISSUES FOUND`
-      : isRunning
-        ? 'CHECKING…'
-        : '—';
 
   const blurredBody = (
     <div className="flex min-h-[200px] w-full gap-0">
@@ -216,8 +207,8 @@ export default function RequirementsReviewModal({
       }}
     >
       {/* Title stays right-aligned in column like original; subtitle block anchors right (ms-auto), lines wrap with text-left */}
-      <div className="flex w-full shrink-0 flex-wrap items-start justify-end gap-[16.72px]">
-        <div className="min-w-0 max-w-[calc(100%-8rem)] text-right">
+      <div className="flex w-full shrink-0 flex-wrap items-start justify-end">
+        <div className="min-w-0 max-w-full text-right">
           <h2
             ref={titleRef}
             id="requirements-review-title"
@@ -245,21 +236,6 @@ export default function RequirementsReviewModal({
           >
             Review the following requirements. Items marked with ✗ or ⚠ need attention.
           </p>
-        </div>
-        <div
-          className="inline-flex h-[31.701px] min-w-fit shrink-0 cursor-default items-center gap-[8.36px] rounded-[10.03px] border border-[#E65100] px-[10.03px] py-[3.34px]"
-          style={{ backgroundColor: '#E6510033' }}
-          aria-live="polite"
-        >
-          <span className="inline-flex size-[18px] shrink-0 items-center justify-center rounded-full border border-[#E65100]/90 bg-transparent text-[#FFA473]">
-            <Info className="size-[11px]" strokeWidth={2.25} aria-hidden />
-          </span>
-          <span
-            className="font-dm-sans font-semibold tracking-wide whitespace-nowrap text-[#FFA473]"
-            style={{ fontSize: '11px', lineHeight: '14px', fontVariationSettings: "'opsz' 14" }}
-          >
-            {badgeIssuesText}
-          </span>
         </div>
       </div>
 
