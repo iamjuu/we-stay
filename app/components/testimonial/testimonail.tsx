@@ -5,6 +5,23 @@ import { useEffect, useRef, useState } from "react";
 import Image, { type StaticImageData } from "next/image";
 import { Men1, Men2 } from "@/content";
 
+const testimonialCardBackground =
+  "linear-gradient(114.49deg, rgba(57, 92, 126, 0.1) 0.47%, rgba(162, 184, 206, 0.1) 99.53%)";
+
+/**
+ * Carousel left/right edge “fade” (not filter: blur). Two absolutely positioned strips
+ * paint a white → transparent gradient over the marquee so cards don’t look cut off flat.
+ *
+ * - Spread: `carouselEdgeFadeWidthClass` — wider strip = softer, longer fade into the track.
+ * - Intensity: gradient stops — more solid white at the start (higher %) = stronger hide at the rim.
+ *   Match `carouselEdgeFadeLeft` / `Right` fill to your section background if it isn’t `#fff`.
+ */
+const carouselEdgeFadeWidthClass = "w-28 sm:w-48 lg:w-60";
+const carouselEdgeFadeLeft =
+  "linear-gradient(to right, #ffffff 0%, #ffffff 28%, rgba(255,255,255,0) 100%)";
+const carouselEdgeFadeRight =
+  "linear-gradient(to left, #ffffff 0%, #ffffff 28%, rgba(255,255,255,0) 100%)";
+
 const testimonials: {
   id: number;
   quote: string;
@@ -80,7 +97,7 @@ function TestimonialCard({
       style={{
         width: expanded ? "448px" : "356px",
         height: expanded ? "390px" : "200px",
-        background: expanded ? "#f2f4f7" : "#EDEDEE",
+        background: testimonialCardBackground,
         border: expanded ? "0.5px solid rgba(0,0,0,0.12)" : "1px solid #E0E0E2",
         boxShadow: expanded
           ? "0 8px 24px rgba(12,27,42,0.10), 0 24px 56px rgba(12,27,42,0.14)"
@@ -90,14 +107,15 @@ function TestimonialCard({
         pointerEvents: dimmed ? "none" : "auto",
         transition:
           "width 0.4s cubic-bezier(0.4,0,0.2,1), height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border 0.3s ease",
-        zIndex: expanded ? 10 : 1,
+        /* Above sibling cards when expanded; edge fade masks are z-20 — track lifts when focused so expanded isn’t covered */
+        zIndex: expanded ? 25 : 1,
         position: "relative",
       }}
     >
       {/* ── COLLAPSED: quote + avatar row ── */}
       {!expanded && (
         <div className="flex flex-col justify-between h-full p-5 ">
-          <p className="text-[12.5px] leading-[1.65] text-[#0C1B2A]/65 italic line-clamp-3">
+          <p className="text-[18.5px] leading-[1.65] text-[#0C1B2A]/65 italic line-clamp-3">
             &ldquo;{t.quote}&rdquo;
           </p>
           <div className="flex items-center gap-3 mt-4">
@@ -136,7 +154,7 @@ function TestimonialCard({
             </div>
 
             {/* Quote text */}
-            <p className="text-[14px] leading-[1.78] text-[#0C1B2A]/80 pr-14">
+            <p className="text-[22px] leading-[1.78] text-[#0C1B2A]/80 pr-14">
               {t.quote}
             </p>
           </div>
@@ -146,8 +164,8 @@ function TestimonialCard({
             className="mx-3 mb-3 px-4 py-3 rounded-xl shrink-0"
             style={{ background: "#d8dbdf" }}
           >
-            <p className="text-[13px] font-semibold text-[#0C1B2A]">{t.author}</p>
-            <p className="text-[11px] text-[#0C1B2A]/50 mt-0.5">{t.role}</p>
+            <p className="text-[16px] font-semibold text-[#0C1B2A]">{t.author}</p>
+            <p className="text-[14px] text-[#0C1B2A]/50 mt-0.5">{t.role}</p>
           </div>
         </div>
       )}
@@ -192,8 +210,8 @@ export default function TestimonialCarousel() {
   return (
     <>
       {/* ── INTRO SECTION ── */}
-      <section className="w-full px-4 py-16 sm:py-20 md:py-24 lg:py-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
-        <div className="mx-auto max-w-7xl 2xl:max-w-none">
+      <section className="w-full py-16 sm:py-20 md:py-24 lg:py-[120px]">
+        <div className="mx-auto max-w-7xl 2xl:max-w-none px-4 sm:px-6 lg:px-8 2xl:px-50">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-[100px] w-full">
             <div className="carousel-heading flex flex-col">
               Built by People Who
@@ -239,23 +257,25 @@ export default function TestimonialCarousel() {
               trackRef.current.style.animationPlayState = "running";
           }}
         >
-          {/* Edge fade masks */}
+          {/* Edge fade masks — see carouselEdgeFade* constants for spread + intensity */}
           <div
-            className="pointer-events-none absolute left-0 top-0 bottom-0 w-20 sm:w-36 z-20"
-            style={{ background: "linear-gradient(to right, white, transparent)" }}
+            className={`pointer-events-none absolute left-0 top-0 bottom-0 z-20 ${carouselEdgeFadeWidthClass}`}
+            style={{ background: carouselEdgeFadeLeft }}
           />
           <div
-            className="pointer-events-none absolute right-0 top-0 bottom-0 w-20 sm:w-36 z-20"
-            style={{ background: "linear-gradient(to left, white, transparent)" }}
+            className={`pointer-events-none absolute right-0 top-0 bottom-0 z-20 ${carouselEdgeFadeWidthClass}`}
+            style={{ background: carouselEdgeFadeRight }}
           />
 
           {/* Scrolling track — items-end so expanded card grows upward */}
           <div
             ref={trackRef}
-            className="flex items-center gap-5 py-6"
+            className="relative flex items-center gap-5 py-6"
             style={{
               width: "max-content",
               animation: `marqueeScroll ${testimonials.length * 5.5}s linear infinite`,
+              // Whole row above edge fades (z-20) while a card is open so expanded content isn’t washed out
+              zIndex: focusedId !== null ? 30 : 0,
             }}
           >
             {doubled.map((t, i) => (

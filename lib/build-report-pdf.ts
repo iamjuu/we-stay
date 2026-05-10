@@ -191,7 +191,7 @@ function drawTable(
   doc.rect(x + labelColW, y, valColW, ROW_H).fill(C.teal);
   doc.font("Helvetica-Bold").fontSize(7.5).fillColor(C.white);
   doc.text("FIELD", x + 10, y + 9, { width: labelColW - 20 });
-  doc.text("YOUR ANSWER", x + labelColW + 10, y + 9, { width: valColW - 20 });
+  doc.text("ANSWER", x + labelColW + 10, y + 9, { width: valColW - 20 });
   y += ROW_H;
 
   for (let i = 0; i < rows.length; i++) {
@@ -330,17 +330,17 @@ export function buildJourneyReportPdf(journey: JourneyDocument): Promise<Buffer>
       // Score + bar
       const scoreY = doc.y;
       doc.font("Helvetica-Bold").fontSize(52).fillColor(C.teal);
-      doc.text(`${score}%`, M, scoreY, { width: 90 });
+      doc.text(`${score}%`, M, scoreY, { width: 130, lineBreak: false });
 
       doc.font("Helvetica-Bold").fontSize(13).fillColor(C.ink);
-      doc.text(rating, M + 104, scoreY + 6, { width: PAGE_W - 2 * M - 104 });
+      doc.text(rating, M + 145, scoreY + 6, { width: PAGE_W - 2 * M - 145 });
       doc.font("Helvetica").fontSize(9).fillColor(C.muted);
       doc.text(
         `${er.passCount} pass  ·  ${er.flagCount} need verification  ·  ${er.failCount} blocked`,
-        M + 104, scoreY + 26, { width: PAGE_W - 2 * M - 104 }
+        M + 145, scoreY + 26, { width: PAGE_W - 2 * M - 145 }
       );
-      drawProgressBar(doc, M, scoreY + 50, PAGE_W - 2 * M, score);
-      doc.y = scoreY + 68;
+      drawProgressBar(doc, M, scoreY + 58, PAGE_W - 2 * M, score);
+      doc.y = scoreY + 76;
       doc.moveDown(0.5);
 
       // Gate columns
@@ -397,7 +397,7 @@ export function buildJourneyReportPdf(journey: JourneyDocument): Promise<Buffer>
     //  PAGE 3 — CONFIGURATION
     // ══════════════════════════════════════════
 
-    sectionBanner(doc, "Your ADU Configuration", "Selections made in the 3D ADU configurator during your session");
+    sectionBanner(doc, "ADU Configuration", "Selections made in the 3D ADU configurator during the client session");
 
     const cfg = journey.configuratorSummary;
     if (cfg) {
@@ -486,7 +486,7 @@ export function buildJourneyReportPdf(journey: JourneyDocument): Promise<Buffer>
     doc.roundedRect(M, doc.y, PAGE_W - 2 * M, 44, 5).fill(C.panel);
     doc.font("Helvetica").fontSize(8).fillColor(C.muted);
     doc.text(
-      "Annual income and property-value impact statements are directional only. Your advisor will align numbers to your lender, appraisal, and tax context on the discovery call.",
+      "Annual income and property-value impact statements are directional only. The advisor will align numbers to the lender, appraisal, and tax context on the discovery call.",
       M + 12, doc.y + 8, { width: PAGE_W - 2 * M - 24 }
     );
 
@@ -497,70 +497,30 @@ export function buildJourneyReportPdf(journey: JourneyDocument): Promise<Buffer>
     //  PAGE 5 — NEXT STEP
     // ══════════════════════════════════════════
 
-    sectionBanner(doc, "Next Step");
+    sectionBanner(doc, "Thank You");
 
-    doc.moveDown(0.3);
-    doc.font("Helvetica-Bold").fontSize(20).fillColor(C.ink);
-    doc.text("Schedule Your Free Discovery Call", M, doc.y, { width: PAGE_W - 2 * M, align: "center" });
-    doc.moveDown(0.2);
-    doc.font("Helvetica").fontSize(10).fillColor(C.muted);
-    doc.text("15–30 minutes with Richie Breaux, Founder & CEO", M, doc.y, { width: PAGE_W - 2 * M, align: "center" });
-    doc.moveDown(0.8);
-
-    // Contact method tiles
-    const ctaW = (PAGE_W - 2 * M - 16) / 3;
-    const ctaY = doc.y;
-    const ctaTiles = [
-      { label: "Book Online",     val: "WeStayHome.com/call", sub: DISCOVERY_URL },
-      { label: "Call Directly",   val: "(808) 555-0000",      sub: "" },
-      { label: "Email",           val: CONTACT_EMAIL,         sub: "" },
-    ];
-    ctaTiles.forEach(({ label: tl, val, sub }, i) => {
-      const tx = M + i * (ctaW + 8);
-      doc.roundedRect(tx, ctaY, ctaW, 68, 5).fill(C.panel);
-      doc.font("Helvetica-Bold").fontSize(8).fillColor(C.teal);
-      doc.text(tl.toUpperCase(), tx + 10, ctaY + 9, { width: ctaW - 20 });
-      doc.font("Helvetica-Bold").fontSize(9).fillColor(C.ink);
-      doc.text(val, tx + 10, ctaY + 23, { width: ctaW - 20 });
-      if (sub) {
-        doc.font("Helvetica").fontSize(6.5).fillColor(C.muted);
-        doc.text(sub, tx + 10, ctaY + 38, { width: ctaW - 20 });
-      }
-    });
-    doc.y = ctaY + 82;
-
-    // Description block
-    doc.roundedRect(M, doc.y, PAGE_W - 2 * M, 78, 5).fill(C.tealBg);
-    doc.font("Helvetica").fontSize(10).fillColor(C.ink);
+    doc.moveDown(2);
+    doc.font("Helvetica-Bold").fontSize(24).fillColor(C.ink);
+    doc.text("Thank you.", M, doc.y, { width: PAGE_W - 2 * M, align: "center" });
+    doc.moveDown(0.5);
+    doc.font("Helvetica").fontSize(11).fillColor(C.muted);
     doc.text(
-      "On the call, we walk through this Snapshot together, answer every question on your mind — cost, timeline, aesthetics, financing, neighbors — and prepare your full Pathway Report within 48 hours.",
-      M + 14, doc.y + 10, { width: PAGE_W - 2 * M - 28 }
+      "The client's ADU journey has been received and is under review.",
+      M, doc.y, { width: PAGE_W - 2 * M, align: "center" }
     );
-    doc.y += 92;
 
-    doc.moveDown(0.6);
-    const q1Y = doc.y;
-    doc.roundedRect(M, q1Y, PAGE_W - 2 * M, 52, 5).fill(C.panel);
-    doc.font("Helvetica").fontSize(9).fillColor(C.tealDark);
-    doc.text(
-      "“Real estate cannot be lost or stolen. Managed with reasonable care, it is about the safest investment in the world.”",
-      M + 16, q1Y + 9, { width: PAGE_W - 2 * M - 32 }
-    );
-    doc.font("Helvetica").fontSize(7.5).fillColor(C.muted);
-    doc.text("— Franklin D. Roosevelt", M + 16, q1Y + 38, { width: PAGE_W - 2 * M - 32, align: "right" });
+    doc.moveDown(3);
+    const coY = doc.y;
+    doc.roundedRect(M, coY, PAGE_W - 2 * M, 96, 6).fill(C.panel);
+    doc.font("Helvetica-Bold").fontSize(12).fillColor(C.ink);
+    doc.text("WeStay Technologies Inc.", M + 28, coY + 18, { width: PAGE_W - 2 * M - 56 });
+    doc.font("Helvetica").fontSize(9).fillColor(C.muted);
+    doc.text("Kapolei, Hawaiʻi", M + 28, coY + 38, { width: PAGE_W - 2 * M - 56 });
+    doc.text(CONTACT_EMAIL,           M + 28, coY + 52, { width: PAGE_W - 2 * M - 56 });
+    doc.text(DISCOVERY_URL,           M + 28, coY + 66, { width: PAGE_W - 2 * M - 56 });
 
-    doc.y = q1Y + 64;
-    doc.moveDown(0.3);
-    const q2Y = doc.y;
-    doc.roundedRect(M, q2Y, PAGE_W - 2 * M, 36, 5).fill(C.tealBg);
-    doc.font("Helvetica").fontSize(9).fillColor(C.tealDark);
-    doc.text(
-      "“The best investment on earth is earth.”  — Louis Glickman",
-      M + 16, q2Y + 12, { width: PAGE_W - 2 * M - 32, align: "center" }
-    );
-    doc.y = q2Y + 48;
-
-    doc.moveDown(1.4);
+    doc.y = coY + 112;
+    doc.moveDown(2);
     doc.font("Helvetica").fontSize(7.5).fillColor("#9CA3AF");
     doc.text(
       `Journey ${journey.journeyId ?? "—"}  ·  Generated ${new Date().toISOString()}`,

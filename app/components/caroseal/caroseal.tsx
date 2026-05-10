@@ -179,7 +179,7 @@ export default function PropertyCarousel() {
   };
 
   return (
-    <div className="w-full overflow-x-hidden px-4 pt-16 sm:pt-20 md:pt-24 lg:pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
+    <div className="w-full overflow-x-hidden px-4 pt-16 sm:pt-20 md:pt-24 lg:pt-[120px] sm:px-6 lg:px-8 2xl:px-50">
       <div className="mx-auto max-w-7xl 2xl:max-w-none">
 
         {/* Top Row */}
@@ -189,7 +189,10 @@ export default function PropertyCarousel() {
             <p className="carousel-subheading !text-[#93928E]">Your Property</p>
           </div>
           <div className="shrink-0 w-full sm:w-auto">
-            <CtaButton buttonName="Explore My Options" />
+            <CtaButton
+              buttonName="Explore My Options"
+              href="/#home-hero"
+            />
           </div>
         </div>
 

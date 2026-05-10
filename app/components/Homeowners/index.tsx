@@ -58,10 +58,36 @@ const index = () => {
     },
   ];
 
+  /** Card typography: max sizes at ~1980px; fluid below (clamp + vw). */
+  const cardNumberStyle: React.CSSProperties = {
+    fontFamily: '"Playfair Display", serif',
+    fontWeight: 600,
+    fontSize: "clamp(40px, calc(40px + 2.222vw), 64px)",
+    lineHeight: 32.95 / 84,
+    letterSpacing: 0,
+  };
+
+  const cardTitleStyle: React.CSSProperties = {
+    fontFamily: '"DM Sans", sans-serif',
+    fontWeight: 900,
+    fontSize: "clamp(16px, calc(16px + 1.01vw), 16px)",
+    lineHeight: 32.95 / 36,
+    letterSpacing: 0,
+  };
+
+  const cardDescriptionStyle: React.CSSProperties = {
+    fontFamily: '"DM Sans", sans-serif',
+    fontWeight: 400,
+    fontSize: "clamp(13px, calc(13px + 0.758vw), 16px)",
+    lineHeight: 38.94 / 28,
+    letterSpacing: "-0.0429em",
+    color: "#93928E",
+  };
+
   return (
     <section
       ref={sectionRef}
-      className="w-full px-4 pt-16 sm:pt-20 md:pt-24 lg:pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]"
+      className="w-full px-4 pt-16 sm:pt-20 md:pt-24 lg:pt-[120px] sm:px-6 lg:px-8 2xl:px-50"
     >
       <div className="mx-auto max-w-7xl 2xl:max-w-none">
 
@@ -79,48 +105,46 @@ const index = () => {
         {/* Two-column layout */}
         <div className="grid grid-cols-1 gap-8 sm:gap-10 lg:grid-cols-2 lg:gap-[100px] items-stretch">
 
-          {/* Feature Grid */}
-          <div className="grid grid-cols-2 grid-rows-2 rounded-[20px] border border-[#E3E3E3] overflow-hidden">
+          {/* Feature Grid — max height 559px; 40px gap between number and copy */}
+          <div className="grid h-full max-h-[559px] min-h-0 grid-cols-2 grid-rows-2 overflow-visible rounded-[20px] border border-[#E3E3E3]">
             {features.map((feature, idx) => (
               <div
                 key={feature.number}
                 className={`
-                  flex flex-col justify-between bg-[#F5F7FA]
+                  group relative flex flex-col gap-[40px] bg-[#F5F7FA]
                   p-5 sm:p-6 lg:pt-[31px] lg:px-[24px] lg:pb-[31px]
-                  xl:px-[38px] min-h-[200px] lg:min-h-[240px]
-                  transition-transform duration-300 ease-in-out
-                  hover:scale-105 hover:z-10 relative
+                  xl:px-[38px] min-h-[200px] lg:min-h-0
+                  transition-shadow duration-300 ease-in-out
+                  hover:shadow-[0_10px_28px_rgba(12,27,42,0.12)]
+                  ${idx === 0 ? "rounded-tl-[20px]" : ""}
+                  ${idx === 1 ? "rounded-tr-[20px]" : ""}
+                  ${idx === 2 ? "rounded-bl-[20px]" : ""}
+                  ${idx === 3 ? "rounded-br-[20px]" : ""}
                   ${idx % 2 === 0 ? "border-r border-[#E3E3E3]" : ""}
                   ${idx < 2 ? "border-b border-[#E3E3E3]" : ""}
                 `}
               >
                 <span
-                  style={{ fontFamily: "Playfair Display" }}
-                  className="text-[40px] sm:text-[56px] lg:text-[84px] leading-none font-[500] text-[#C4C2BC]"
+                  className="shrink-0 text-[#C4C2BC] transition-colors duration-300 ease-in-out group-hover:text-[#4DB6AC]"
+                  style={cardNumberStyle}
                 >
                   {feature.number}
                 </span>
-                <div className="flex flex-col gap-2 sm:gap-[10px]">
+                <div className="flex min-h-0 flex-col gap-2 sm:gap-[10px]">
                   <h3
-                    style={{ fontFamily: "DM Sans" }}
-                    className="card-title font-[600] text-[#0C1B2A] text-sm sm:text-base lg:text-lg"
+                    className="card-title text-[#0C1B2A] transition-colors duration-300 ease-in-out group-hover:text-[#4DB6AC]"
+                    style={cardTitleStyle}
                   >
                     {feature.title}
                   </h3>
-                  <p
-                    style={{ fontFamily: "DM Sans" }}
-                    className="text-xs sm:text-sm lg:text-base leading-[1.6] font-[400] text-[#93928E]"
-                  >
-                    {feature.description}
-                  </p>
+                  <p style={cardDescriptionStyle}>{feature.description}</p>
                 </div>
               </div>
             ))}
           </div>
 
-      {/* Image as background with parallax */}
-{/* Added 'h-full' and 'min-h-[400px]' so it matches the left side height on desktop */}
-<div className="relative w-full h-full min-h-[400px] lg:min-h-0 rounded-[20px] overflow-hidden">
+      {/* Image as background with parallax — same max height as feature grid */}
+<div className="relative h-full max-h-[559px] min-h-[400px] w-full lg:min-h-0 rounded-[20px] overflow-hidden">
   
   {/* Parallax image layer */}
   <div

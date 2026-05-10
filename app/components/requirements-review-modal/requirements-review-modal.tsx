@@ -279,7 +279,7 @@ export default function RequirementsReviewModal({
             <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-[16px] bg-black/8 px-5">
               <div className="flex max-w-[min(100%,400px)] flex-row flex-wrap items-center justify-center gap-3 gap-y-2 text-center">
                 <Image
-                  src="/images/lockicon.svg"
+                  src="/images/Lock-icon.svg"
                   alt=""
                   width={17}
                   height={21}

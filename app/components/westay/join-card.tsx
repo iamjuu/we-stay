@@ -74,7 +74,7 @@ const joinSteps = [
 
 export default function JoinCard() {
   return (
-    <section className="w-full px-4 pt-16 sm:pt-20 md:pt-24 lg:pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
+    <section className="w-full px-4 pt-16 sm:pt-20 md:pt-24 lg:pt-[120px] sm:px-6 lg:px-8 2xl:px-50">
       <div className="mx-auto max-w-7xl 2xl:max-w-none">
 
         {/* Heading */}

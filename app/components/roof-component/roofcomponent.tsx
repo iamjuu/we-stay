@@ -346,7 +346,7 @@ const RoofComponent = () => {
   }, [snapRailToNearestSlide]);
 
   return (
-    <section className="w-full px-4 pt-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
+    <section className="w-full px-4 pt-[120px] sm:px-6 lg:px-8 2xl:px-50">
       <div className="mx-auto max-w-7xl 2xl:max-w-none">
         <h1 className="roof-section-heading mb-8 text-center text-gray-900 sm:mb-10 lg:mb-12">
           Designed for your space.{' '}

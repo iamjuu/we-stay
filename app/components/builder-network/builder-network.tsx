@@ -9,8 +9,8 @@ import {
   useRef,
   useState,
 } from "react";
-import { partnerImage, Property } from "@/content";
-import { CircleQuestionMark, Info, Scroll, Search } from "lucide-react";
+import { partnerImage } from "@/content";
+import { CircleQuestionMark, Info, Search } from "lucide-react";
 import CtaButton from "../ctaButton/ctaButton";
 
 const LENDING_PARTNER_MAILTO = "mailto:richie.westayhome@gmail.com";
@@ -214,7 +214,7 @@ const BuilderNetwork = () => {
     <div className="w-full bg-[#0C1B2A]">
       {/* Removed max-w constraints and adjusted padding */}
       <section className="w-full bg-[#0C1B2A] py-16 sm:py-20 lg:py-24">
-        <div className="w-full px-4 sm:px-6 lg:px-8 2xl:px-[100px]">
+        <div className="w-full px-4 sm:px-6 lg:px-8 2xl:px-50">
           <h2
             style={{ fontFamily: '"DM Sans", sans-serif' }}
             className="join-the-westay mb-10 text-center text-white sm:mb-12"
@@ -237,7 +237,7 @@ const BuilderNetwork = () => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-[30px] mb-[60px]">
-                  <h3 className="westay-section-heading text-white ">
+                  <h3 className="westay-section-heading text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
                     Who We Want
                   </h3>
                   <p className="westay-para leading-relaxed text-[#CECECE]">
@@ -259,7 +259,7 @@ const BuilderNetwork = () => {
                   </div>
                 </div>
                 <div className="flex flex-col gap-[30px] ">
-                  <h3 className="westay-section-heading text-white ">
+                  <h3 className="westay-section-heading text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
                     Why Join
                   </h3>
                   <p className="westay-para  text-[#CECECE] leading-relaxed ">
@@ -282,7 +282,7 @@ const BuilderNetwork = () => {
 
             {/* RIGHT COLUMN: Takes up 7 out of 10 columns (70%) */}
             <div className="relative z-0 flex flex-col gap-3 lg:col-span-6 lg:gap-4">
-              <div className="relative z-0 aspect-video w-full overflow-visible">
+              <div className="relative z-0 aspect-video lg:aspect-[4/3] w-full overflow-visible">
                 <div
                   ref={imageWrapRef}
                   className="absolute inset-0 z-0 overflow-hidden rounded-3xl"
@@ -293,7 +293,7 @@ const BuilderNetwork = () => {
                   }
                 >
                   <Image
-                    src={Property}
+                    src="/images/tip.png"
                     alt="Modern home at sunset"
                     fill
                     priority={false}
@@ -304,21 +304,21 @@ const BuilderNetwork = () => {
                 {/* ... (Debug logic stays same) */}
               </div>
 
-              <div className="group relative flex h-full  flex-col justify-between rounded-3xl border border-white/10 bg-[#162032] pr-2  pl-8 sm:py-7 lg:ml-[160px]">
+              <div className="group relative flex flex-col justify-between rounded-3xl border border-white/10 bg-[#162032] pr-2 pl-8 py-6 sm:py-7 lg:ml-[160px] lg:min-h-[160px] lg:py-12">
                 <div className="mb-4 flex items-center justify-between">
-                  <h4 className="text-lg font-bold westay-section-heading text-white sm:text-xl">
+                  <h4 className="text-xl font-bold westay-section-heading text-white transition-colors duration-300 group-hover:text-[#4DB6AC] lg:text-2xl">
                     Process
                   </h4>
                <div className="flex items-center justify-center rounded-lg border border-[#F5F3ED1A]/20 bg-white/10 p-[15px] text-white backdrop-blur-md transition-colors duration-300 group-hover:text-[#4DB6AC]">
   <RefreshIcon className="size-[24px] transition-colors duration-300" />
 </div>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-white/65 sm:text-sm px-10">
-                  <span className="whitespace-nowrap westay-para text-white">Apply</span>
+                <div className="flex items-center gap-2 px-4 text-sm text-white/65 lg:px-6 lg:text-base">
+                  <span className="whitespace-nowrap font-semibold text-white">Apply</span>
                   <span className="h-px flex-1 bg-white/25" />
-                  <span className="whitespace-nowrap westay-para">Review</span>
+                  <span className="whitespace-nowrap">Review</span>
                   <span className="h-px flex-1 bg-white/25" />
-                  <span className="whitespace-nowrap westay-para">Approved Network</span>
+                  <span className="whitespace-nowrap">Approved Network</span>
                 </div>
               </div>
             </div>
@@ -326,10 +326,10 @@ const BuilderNetwork = () => {
         </div>
       </section>
 
-      <section className="w-full px-4  sm:px-6 lg:px-8 2xl:px-[100px]">
+      <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-50">
         <div className="mx-auto max-w-7xl 2xl:max-w-none">
           <div className="w-full flex flex-col gap-[50px]">
-            <h1 className="join-the-westay text-white text-center ">
+            <h1 className="join-the-westay text-center text-[white] transition-colors duration-300 hover:text-[#4DB6AC]">
               Partner With WeStay{" "}
               <span className="text-[#93928E]">Financing Network</span>
             </h1>
@@ -350,7 +350,7 @@ const BuilderNetwork = () => {
                   </p>
                 </div>
                 <div className="flex mb-[15px] items-center flex-col gap-[15px]">
-                  <h1 className="financing-network text-white">
+                  <h1 className="financing-network text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
                     Why It Matters
                   </h1>
                   <p className="financing-paragraph text-center text-[#CECECE]">
@@ -362,16 +362,22 @@ const BuilderNetwork = () => {
               <div className="group flex border border-[#33506E] rounded-[20px] items-center flex-col">
                 <div className="flex w-full  p-[10px] justify-end">
                   <p className="flex w-fit items-center gap-2 rounded-md bg-white/10 p-2 text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
-                    <Scroll />
+                    <Image
+                      src="/images/filesave.svg"
+                      alt=""
+                      width={27}
+                      height={32}
+                      className="h-6 w-auto object-contain opacity-90 transition-all duration-300 group-hover:opacity-100 group-hover:[filter:invert(67%)_sepia(47%)_saturate(462%)_hue-rotate(130deg)_brightness(94%)]"
+                    />
                   </p>
                 </div>
                 <div className="flex mb-[15px] items-center flex-col gap-[15px]">
-                  <h1 className="financing-network text-white">
-                    Why It Matters
+                  <h1 className="financing-network text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
+                    Lender-Ready File Concept
                   </h1>
                   <p className="financing-paragraph text-center text-[#CECECE]">
-                    Qualified ADU borrowers | Organized deal files <br />| Clear
-                    pipeline visibility | Growth market <br /> opportunity
+                    Each lead comes organized:<br />| Clear
+                    Homeowner Info | Property Data | Project Scope |  <br /> Estimated Costs | Qualification Notes  
                   </p>
                 </div>
               </div>

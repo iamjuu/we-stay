@@ -69,8 +69,8 @@ function StepCard({ title, desc, icon }: StepCardProps) {
 
 export default function WeStaySection() {
   return (
-    <section className="w-full bg-[#0C1B2A] px-4 py-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
-      <div className="mx-auto  flex flex-col gap-[50px] max-w-7xl 2xl:max-w-none0">
+    <section className="w-full bg-[#0C1B2A] py-[120px]">
+      <div className="mx-auto flex flex-col gap-[50px] max-w-7xl px-4 sm:px-6 lg:px-8">
         <h2
           style={{ fontFamily: "DM Sans" }}
           className="medium-heading  text-center font-[500] text-white"

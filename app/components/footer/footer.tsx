@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0f1e2e] text-white px-6 py-14 sm:px-12 lg:px-20 lg:py-16">
+    <footer className="bg-[#0f1e2e] text-white px-6 py-14 sm:px-12 lg:px-20 lg:py-16 2xl:px-50">
       <div className="mx-auto max-w-7xl 2xl:max-w-none">
         {/* 
             Grid: 1 column on mobile, 2 columns on lg (1024px+). 

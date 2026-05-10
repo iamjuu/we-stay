@@ -20,18 +20,25 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="w-full px-4 py-4 sm:px-6 lg:px-8">
+    <>
+      {/* Reserves space on lg when bar is fixed so page content is not covered */}
+      <div
+        className="hidden shrink-0 lg:block"
+        style={{ height: "calc(1rem + 70px)" }}
+        aria-hidden
+      />
+      <nav className="w-full px-4 py-4 sm:px-6 lg:fixed lg:inset-x-0 lg:top-4 lg:z-[100] lg:px-8 lg:py-0">
       <div
         className="mx-auto flex w-full max-w-[1280px] flex-col rounded-[34px] border-b border-r border-[#bdbdbd] bg-[rgba(255,255,255,0.3)] shadow-[0px_3px_10px_0px_rgba(0,0,0,0.05),0px_3px_10px_0px_rgba(0,0,0,0.1)] backdrop-blur-[10px] sm:rounded-[40px] lg:rounded-[50px]"
       >
-        {/* Main row — always visible */}
-        <div className="flex  items-center justify-between px-5 py-3 sm:px-7 lg:px-[42px] lg:py-[10px]">
+        {/* Main row — lg: fixed 70px bar height; mobile unchanged */}
+        <div className="flex items-center justify-between px-5 py-3 sm:px-7 lg:h-[70px] lg:min-h-[70px] lg:px-[42px] lg:py-0">
           {/* Logo */}
-          <div className=" flex items-center justify-between w-full">
+          <div className="flex w-full items-center justify-between">
             <Link href="/" className="inline-flex shrink-0" aria-label="WeStay home">
               <Image
                 alt="WeStay logo"
-                className="h-full w-full object-contain"
+                className="h-8 w-auto object-contain sm:h-9 lg:h-[42px] lg:max-h-[42px]"
                 src={Logo}
               />
             </Link>
@@ -120,6 +127,7 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
+    </>
   );
 };
 

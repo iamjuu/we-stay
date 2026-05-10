@@ -166,12 +166,12 @@ export function InteriorTourClient() {
     );
 
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 2xl:px-[100px]">
+    <div className="w-full px-4 sm:px-6 lg:px-8 2xl:px-50">
       <div className="mx-auto max-w-7xl 2xl:max-w-none">
         <div className="font-dm-sans w-full py-10 text-[#141a18]">
           {(phase === "splash" || phase === "pick") && (
             <main
-              className="relative min-h-[min(420px,70vh)] w-full overflow-hidden rounded-[20px] shadow-[0_12px_40px_rgba(12,27,42,0.12)] sm:min-h-[min(480px,75vh)] lg:min-h-[min(560px,78vh)]"
+              className="relative min-h-[min(420px,90vh)] w-full overflow-hidden rounded-[20px] shadow-[0_12px_40px_rgba(12,27,42,0.12)] sm:min-h-[min(480px,75vh)] lg:min-h-[min(560px,78vh)]"
               style={{ background: STAGE_BG }}
             >
               <>
@@ -196,8 +196,16 @@ export function InteriorTourClient() {
 
                 <div className="absolute inset-0 z-20 flex flex-col bg-gradient-to-b from-[#0C1B2A]/65 via-[#0C1B2A]/45 to-[#0C1B2A]/70">
                   <div className="flex flex-1 flex-col items-center justify-center px-6">
-                    <p className="font-playfair-display text-center text-[clamp(1.75rem,5vw,3rem)] font-bold leading-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)]">
-                      Step inside.
+                    <p
+                      className={`font-playfair-display text-center font-bold leading-tight text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)] ${
+                        phase === "pick"
+                          ? "text-[clamp(1.25rem,4vw,2rem)]"
+                          : "text-[clamp(1.75rem,5vw,3rem)]"
+                      }`}
+                    >
+                      {phase === "pick"
+                        ? "Select to explore the four interior styles below."
+                        : "Step inside."}
                     </p>
 
                     {phase === "pick" && (

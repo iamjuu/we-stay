@@ -50,6 +50,8 @@ export default function Home() {
 
   return (
     <>
+      {/* Navbar outside #home-hero so fixed bar stacks above later sections (e.g. Builder Network) */}
+      <Navbar />
       <div
         style={{
           backgroundImage: ` url("${HERO_BACKGROUND_URL}")`,
@@ -68,7 +70,6 @@ export default function Home() {
         />
         <div className="relative z-[2] flex min-h-screen flex-col justify-between">
         <div className="relative z-20">
-          <Navbar />
           <div>
             <div className="mx-auto mb-[120px] mt-[80px] flex w-full max-w-[1100px] flex-col items-center gap-14 px-4 md:mt-[104px] lg:mt-[104px] md:px-[80px] md:gap-20">
               <div className="flex w-full flex-col items-center text-center">
@@ -141,7 +142,7 @@ export default function Home() {
 
       {/* <Eligibility /> */}
 
-      <div className="flex   py-[100px]   flex-col items-center bg-[#0C1B2A]">
+      <div className="flex py-[120px] flex-col items-center bg-[#0C1B2A]">
         <h1
           style={{
             fontFamily: "DM Sans",
@@ -162,7 +163,7 @@ export default function Home() {
         </h1>
       </div>
 
-      <div className="w-full px-4 py-[120px] sm:px-6 lg:px-8 2xl:px-[100px]">
+      <div className="w-full px-4 py-[120px] sm:px-6 lg:px-8 2xl:px-50">
         <div className="mx-auto max-w-7xl 2xl:max-w-none">
           <div className="flex flex-col overflow-hidden rounded-[20px] border border-[#E1E0DB] bg-[#F5F7FA] lg:flex-row">
             <div className="relative w-full min-h-[240px] shrink-0 lg:min-h-0 lg:w-[46%]">
@@ -228,8 +229,8 @@ export default function Home() {
       <div>
         <TestimonialCarousel />
       </div>
-      <div>
-      <Eligibility />
+      <div id="eligibility" className="scroll-mt-28">
+        <Eligibility />
       </div>
       <div className="">
         <Footer />

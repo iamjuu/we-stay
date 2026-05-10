@@ -146,7 +146,7 @@ export default function HeroEligibility() {
             className={`w-full  font-dm-sans font-normal text-white text-pretty ${
               modalOpen
                 ? 'mt-0 text-center lg:absolute lg:bottom-0 lg:-left-36 lg:z-[101] lg:mt-0 lg:max-w-[280px] lg:text-left xl:max-w-[300px]'
-                : 'mt-5 text-center'
+                : 'mt-[-680px] text-center'
             }`}
             style={{
               fontSize: 'clamp(13px, 2.06vw, 17px)',
