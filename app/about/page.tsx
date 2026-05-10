@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Sectioncomponent from '../components/section-component/section-component';
-import { About2, About3, About4, HeroImage } from '@/content';
+import { About2, About3, HeroImage } from '@/content';
 import AboutSection from '../components/about/section';
 import Eligibility from '../components/eligibility/eligibility';
 import Footer from '../components/footer/footer';

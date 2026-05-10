@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import PDFDocument from "pdfkit";
 import type { FullEligibilityResult } from "@/lib/eligibility-gates";
 import type { EligibilityRentalPayload } from "@/lib/eligibility-pipeline";
@@ -7,21 +5,86 @@ import type { JourneyDocument } from "@/lib/journey-types";
 
 const PAGE_W = 612;
 const PAGE_H = 792;
-const M = 52;
-const COLORS = {
+const M = 48;
+
+const C = {
   ink: "#0C1B2A",
   muted: "#5C6570",
   line: "#E2E8E4",
   teal: "#2A9D8F",
   tealDark: "#1E7A70",
-  warn: "#E9C46A",
+  tealBg: "#EBF7F6",
+  warnBg: "#FDF8EC",
+  warn: "#B8860B",
+  badBg: "#FEF0EC",
   bad: "#E76F51",
-  ok: "#2A9D8F",
-  panel: "#F4F8F7",
+  panel: "#F5F7FA",
+  white: "#FFFFFF",
 };
 
-const DISCOVERY_BOOKING_URL = "https://links.womcom.com/widget/bookings/westay-discovery-call";
+const DISCOVERY_URL = "https://links.womcom.com/widget/bookings/westay-discovery-call";
 const CONTACT_EMAIL = "richie.westayhome@gmail.com";
+
+// ─── Label lookup maps ───────────────────────────────────────────────────────
+
+const GOAL_LABELS: Record<string, string> = {
+  "long-term": "Long-Term Rental",
+  "short-term": "Short-Term Rental",
+  "family": "Family Living",
+  "live-rent": "Live In It, Rent the Main House",
+  "not-sure": "Not Sure Yet",
+};
+const ADU_TYPE_LABELS: Record<string, string> = {
+  "backyard": "Backyard Home",
+  "attached": "Attached Addition",
+  "second-story": "Second Story Addition",
+};
+const BUILD_PREF_LABELS: Record<string, string> = {
+  "fast-track": "Fast Track",
+  "custom": "Custom Build",
+};
+const PLAN_LABELS: Record<string, string> = {
+  "studio": "Studio",
+  "one-bedroom": "One Bedroom",
+  "two-bedroom": "Two Bedroom",
+  "two-office": "Two Bedroom + Office",
+};
+const SIDING_LABELS: Record<string, string> = {
+  "default-stucco": "Default Stucco",
+  "board-batten": "Board & Batten",
+  "vertical-tg": "Vertical T&G",
+  "horizontal-lap": "Horizontal Lap",
+};
+const CLADDING_LABELS: Record<string, string> = {
+  "original": "Imported (Original)",
+  "coastal": "Coastal Milky White",
+  "soft-sage": "Soft Sage",
+  "stormwood": "Stormwood Drift",
+  "brushed-sandstorm": "Brushed Sandstorm",
+  "deep-umber": "Deep Umber",
+};
+const INTERIOR_LABELS: Record<string, string> = {
+  "kai": "Kai — Warm & Simple",
+  "aina": "Aina — Grounded & Rich",
+  "lani": "Lani — Light & Airy",
+  "anu": "Anu — Earthy & Balanced",
+};
+const FUNDING_LABELS: Record<string, string> = {
+  "cash": "Cash",
+  "financing": "Need Financing",
+  "exploring": "Exploring Options",
+};
+const ROOF_LABELS: Record<string, string> = {
+  "asphalt": "Asphalt Shingle",
+  "metal": "Metal Roof",
+};
+
+function lbl(map: Record<string, string>, id: string | null | undefined): string {
+  if (!id) return "—";
+  return map[id] ?? id;
+}
+
+// ─── Types ───────────────────────────────────────────────────────────────────
 
 type EligibilitySnap = {
   address?: string;
@@ -45,94 +108,116 @@ function parseSnapshot(journey: JourneyDocument): EligibilitySnap | null {
 
 function scoreFromResult(result: FullEligibilityResult): number {
   const n = result.gates.length;
-  if (n === 0) return 0;
-  return Math.round((result.passCount / n) * 100);
+  return n === 0 ? 0 : Math.round((result.passCount / n) * 100);
 }
 
 function eligibilityRating(score: number, status: FullEligibilityResult["status"]): string {
   if (status === "INELIGIBLE") return "Needs attention — several checks did not pass.";
-  if (status === "NEEDS_REVIEW" || score < 70) return "Eligible with verification — some items need a closer look.";
-  if (score >= 85) return "Highly eligible — strong alignment with typical DPP requirements.";
+  if (status === "NEEDS_REVIEW" || score < 70)
+    return "Eligible with verification — some items need a closer look.";
+  if (score >= 85) return "Highly Eligible — strong alignment with typical DPP requirements.";
   return "Good eligibility — a few items may need confirmation.";
 }
 
-/** Score meter — avoids PDF arc APIs that are missing from some typings. */
-function drawScoreMeter(doc: InstanceType<typeof PDFDocument>, x: number, y: number, w: number, pct: number): void {
-  const p = Math.max(0, Math.min(100, pct));
-  doc.roundedRect(x, y, w, 14, 4).fill(COLORS.line);
-  if (p > 0) doc.roundedRect(x, y, (w * p) / 100, 14, 4).fill(COLORS.teal);
+// ─── Drawing primitives ───────────────────────────────────────────────────────
+
+type Doc = InstanceType<typeof PDFDocument>;
+
+function pageFooter(doc: Doc, page: number, total: number): void {
+  doc.font("Helvetica").fontSize(7).fillColor("#9CA3AF");
+  doc.text(
+    `WeStay Technologies Inc. · Kapolei, Hawaiʻi`,
+    M, PAGE_H - 34,
+    { width: PAGE_W - 2 * M, align: "left", continued: true }
+  );
+  doc.text(`Page ${page} of ${total}`, { align: "right" });
 }
 
-function drawStatCard(
-  doc: InstanceType<typeof PDFDocument>,
+function sectionBanner(doc: Doc, title: string, subtitle?: string): void {
+  const y = doc.y;
+  const h = subtitle ? 38 : 28;
+  doc.rect(0, y, PAGE_W, h).fill(C.ink);
+  doc.font("Helvetica-Bold").fontSize(11).fillColor(C.white);
+  doc.text(title.toUpperCase(), M, y + 8, { width: PAGE_W - 2 * M });
+  if (subtitle) {
+    doc.font("Helvetica").fontSize(8).fillColor(C.teal);
+    doc.text(subtitle, M, y + 22, { width: PAGE_W - 2 * M });
+  }
+  doc.y = y + h + 12;
+}
+
+function drawProgressBar(doc: Doc, x: number, y: number, w: number, pct: number): void {
+  doc.roundedRect(x, y, w, 10, 3).fill(C.line);
+  if (pct > 0) doc.roundedRect(x, y, (w * Math.min(100, pct)) / 100, 10, 3).fill(C.teal);
+}
+
+/** Draws an initials avatar circle at (cx, cy). */
+function drawAvatar(doc: Doc, cx: number, cy: number, r: number, initials: string): void {
+  doc.circle(cx, cy, r).fill(C.teal);
+  doc.font("Helvetica-Bold")
+    .fontSize(r * 0.9)
+    .fillColor(C.white)
+    .text(initials, cx - r, cy - r * 0.6, { width: r * 2, align: "center" });
+}
+
+/** Stat card — small metric tile. */
+function statCard(doc: Doc, x: number, y: number, w: number, fieldLabel: string, value: string, sub?: string): void {
+  const h = 62;
+  doc.roundedRect(x, y, w, h, 5).fill(C.panel);
+  doc.font("Helvetica").fontSize(7).fillColor(C.muted).text(fieldLabel.toUpperCase(), x + 10, y + 8, { width: w - 20 });
+  doc.font("Helvetica-Bold").fontSize(16).fillColor(C.ink).text(value, x + 10, y + 20, { width: w - 20 });
+  if (sub) doc.font("Helvetica").fontSize(7).fillColor(C.muted).text(sub, x + 10, y + 44, { width: w - 20 });
+}
+
+/**
+ * Draws a two-column table.
+ * Left col = field name (muted), right col = answer (teal bg + bold teal text when filled).
+ * Returns the Y position after the last row.
+ */
+function drawTable(
+  doc: Doc,
   x: number,
-  y: number,
+  startY: number,
   w: number,
-  label: string,
-  value: string,
-  sub?: string
-): void {
-  doc.roundedRect(x, y, w, 58, 6).fill(COLORS.panel);
-  doc.fillColor(COLORS.muted).font("Helvetica").fontSize(8);
-  doc.text(label.toUpperCase(), x + 12, y + 8, { width: w - 24 });
-  doc.fillColor(COLORS.ink).font("Helvetica-Bold").fontSize(16);
-  doc.text(value, x + 12, y + 20, { width: w - 24 });
-  if (sub) {
-    doc.font("Helvetica").fontSize(8).fillColor(COLORS.muted);
-    doc.text(sub, x + 12, y + 40, { width: w - 24 });
+  rows: Array<{ field: string; value: string }>,
+  labelColW = 190
+): number {
+  const valColW = w - labelColW;
+  const ROW_H = 26;
+  let y = startY;
+
+  // Header
+  doc.rect(x, y, labelColW, ROW_H).fill(C.ink);
+  doc.rect(x + labelColW, y, valColW, ROW_H).fill(C.teal);
+  doc.font("Helvetica-Bold").fontSize(7.5).fillColor(C.white);
+  doc.text("FIELD", x + 10, y + 9, { width: labelColW - 20 });
+  doc.text("YOUR ANSWER", x + labelColW + 10, y + 9, { width: valColW - 20 });
+  y += ROW_H;
+
+  for (let i = 0; i < rows.length; i++) {
+    const { field, value } = rows[i];
+    const filled = value !== "—" && value.trim() !== "";
+    const rowBg = i % 2 === 0 ? C.white : C.panel;
+    doc.rect(x, y, labelColW, ROW_H).fill(rowBg);
+    doc.rect(x + labelColW, y, valColW, ROW_H).fill(filled ? C.tealBg : C.panel);
+    // row border
+    doc.rect(x, y, w, ROW_H).lineWidth(0.4).strokeColor(C.line).stroke();
+
+    doc.font("Helvetica").fontSize(8.5).fillColor(C.muted);
+    doc.text(field, x + 10, y + 8, { width: labelColW - 20 });
+    doc.font("Helvetica-Bold").fontSize(8.5).fillColor(filled ? C.tealDark : C.muted);
+    doc.text(value || "—", x + labelColW + 10, y + 8, { width: valColW - 20 });
+    y += ROW_H;
   }
+
+  return y;
 }
 
-function drawRentalBars(
-  doc: InstanceType<typeof PDFDocument>,
-  x: number,
-  y: number,
-  width: number,
-  rentals: EligibilityRentalPayload["rentals"]
-): void {
-  if (!rentals.length) return;
-  const slice = rentals.slice(0, 5);
-  const maxEst = Math.max(...slice.map((r) => r.estimate), 1);
-  const barW = Math.min(56, (width - (slice.length - 1) * 12) / slice.length);
-  let bx = x;
-  const baseY = y + 110;
-  doc.font("Helvetica-Bold").fontSize(11).fillColor(COLORS.ink).text("Rent comps by unit type (zip-level)", x, y);
-  doc.font("Helvetica").fontSize(8).fillColor(COLORS.muted);
-  doc.text("Bar height reflects estimated monthly rent from comparable count in your ZIP.", x, y + 16, { width });
-
-  for (const row of slice) {
-    const h = Math.round((row.estimate / maxEst) * 88);
-    doc.roundedRect(bx, baseY - h, barW, h, 3).fill(COLORS.teal);
-    doc
-      .font("Helvetica-Bold")
-      .fontSize(9)
-      .fillColor(COLORS.ink)
-      .text(`$${Math.round(row.estimate / 1000)}k`, bx, baseY - h - 16, { width: barW, align: "center" });
-    doc
-      .font("Helvetica")
-      .fontSize(7)
-      .fillColor(COLORS.muted)
-      .text(`${row.bedrooms} bd`, bx, baseY + 6, { width: barW, align: "center" });
-    bx += barW + 12;
-  }
-}
-
-function safeImage(rel: string): string | null {
-  const p = path.join(process.cwd(), rel);
-  return fs.existsSync(p) ? p : null;
-}
-
-function pageFooter(doc: InstanceType<typeof PDFDocument>, page: number, total: number): void {
-  doc.font("Helvetica").fontSize(8).fillColor("#9CA3AF");
-  doc.text(`— ${page} of ${total} —`, M, PAGE_H - 40, {
-    align: "center",
-    width: PAGE_W - 2 * M,
-  });
-}
+// ─── Main export ─────────────────────────────────────────────────────────────
 
 export function buildJourneyReportPdf(journey: JourneyDocument): Promise<Buffer> {
   return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({ size: "LETTER", margin: M });
+    const doc = new PDFDocument({ size: "LETTER", margin: 0 });
     const chunks: Buffer[] = [];
     doc.on("data", (c) => chunks.push(c as Buffer));
     doc.on("end", () => resolve(Buffer.concat(chunks)));
@@ -142,283 +227,347 @@ export function buildJourneyReportPdf(journey: JourneyDocument): Promise<Buffer>
     const er = snap?.eligibilityResult;
     const score = er ? scoreFromResult(er) : 0;
     const rating = er ? eligibilityRating(score, er.status) : "";
-    const TOTAL_PAGES = 6;
-    let pageNum = 1;
+    const TOTAL = 5;
+    let pg = 1;
 
-    // ----- Page 1 cover -----
-    const heroPath = safeImage("content/images/about/adu-evening-duo.png") ?? safeImage("content/images/property.png");
-    if (heroPath) {
-      try {
-        doc.save();
-        doc.image(heroPath, 0, 0, { width: PAGE_W, height: 200 });
-        doc.restore();
-      } catch {
-        /* skip broken image */
-      }
-    } else {
-      doc.rect(0, 0, PAGE_W, 200).fill(COLORS.tealDark);
-    }
+    const contact = journey.contact;
+    const firstName = contact?.firstName ?? "";
+    const lastName = contact?.lastName ?? "";
+    const fullName = `${firstName} ${lastName}`.trim() || "Homeowner";
+    const initials = ((firstName[0] ?? "") + (lastName[0] ?? "")).toUpperCase() || "?";
 
-    doc.y = 216;
-    doc.font("Helvetica-Bold").fontSize(26).fillColor(COLORS.ink).text("Your ADU Snapshot", { align: "center" });
-    doc.moveDown(0.2);
-    doc.font("Helvetica").fontSize(11).fillColor(COLORS.muted).text("Eligibility · Rent · Selections · Next steps", {
-      align: "center",
-    });
-    doc.moveDown(0.6);
+    // ══════════════════════════════════════════
+    //  PAGE 1 — COVER
+    // ══════════════════════════════════════════
 
-    if (journey.contact) {
-      doc.font("Helvetica-Bold").fontSize(12).fillColor(COLORS.ink);
-      doc.text(
-        `Prepared for: ${journey.contact.firstName} ${journey.contact.lastName}`,
-        M,
-        doc.y,
-        { width: PAGE_W - 2 * M }
-      );
-      doc.moveDown(0.25);
-      doc.font("Helvetica").fontSize(11).fillColor(COLORS.muted);
-      doc.text(journey.contact.email, { width: PAGE_W - 2 * M });
-      doc.text(journey.contact.phone, { width: PAGE_W - 2 * M });
-    }
+    // Top dark header band
+    doc.rect(0, 0, PAGE_W, 100).fill(C.ink);
+    // Teal accent stripe
+    doc.rect(0, 100, PAGE_W, 5).fill(C.teal);
 
-    doc.moveDown(0.35);
-    doc.font("Helvetica-Bold").fontSize(11).fillColor(COLORS.ink);
-    doc.text(snap?.address ?? "Property address on file", { width: PAGE_W - 2 * M });
+    // Title
+    doc.font("Helvetica-Bold").fontSize(30).fillColor(C.white);
+    doc.text("ADU Snapshot", M, 22, { width: PAGE_W - 2 * M });
+    doc.font("Helvetica").fontSize(11).fillColor(C.teal);
+    doc.text("Eligibility  ·  Cost  ·  Income  ·  Next Steps", M, 58, { width: PAGE_W - 2 * M });
 
+    // ── User profile card ──
+    const profileY = 120;
+    drawAvatar(doc, M + 26, profileY + 26, 26, initials);
+
+    doc.font("Helvetica-Bold").fontSize(15).fillColor(C.ink);
+    doc.text(fullName, M + 64, profileY + 4, { width: PAGE_W - M - 64 - M });
+    doc.font("Helvetica").fontSize(9).fillColor(C.muted);
+    if (contact?.email) doc.text(contact.email, M + 64, profileY + 22, { width: PAGE_W - M - 64 - M });
+    if (contact?.phone) doc.text(contact.phone, M + 64, profileY + 34, { width: PAGE_W - M - 64 - M });
+
+    doc.moveTo(M, profileY + 60).lineTo(PAGE_W - M, profileY + 60).lineWidth(0.5).strokeColor(C.line).stroke();
+
+    // ── Property info ──
+    const propY = profileY + 72;
+    doc.font("Helvetica-Bold").fontSize(10).fillColor(C.muted);
+    doc.text("PROPERTY ADDRESS", M, propY);
+    doc.font("Helvetica-Bold").fontSize(12).fillColor(C.ink);
+    doc.text(snap?.address ?? "Address on file", M, propY + 14, { width: PAGE_W - 2 * M });
+
+    // ── Metric tiles ──
+    const metricY = propY + 48;
     const adu = er?.aduSize;
-    const metrics: string[] = [];
-    if (adu) {
-      metrics.push(`Max ADU: up to ${adu.maxAduSizeSqFt.toLocaleString()} SF`);
-      if (adu.primaryDwellingSizeSqFt)
-        metrics.push(`Primary dwelling ~${adu.primaryDwellingSizeSqFt.toLocaleString()} SF`);
-    }
-    if (er) {
-      metrics.push(`${er.passCount} checks pass · ${er.flagCount} verify · ${er.failCount} blocked`);
-    }
-    doc.font("Helvetica").fontSize(10).fillColor(COLORS.muted);
-    if (metrics.length) doc.text(metrics.join("  ·  "), { width: PAGE_W - 2 * M });
+    const mW = (PAGE_W - 2 * M - 18) / 4;
+    const metrics = [
+      { l: "Max ADU Size", v: adu ? `${adu.maxAduSizeSqFt.toLocaleString()} SF` : "—" },
+      { l: "Eligibility Score", v: er ? `${score}%` : "—" },
+      { l: "Checks Pass", v: er ? `${er.passCount} of ${er.gates.length}` : "—" },
+      { l: "Status", v: er ? er.status.replace(/_/g, " ") : "—" },
+    ];
+    metrics.forEach((m, i) => statCard(doc, M + i * (mW + 6), metricY, mW, m.l, m.v));
 
-    doc.moveDown(0.5);
-    doc.font("Helvetica").fontSize(9).fillColor(COLORS.muted);
+    // ── Prepared for block ──
+    const prepY = metricY + 78;
+    doc.font("Helvetica-Bold").fontSize(9).fillColor(C.muted);
+    doc.text(`Prepared for: ${fullName}`, M, prepY);
+    doc.font("Helvetica").fontSize(9).fillColor(C.muted);
     doc.text(
-      "This Snapshot summarizes what you explored in WeStay — eligibility signals, rent context, and your configuration choices. It is not a commitment to build, a loan offer, or financial advice. Your full Pathway Report is prepared after your discovery call.",
-      { width: PAGE_W - 2 * M, align: "justify" }
+      `Date: ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`,
+      M, prepY + 14
     );
 
-    pageFooter(doc, pageNum++, TOTAL_PAGES);
+    // ── Disclaimer ──
+    const discY = prepY + 48;
+    doc.roundedRect(M, discY, PAGE_W - 2 * M, 60, 5).fill(C.tealBg);
+    doc.font("Helvetica").fontSize(8).fillColor(C.tealDark);
+    doc.text(
+      "This Snapshot is a preliminary estimate based on your address and the answers you provided. It is not a commitment to build, a loan offer, or financial advice. Your full personalized Pathway Report will be prepared after your discovery call.",
+      M + 12, discY + 10, { width: PAGE_W - 2 * M - 24 }
+    );
+
+    // ── At a Glance — contact + build info below disclaimer ──
+    doc.y = discY + 75;
+    doc.font("Helvetica-Bold").fontSize(8).fillColor(C.muted);
+    doc.text("AT A GLANCE", M, doc.y);
+    doc.moveDown(0.3);
+    drawTable(doc, M, doc.y, PAGE_W - 2 * M, [
+      { field: "Name",        value: fullName },
+      { field: "Email",       value: contact?.email ?? "—" },
+      { field: "Phone",       value: contact?.phone ?? "—" },
+      { field: "Goal",        value: lbl(GOAL_LABELS,       journey.buildSelections?.goalId) },
+      { field: "ADU Type",    value: lbl(ADU_TYPE_LABELS,   journey.buildSelections?.aduTypeId) },
+      { field: "Build Path",  value: lbl(BUILD_PREF_LABELS, journey.buildSelections?.buildPreferenceId) },
+      { field: "Address",     value: snap?.address ?? "—" },
+      { field: "Max ADU SF",  value: adu ? `${adu.maxAduSizeSqFt.toLocaleString()} SF` : "—" },
+    ]);
+
+    pageFooter(doc, pg++, TOTAL);
     doc.addPage();
 
-    // ----- Page 2 eligibility -----
-    doc.font("Helvetica-Bold").fontSize(16).fillColor(COLORS.ink).text("ELIGIBILITY");
-    doc.moveDown(0.5);
-    if (er) {
-      const meterY = doc.y + 8;
-      doc.font("Helvetica-Bold").fontSize(36).fillColor(COLORS.ink);
-      doc.text(`${score}%`, M, meterY, { width: PAGE_W - 2 * M, align: "center" });
-      doc.font("Helvetica").fontSize(10).fillColor(COLORS.muted);
-      doc.text("Your eligibility — estimated pass rate across automated checks", M, meterY + 42, {
-        width: PAGE_W - 2 * M,
-        align: "center",
-      });
-      drawScoreMeter(doc, M, meterY + 62, PAGE_W - 2 * M, score);
-      doc.y = meterY + 92;
-      doc.font("Helvetica").fontSize(11).fillColor(COLORS.ink).text(rating, { width: PAGE_W - 2 * M, align: "justify" });
-      doc.moveDown(0.8);
+    // ══════════════════════════════════════════
+    //  PAGE 2 — ELIGIBILITY
+    // ══════════════════════════════════════════
 
+    sectionBanner(doc, "Eligibility", "Automated checks run against City & County of Honolulu DPP criteria");
+
+    if (er) {
+      // Score + bar
+      const scoreY = doc.y;
+      doc.font("Helvetica-Bold").fontSize(52).fillColor(C.teal);
+      doc.text(`${score}%`, M, scoreY, { width: 90 });
+
+      doc.font("Helvetica-Bold").fontSize(13).fillColor(C.ink);
+      doc.text(rating, M + 104, scoreY + 6, { width: PAGE_W - 2 * M - 104 });
+      doc.font("Helvetica").fontSize(9).fillColor(C.muted);
+      doc.text(
+        `${er.passCount} pass  ·  ${er.flagCount} need verification  ·  ${er.failCount} blocked`,
+        M + 104, scoreY + 26, { width: PAGE_W - 2 * M - 104 }
+      );
+      drawProgressBar(doc, M, scoreY + 50, PAGE_W - 2 * M, score);
+      doc.y = scoreY + 68;
+      doc.moveDown(0.5);
+
+      // Gate columns
       const passG = er.gates.filter((g) => g.status === "pass");
       const flagG = er.gates.filter((g) => g.status === "flag");
-      const badG = er.gates.filter((g) => g.status === "fail" || g.status === "pending");
+      const badG  = er.gates.filter((g) => g.status === "fail" || g.status === "pending");
+      const colW  = (PAGE_W - 2 * M - 16) / 3;
+      const boxY  = doc.y;
+      const BOX_H = 195;
 
-      const colW = (PAGE_W - 2 * M - 24) / 3;
-      let colX = M;
-      const boxY = doc.y;
-      const drawCol = (title: string, gates: typeof passG, color: string) => {
-        doc.lineWidth(1).strokeColor(color).roundedRect(colX, boxY, colW, 168, 6).stroke();
-        doc.font("Helvetica-Bold").fontSize(10).fillColor(color).text(title, colX + 8, boxY + 8, {
-          width: colW - 16,
-        });
-        doc.font("Helvetica").fontSize(8).fillColor(COLORS.ink);
-        const lines = gates.slice(0, 5).map((g) => `• ${g.name}: ${g.message}`);
-        doc.text(lines.join("\n") || "—", colX + 8, boxY + 26, { width: colW - 16 });
-        if (gates.length > 5) {
-          doc.fillColor(COLORS.muted).text(`+${gates.length - 5} more…`, colX + 8, boxY + 150, { width: colW - 16 });
+      const cols = [
+        { title: "✓  Checks Pass",        gates: passG, hdr: C.teal,    bg: C.tealBg },
+        { title: "⚠  Needs Verification", gates: flagG, hdr: C.warn,    bg: C.warnBg },
+        { title: "✗  Blocked / Pending",  gates: badG,  hdr: C.bad,     bg: C.badBg  },
+      ];
+
+      cols.forEach(({ title, gates, hdr, bg }, idx) => {
+        const cx = M + idx * (colW + 8);
+        doc.roundedRect(cx, boxY, colW, BOX_H, 5).fill(bg);
+        doc.rect(cx, boxY, colW, 24).fill(hdr);
+        doc.font("Helvetica-Bold").fontSize(8).fillColor(C.white);
+        doc.text(title, cx + 8, boxY + 8, { width: colW - 16 });
+        doc.font("Helvetica").fontSize(8).fillColor(C.ink);
+        const lines = gates.slice(0, 6).map((g) => `• ${g.name}`);
+        doc.text(lines.join("\n") || "None", cx + 8, boxY + 32, { width: colW - 16 });
+        if (gates.length > 6) {
+          doc.font("Helvetica").fontSize(7).fillColor(C.muted);
+          doc.text(`+${gates.length - 6} more`, cx + 8, boxY + BOX_H - 16, { width: colW - 16 });
         }
-        colX += colW + 12;
-      };
-      drawCol("Checks pass", passG, COLORS.ok);
-      drawCol("Needs verification", flagG, "#B8860B");
-      drawCol("Blocked / pending", badG, COLORS.bad);
-      doc.y = boxY + 180;
+      });
+
+      doc.y = boxY + BOX_H + 14;
+
+      // Notable gate details
+      const notable = er.gates.filter((g) => g.status !== "pass").slice(0, 6);
+      if (notable.length) {
+        doc.font("Helvetica-Bold").fontSize(9).fillColor(C.ink).text("Gate Details", M, doc.y);
+        doc.moveDown(0.25);
+        for (const g of notable) {
+          const col = g.status === "fail" ? C.bad : C.warn;
+          doc.font("Helvetica-Bold").fontSize(8).fillColor(col).text(`${g.name}: `, M, doc.y, { continued: true });
+          doc.font("Helvetica").fillColor(C.ink).text(g.message, { width: PAGE_W - 2 * M });
+          doc.moveDown(0.2);
+        }
+      }
     } else {
-      doc.font("Helvetica").fillColor(COLORS.muted).text("No eligibility snapshot stored for this journey.");
+      doc.font("Helvetica").fontSize(10).fillColor(C.muted).text("No eligibility data stored for this journey.");
     }
 
-    pageFooter(doc, pageNum++, TOTAL_PAGES);
+    pageFooter(doc, pg++, TOTAL);
     doc.addPage();
 
-    // ----- Page 3 numbers -----
-    doc.font("Helvetica-Bold").fontSize(16).fillColor(COLORS.ink).text("ESTIMATED NUMBERS");
-    doc.moveDown(0.4);
-    doc.font("Helvetica").fontSize(10).fillColor(COLORS.muted);
-    doc.text(
-      "Figures below use your ZIP-level rent comps where available. Hard construction costs and loan payment scenarios are finalized on your discovery call.",
-      { width: PAGE_W - 2 * M }
-    );
-    doc.moveDown(0.6);
+    // ══════════════════════════════════════════
+    //  PAGE 3 — CONFIGURATION
+    // ══════════════════════════════════════════
+
+    sectionBanner(doc, "Your ADU Configuration", "Selections made in the 3D ADU configurator during your session");
+
+    const cfg = journey.configuratorSummary;
+    if (cfg) {
+      doc.font("Helvetica-Bold").fontSize(9).fillColor(C.ink).text("Design Selections", M, doc.y);
+      doc.moveDown(0.25);
+      let y4 = drawTable(doc, M, doc.y, PAGE_W - 2 * M, [
+        { field: "Floor Plan",        value: lbl(PLAN_LABELS,     cfg.planId) },
+        { field: "Siding Style",      value: lbl(SIDING_LABELS,   cfg.sidingId) },
+        { field: "Exterior Cladding", value: lbl(CLADDING_LABELS, cfg.claddingId) },
+        { field: "Roof Style",        value: lbl(ROOF_LABELS,     cfg.roofStyle) },
+        { field: "Interior Theme",    value: lbl(INTERIOR_LABELS, cfg.interiorId) },
+        { field: "Funding Method",    value: lbl(FUNDING_LABELS,  cfg.fundingId) },
+      ]);
+      doc.y = y4 + 16;
+
+      doc.font("Helvetica-Bold").fontSize(9).fillColor(C.ink).text("Optional Features", M, doc.y);
+      doc.moveDown(0.25);
+      const featureRows: Array<{ field: string; value: string }> = [
+        { field: "Deck",              value: cfg.features.deck   ? "Yes — Included" : "No" },
+        { field: "Lanai / Porch",      value: cfg.features.lanai  ? "Yes — Included" : "No" },
+        { field: "Outdoor Shower",    value: cfg.features.shower ? "Yes — Included" : "No" },
+        ...Object.entries(cfg.upgrades ?? {}).map(([k, v]) => ({
+          field: k,
+          value: v ? "Yes — Included" : "No",
+        })),
+      ];
+      y4 = drawTable(doc, M, doc.y, PAGE_W - 2 * M, featureRows);
+      doc.y = y4 + 16;
+
+      if (cfg.chipLabels?.length) {
+        doc.font("Helvetica-Bold").fontSize(9).fillColor(C.ink).text("All Selected Options", M, doc.y);
+        doc.moveDown(0.2);
+        doc.roundedRect(M, doc.y, PAGE_W - 2 * M, 36, 5).fill(C.tealBg);
+        doc.font("Helvetica").fontSize(8).fillColor(C.tealDark);
+        doc.text(
+          cfg.chipLabels.join("  ·  "),
+          M + 10, doc.y + 8,
+          { width: PAGE_W - 2 * M - 20 }
+        );
+        doc.y += 48;
+      }
+    } else {
+      doc.font("Helvetica").fontSize(10).fillColor(C.muted).text("No configurator session stored for this journey.");
+    }
+
+    pageFooter(doc, pg++, TOTAL);
+    doc.addPage();
+
+    // ══════════════════════════════════════════
+    //  PAGE 4 — ESTIMATED NUMBERS
+    // ══════════════════════════════════════════
+
+    sectionBanner(doc, "Estimated Numbers", "ZIP-level rent comps · Construction costs finalized on discovery call");
 
     const rent = snap?.rentalData?.rentals?.[0];
-    const cardW = (PAGE_W - 2 * M - 16) / 2;
-    if (rent) {
-      drawStatCard(
-        doc,
-        M,
-        doc.y,
-        cardW,
-        "Est. monthly rent (1st comp row)",
-        `$${rent.estimate.toLocaleString()}`,
-        `$${rent.min.toLocaleString()}–$${rent.max.toLocaleString()} · ${rent.comparableCount} comps`
-      );
-    } else {
-      drawStatCard(doc, M, doc.y, cardW, "Est. monthly rent", "—", "No rent row stored for this snapshot.");
-    }
-    drawStatCard(
-      doc,
-      M + cardW + 16,
-      doc.y - 72,
-      cardW,
-      "Eligibility score",
+    const cardW = (PAGE_W - 2 * M - 12) / 2;
+    const cardY = doc.y;
+    statCard(
+      doc, M, cardY, cardW,
+      "Est. Monthly Rent (primary comp)",
+      rent ? `$${rent.estimate.toLocaleString()}` : "—",
+      rent ? `$${rent.min.toLocaleString()}–$${rent.max.toLocaleString()} · ${rent.comparableCount} comps` : "No data available"
+    );
+    statCard(
+      doc, M + cardW + 12, cardY, cardW,
+      "Eligibility Score",
       er ? `${score}%` : "—",
-      er ? `${er.passCount}/${er.gates.length} checks passing` : ""
+      er ? `${er.passCount} of ${er.gates.length} checks passing` : ""
     );
-    doc.y += 88;
+    doc.y = cardY + 74;
 
+    // Rent comps table
     if (snap?.rentalData?.rentals?.length) {
-      drawRentalBars(doc, M, doc.y, PAGE_W - 2 * M, snap.rentalData.rentals);
-      doc.y += 150;
+      doc.moveDown(0.5);
+      doc.font("Helvetica-Bold").fontSize(9).fillColor(C.ink).text("Rent Comps by Bedroom Count", M, doc.y);
+      doc.moveDown(0.25);
+      const rentRows = snap.rentalData.rentals.slice(0, 8).map((r) => ({
+        field: `${r.bedrooms}-Bedroom Unit`,
+        value: `$${r.estimate.toLocaleString()} / mo  (range $${r.min.toLocaleString()}–$${r.max.toLocaleString()}, ${r.comparableCount} comps)`,
+      }));
+      const rentEnd = drawTable(doc, M, doc.y, PAGE_W - 2 * M, rentRows);
+      doc.y = rentEnd + 16;
     }
 
-    doc.font("Helvetica").fontSize(9).fillColor(COLORS.muted);
-    doc.text(
-      "Annual income and property-value impact statements in marketing snapshots are directional only. Your advisor will align numbers to your lender, appraisal, and tax context.",
-      { width: PAGE_W - 2 * M, align: "justify" }
-    );
-
-    pageFooter(doc, pageNum++, TOTAL_PAGES);
-    doc.addPage();
-
-    // ----- Page 4 process -----
-    doc.font("Helvetica-Bold").fontSize(16).fillColor(COLORS.ink).text("THE WESTAY PROCESS");
-    doc.moveDown(0.4);
-    doc.font("Helvetica").fontSize(11).fillColor(COLORS.ink);
-    const steps = [
-      ["Click", "You checked eligibility and captured this Snapshot — next is your discovery call."],
-      ["Plan", "Lending, architecture, and site context roll into one coordinated package."],
-      ["Permit", "Permit strategy aligned with Honolulu DPP expectations and third-party review."],
-      ["Build", "Construction milestones, draws, and updates through the WeStay portal."],
-      ["Stay", "Optional rental activation and property management when you are ready."],
-    ];
-    for (let i = 0; i < steps.length; i++) {
-      doc.font("Helvetica-Bold").fillColor(COLORS.tealDark).text(`${i + 1}. ${steps[i][0]}`);
-      doc.font("Helvetica").fillColor(COLORS.muted).text(steps[i][1], { width: PAGE_W - 2 * M });
-      doc.moveDown(0.55);
-    }
-
-    const processImg = safeImage("content/images/about/richie-story.png");
-    if (processImg) {
-      try {
-        doc.image(processImg, M, doc.y, { width: PAGE_W - 2 * M, height: 140 });
-        doc.y += 148;
-      } catch {
-        doc.moveDown(0.5);
-      }
-    }
-
-    pageFooter(doc, pageNum++, TOTAL_PAGES);
-    doc.addPage();
-
-    // ----- Page 5 pathway + configuration -----
-    doc.font("Helvetica-Bold").fontSize(16).fillColor(COLORS.ink).text("YOUR PATHWAY & CONFIGURATION");
-    doc.moveDown(0.5);
-    doc.font("Helvetica").fontSize(10).fillColor(COLORS.muted);
-    doc.text(
-      "The full Pathway Report covers named partners, financing comparisons, line-item costs, and a phased timeline. Below is what we already know from your session.",
-      { width: PAGE_W - 2 * M }
-    );
-    doc.moveDown(0.6);
-
-    if (journey.buildSelections) {
-      const b = journey.buildSelections;
-      doc.font("Helvetica-Bold").fontSize(11).fillColor(COLORS.ink).text("Build path");
-      doc.font("Helvetica").fontSize(10).fillColor(COLORS.muted);
-      doc.text(
-        `Goal: ${b.goalId ?? "—"} · Timeline: ${b.timelineId ?? "—"} · ADU type: ${b.aduTypeId ?? "—"} · Preference: ${b.buildPreferenceId ?? "—"}`,
-        { width: PAGE_W - 2 * M }
-      );
-      doc.moveDown(0.6);
-    }
-
-    if (journey.configuratorSummary) {
-      const c = journey.configuratorSummary;
-      doc.font("Helvetica-Bold").fontSize(11).fillColor(COLORS.ink).text("3D configurator");
-      doc.font("Helvetica").fontSize(10).fillColor(COLORS.muted);
-      doc.text(
-        `Plan ${c.planId} · Siding ${c.sidingId} · Cladding ${c.claddingId} · Roof ${c.roofStyle} · Interior ${c.interiorId} · Funding ${c.fundingId}`,
-        { width: PAGE_W - 2 * M }
-      );
-      doc.text(
-        `Features: deck ${c.features.deck ? "yes" : "no"} · lanai ${c.features.lanai ? "yes" : "no"} · shower ${c.features.shower ? "yes" : "no"}`,
-        { width: PAGE_W - 2 * M }
-      );
-      doc.moveDown(0.4);
-      doc.font("Helvetica-Bold").fontSize(9).fillColor(COLORS.ink).text("Selection chips");
-      doc.font("Helvetica").fontSize(8).fillColor(COLORS.muted);
-      doc.text(c.chipLabels.slice(0, 18).join(" · ") || "—", { width: PAGE_W - 2 * M });
-      if (c.chipLabels.length > 18) doc.text(`+${c.chipLabels.length - 18} more…`);
-    }
-
-    const interiorImg =
-      safeImage("content/images/two bedroom/two bedroom with office sormwood drift.png") ??
-      safeImage("content/interior/kai interior.png") ??
-      safeImage("content/images/figma-node-87-824.png");
-    if (interiorImg) {
-      try {
-        doc.moveDown(0.5);
-        doc.image(interiorImg, M, doc.y, { width: PAGE_W - 2 * M, height: 130 });
-        doc.y += 138;
-      } catch {
-        /* skip */
-      }
-    }
-
-    pageFooter(doc, pageNum++, TOTAL_PAGES);
-    doc.addPage();
-
-    // ----- Page 6 next step -----
-    doc.font("Helvetica-Bold").fontSize(18).fillColor(COLORS.ink).text("NEXT STEP", { align: "center" });
     doc.moveDown(0.3);
-    doc.font("Helvetica-Bold").fontSize(12).fillColor(COLORS.tealDark).text("Schedule your discovery call", {
-      align: "center",
-    });
-    doc.moveDown(0.8);
-    doc.font("Helvetica").fontSize(11).fillColor(COLORS.ink);
-    doc.text(`Book online:\n${DISCOVERY_BOOKING_URL}`, { align: "center" });
-    doc.moveDown(0.6);
-    doc.text(`Email:\n${CONTACT_EMAIL}`, { align: "center" });
-    doc.moveDown(1);
-    doc.fontSize(10).fillColor(COLORS.muted);
+    doc.roundedRect(M, doc.y, PAGE_W - 2 * M, 44, 5).fill(C.panel);
+    doc.font("Helvetica").fontSize(8).fillColor(C.muted);
     doc.text(
-      "On the call we walk through this Snapshot, answer cost and timeline questions, and outline your Pathway Report. No cost and no obligation for this introductory session.",
-      M,
-      doc.y,
-      { width: PAGE_W - 2 * M, align: "center" }
+      "Annual income and property-value impact statements are directional only. Your advisor will align numbers to your lender, appraisal, and tax context on the discovery call.",
+      M + 12, doc.y + 8, { width: PAGE_W - 2 * M - 24 }
     );
-    doc.moveDown(1.2);
-    doc.fontSize(8).fillColor("#9CA3AF");
-    doc.text(`Journey ${journey.journeyId ?? "—"} · Generated ${new Date().toISOString()}`, {
-      align: "center",
-    });
 
-    pageFooter(doc, pageNum, TOTAL_PAGES);
+    pageFooter(doc, pg++, TOTAL);
+    doc.addPage();
+
+    // ══════════════════════════════════════════
+    //  PAGE 5 — NEXT STEP
+    // ══════════════════════════════════════════
+
+    sectionBanner(doc, "Next Step");
+
+    doc.moveDown(0.3);
+    doc.font("Helvetica-Bold").fontSize(20).fillColor(C.ink);
+    doc.text("Schedule Your Free Discovery Call", M, doc.y, { width: PAGE_W - 2 * M, align: "center" });
+    doc.moveDown(0.2);
+    doc.font("Helvetica").fontSize(10).fillColor(C.muted);
+    doc.text("15–30 minutes with Richie Breaux, Founder & CEO", M, doc.y, { width: PAGE_W - 2 * M, align: "center" });
+    doc.moveDown(0.8);
+
+    // Contact method tiles
+    const ctaW = (PAGE_W - 2 * M - 16) / 3;
+    const ctaY = doc.y;
+    const ctaTiles = [
+      { label: "Book Online",     val: "WeStayHome.com/call", sub: DISCOVERY_URL },
+      { label: "Call Directly",   val: "(808) 555-0000",      sub: "" },
+      { label: "Email",           val: CONTACT_EMAIL,         sub: "" },
+    ];
+    ctaTiles.forEach(({ label: tl, val, sub }, i) => {
+      const tx = M + i * (ctaW + 8);
+      doc.roundedRect(tx, ctaY, ctaW, 68, 5).fill(C.panel);
+      doc.font("Helvetica-Bold").fontSize(8).fillColor(C.teal);
+      doc.text(tl.toUpperCase(), tx + 10, ctaY + 9, { width: ctaW - 20 });
+      doc.font("Helvetica-Bold").fontSize(9).fillColor(C.ink);
+      doc.text(val, tx + 10, ctaY + 23, { width: ctaW - 20 });
+      if (sub) {
+        doc.font("Helvetica").fontSize(6.5).fillColor(C.muted);
+        doc.text(sub, tx + 10, ctaY + 38, { width: ctaW - 20 });
+      }
+    });
+    doc.y = ctaY + 82;
+
+    // Description block
+    doc.roundedRect(M, doc.y, PAGE_W - 2 * M, 78, 5).fill(C.tealBg);
+    doc.font("Helvetica").fontSize(10).fillColor(C.ink);
+    doc.text(
+      "On the call, we walk through this Snapshot together, answer every question on your mind — cost, timeline, aesthetics, financing, neighbors — and prepare your full Pathway Report within 48 hours.",
+      M + 14, doc.y + 10, { width: PAGE_W - 2 * M - 28 }
+    );
+    doc.y += 92;
+
+    doc.moveDown(0.6);
+    const q1Y = doc.y;
+    doc.roundedRect(M, q1Y, PAGE_W - 2 * M, 52, 5).fill(C.panel);
+    doc.font("Helvetica").fontSize(9).fillColor(C.tealDark);
+    doc.text(
+      "“Real estate cannot be lost or stolen. Managed with reasonable care, it is about the safest investment in the world.”",
+      M + 16, q1Y + 9, { width: PAGE_W - 2 * M - 32 }
+    );
+    doc.font("Helvetica").fontSize(7.5).fillColor(C.muted);
+    doc.text("— Franklin D. Roosevelt", M + 16, q1Y + 38, { width: PAGE_W - 2 * M - 32, align: "right" });
+
+    doc.y = q1Y + 64;
+    doc.moveDown(0.3);
+    const q2Y = doc.y;
+    doc.roundedRect(M, q2Y, PAGE_W - 2 * M, 36, 5).fill(C.tealBg);
+    doc.font("Helvetica").fontSize(9).fillColor(C.tealDark);
+    doc.text(
+      "“The best investment on earth is earth.”  — Louis Glickman",
+      M + 16, q2Y + 12, { width: PAGE_W - 2 * M - 32, align: "center" }
+    );
+    doc.y = q2Y + 48;
+
+    doc.moveDown(1.4);
+    doc.font("Helvetica").fontSize(7.5).fillColor("#9CA3AF");
+    doc.text(
+      `Journey ${journey.journeyId ?? "—"}  ·  Generated ${new Date().toISOString()}`,
+      M, doc.y, { width: PAGE_W - 2 * M, align: "center" }
+    );
+
+    pageFooter(doc, pg, TOTAL);
     doc.end();
   });
 }
