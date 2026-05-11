@@ -13,7 +13,7 @@ export default function ThankYouAfterConfigurator() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0C1B2A] via-[#1a2f42] to-[#0C1B2A]">
       <Navbar />
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 pb-16 pt-24 sm:pt-28">
         <div className="relative mx-auto flex w-full max-w-[640px] flex-col items-center rounded-[40px] p-8 text-center sm:p-11">
           <div className="flex flex-col items-center gap-6">
             <CheckIcon />

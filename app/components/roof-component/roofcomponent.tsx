@@ -8,6 +8,7 @@ import React, {
   useLayoutEffect,
   useRef,
   useState,
+  useSyncExternalStore,
 } from 'react';
 
 import Img400Coastal from '@/content/images/400/Studio coastal milky white.svg';
@@ -16,11 +17,11 @@ import Img400Sage from '@/content/images/400/Studio soft sage.svg';
 import Img400Stormwood from '@/content/images/400/Studio stormwood drift.svg';
 import Img400Bronze from '@/content/images/400/Studio dark bronze.svg';
 
-import Img600Coastal from '@/content/images/600/one bedroom coastal milky white.svg';
-import Img600Sandstorm from '@/content/images/600/one bedroom brushed sandstorm.svg';
-import Img600Sage from '@/content/images/600/one bedroom soft sage.svg';
-import Img600Stormwood from '@/content/images/600/one bedroom stormwood drift.svg';
-import Img600Bronze from '@/content/images/600/one bedroom dark bronze.svg';
+import Img600Coastal from '@/content/images/600/milky660.svg';
+import Img600Sandstorm from '@/content/images/600/stormwooddrift660.svg';
+import Img600Sage from '@/content/images/600/stanstorm.svg';
+import Img600Stormwood from '@/content/images/600/softsage660.svg';
+import Img600Bronze from '@/content/images/600/drakbrone660.svg';
 
 import Img2BrCoastal from '@/content/images/two bedroom/two bedroom with office coastal mik white.svg';
 import Img2BrSandstorm from '@/content/images/two bedroom/two bedroom with office brushed sandstorm.svg';
@@ -36,19 +37,11 @@ import Img660Bronze from '@/content/images/two-660/two bedroom dark bronze.svg';
 
 const FINISH_SWATCHES = [
   { name: 'Coastal milky white', color: '#EDE7E1' },
-  { name: 'Sandstorm', color: '#CBC7B5' },
-  { name: 'Soft sage', color: '#A28D71' },
-  { name: 'Stormwood drift', color: '#D9CBBB' },
+  { name: 'Brushed sandstorm', color: '#D9CBBB' },
+  { name: 'Soft sage', color: '#CBC7B5' },
+  { name: 'Stormwood drift', color: '#A28D71' },
   { name: 'Dark bronze', color: '#2E2E2C' },
 ] as const;
-
-const getSlideScale = (slideIndex: number) => {
-  if (slideIndex === 3) return 1.169;
-  if (slideIndex === 2) return 0.85;  
-  if (slideIndex === 1) return 0.80;
-  if (slideIndex === 0) return 0.64;
-  return 1;
-};
 
 type ModelSlide = {
   title: string;
@@ -84,7 +77,7 @@ const MODEL_SLIDES: ModelSlide[] = [
     ],
   },
   {
-    title: 'Two bedroom 660',
+    title: 'Two bedroom',
     subtitle: 'Extra room for the way you live',
     specs: '660 sq.ft',
     images: [
@@ -96,9 +89,9 @@ const MODEL_SLIDES: ModelSlide[] = [
     ],
   },
   {
-    title: 'Two bedroom',
+    title: 'Two bedroom with office',
     subtitle: 'Space for living and working',
-    specs: '800',
+    specs: '800 sq.ft',
     images: [
       Img2BrCoastal,
       Img2BrSandstorm,
@@ -109,6 +102,36 @@ const MODEL_SLIDES: ModelSlide[] = [
   },
 ];
 
+/** “Two bedroom” 660 sq.ft — art is taller in-frame than other models; cap height so all houses read similar. */
+const SLIDE_660_INDEX = 2;
+const SLIDE_TWO_OFFICE_INDEX = 3;
+
+function slideRailCardClass(slideIndex: number): string {
+  const base = 'shrink-0 cursor-pointer';
+  if (slideIndex === 0) {
+    return `${base} min-w-[min(86%,520px)] sm:min-w-[min(80%,560px)] lg:min-w-[min(74%,600px)] xl:min-w-[min(68%,640px)]`;
+  }
+  if (slideIndex === SLIDE_TWO_OFFICE_INDEX) {
+    return `${base} min-w-[min(92%,620px)] sm:min-w-[min(88%,700px)] lg:min-w-[min(84%,780px)] xl:min-w-[min(78%,820px)] max-lg:min-w-full max-lg:max-w-full`;
+  }
+  if (slideIndex === SLIDE_660_INDEX) {
+    return `${base} min-w-[min(94%,700px)] sm:min-w-[min(90%,800px)] lg:min-w-[min(86%,880px)] xl:min-w-[min(80%,920px)]`;
+  }
+  // One bedroom 600 — narrower rail than 660
+  return `${base} min-w-[min(88%,560px)] sm:min-w-[min(84%,620px)] lg:min-w-[min(78%,660px)] xl:min-w-[min(72%,700px)]`;
+}
+
+function slideImageStageClass(slideIndex: number): string {
+  const base =
+    'mx-auto flex h-[320px] w-full items-center justify-center overflow-hidden sm:h-[380px] lg:h-[420px]';
+  if (slideIndex === 0) return `${base} max-w-[800px]`;
+  if (slideIndex === SLIDE_TWO_OFFICE_INDEX)
+    return `${base} max-w-[min(98vw,960px)] max-lg:max-w-full max-lg:h-auto max-lg:min-h-[260px] max-lg:max-h-[min(440px,65vw)]`;
+  if (slideIndex === SLIDE_660_INDEX) return `${base} max-w-[min(99vw,1040px)]`;
+  // One bedroom 600
+  return `${base} max-w-[min(94vw,860px)]`;
+}
+
 /** Tailwind `gap-4` between flex items */
 const CAROUSEL_GAP_PX = 16;
 
@@ -116,6 +139,22 @@ const CAROUSEL_GAP_PX = 16;
 const FINISH_BAR_VISIBLE_MS = 4000;
 
 const ACCENT_COLOR = '#0D9488';
+
+const LG_UP_MEDIA = '(min-width: 1024px)';
+
+function subscribeLgUp(cb: () => void) {
+  const mq = window.matchMedia(LG_UP_MEDIA);
+  mq.addEventListener('change', cb);
+  return () => mq.removeEventListener('change', cb);
+}
+
+function getLgUpSnapshot() {
+  return window.matchMedia(LG_UP_MEDIA).matches;
+}
+
+function getLgUpServerSnapshot() {
+  return true;
+}
 
 const RoofComponent = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -146,10 +185,16 @@ const RoofComponent = () => {
    */
   const observerCanUpdateActiveRef = useRef(false);
 
-  /** Finish swatch column auto-hides ~4s after the last hover/click on a model or swatch */
+  /** Finish swatch column: lg+ auto-hides ~4s after interaction; below lg always visible at bottom */
   const [finishBarVisible, setFinishBarVisible] = useState(false);
   const finishBarTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null
+  );
+
+  const isLgUp = useSyncExternalStore(
+    subscribeLgUp,
+    getLgUpSnapshot,
+    getLgUpServerSnapshot
   );
 
   const showFinishBar = useCallback(() => {
@@ -157,6 +202,11 @@ const RoofComponent = () => {
 
     if (finishBarTimeoutRef.current) {
       clearTimeout(finishBarTimeoutRef.current);
+      finishBarTimeoutRef.current = null;
+    }
+
+    if (!window.matchMedia(LG_UP_MEDIA).matches) {
+      return;
     }
 
     finishBarTimeoutRef.current = setTimeout(() => {
@@ -164,6 +214,18 @@ const RoofComponent = () => {
       finishBarTimeoutRef.current = null;
     }, FINISH_BAR_VISIBLE_MS);
   }, []);
+
+  useEffect(() => {
+    if (!isLgUp) {
+      setFinishBarVisible(true);
+      if (finishBarTimeoutRef.current) {
+        clearTimeout(finishBarTimeoutRef.current);
+        finishBarTimeoutRef.current = null;
+      }
+    } else {
+      setFinishBarVisible(false);
+    }
+  }, [isLgUp]);
 
   useEffect(() => {
     return () => {
@@ -466,65 +528,17 @@ const RoofComponent = () => {
         </h1>
 
         <div className="relative rounded-2xl bg-[#F5F7FA] px-4 py-8 sm:px-6 sm:py-10">
-          <div className="flex items-stretch gap-8 sm:gap-10 lg:gap-14">
-            <aside
-              className={`flex w-[72px] shrink-0 flex-col items-center justify-center gap-4 self-center rounded-2xl border border-black/6 bg-[#E8EAED] px-4 py-10 transition-opacity duration-300 sm:w-[84px] sm:gap-5 sm:px-5 sm:py-12 ${
-                finishBarVisible
-                  ? 'opacity-100'
-                  : 'pointer-events-none opacity-0'
-              }`}
-              aria-label="Exterior finish"
-              aria-hidden={!finishBarVisible}
-              onMouseEnter={showFinishBar}
-              onMouseMove={showFinishBar}
-            >
-              {FINISH_SWATCHES.map((opt, idx) => (
-                <div key={opt.name} className="group relative flex items-center">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      showFinishBar();
-                      setFinishBySlide((prev) => {
-                        const next = [...prev];
-                        next[activeSlide] = idx;
-                        return next;
-                      });
-                    }}
-                    aria-label={`${
-                      MODEL_SLIDES[activeSlide]?.title ?? 'Model'
-                    }: ${opt.name}`}
-                    className={`h-9 w-9 shrink-0 cursor-pointer rounded-full border-2 transition sm:h-10 sm:w-10 ${
-                      activeFinish === idx
-                        ? 'scale-105'
-                        : 'border-gray-300'
-                    }`}
-                    style={{
-                      backgroundColor: opt.color,
-                      borderColor:
-                        activeFinish === idx ? ACCENT_COLOR : undefined,
-                    }}
-                  />
-
-                  <span
-                    className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-md bg-white px-2 py-1 text-xs font-medium opacity-0 shadow-sm ring-1 ring-black/5 transition-opacity duration-200 group-hover:opacity-100"
-                    style={{ color: ACCENT_COLOR }}
-                  >
-                    {opt.name}
-                  </span>
-                </div>
-              ))}
-            </aside>
-
-            <div className="relative min-w-0 flex-1 overflow-hidden">
-              {/* Soft edge fade — narrow enough that neighbor models still peek through */}
+          <div className="flex flex-col items-stretch gap-6 sm:gap-8 lg:flex-row lg:gap-10 xl:gap-14">
+            <div className="relative order-1 min-w-0 flex-1 overflow-hidden lg:order-2">
+              {/* Light edge blur + fade (narrow strip keeps blur subtle) */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-y-3 left-0 z-[6] w-[clamp(16px,3vw,40px)] bg-gradient-to-r from-[#F5F7FA] to-transparent"
+                className="pointer-events-none absolute inset-y-3 left-0 z-[6] w-[clamp(14px,3.5vw,32px)] bg-gradient-to-r from-[#F5F7FA]/90 via-[#F5F7FA]/35 to-transparent backdrop-blur-sm"
               />
 
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-y-3 right-0 z-[6] w-[clamp(16px,3vw,40px)] bg-gradient-to-l from-[#F5F7FA] to-transparent"
+                className="pointer-events-none absolute inset-y-3 right-0 z-[6] w-[clamp(14px,3.5vw,32px)] bg-gradient-to-l from-[#F5F7FA]/90 via-[#F5F7FA]/35 to-transparent backdrop-blur-sm"
               />
 
               <div
@@ -575,7 +589,7 @@ const RoofComponent = () => {
                       }}
                       aria-label={`Select ${model.title}`}
                       aria-current={isActive ? 'true' : undefined}
-                      className="min-w-[min(86%,520px)] shrink-0 cursor-pointer sm:min-w-[min(80%,560px)] lg:min-w-[min(74%,600px)] xl:min-w-[min(68%,640px)]"
+                      className={slideRailCardClass(slideIndex)}
                     >
                       <div className="px-4 py-8 sm:px-8">
                         <p className="text-center text-[30px] font-normal leading-[36px] text-gray-900">
@@ -590,27 +604,45 @@ const RoofComponent = () => {
                           {model.subtitle}
                         </p>
 
-                        <div className="mx-auto flex h-[280px] w-full max-w-[720px] items-center justify-center overflow-hidden sm:h-[320px]">
-                          <span
-                            key={`${slideIndex}-${fIdx}`}
-                            className="roof-finish-img-mount block h-full w-full max-w-[520px] origin-center"
-                            style={
-                              {
-                                '--roof-scale': getSlideScale(slideIndex),
-                              } as React.CSSProperties
-                            }
-                          >
+                        {/* Fixed box height for every slide; image scales inside (width varies by asset). Avoid `fill`+SVG static imports — can fail at runtime. */}
+                        <div
+                          key={`${slideIndex}-${fIdx}`}
+                          className={slideImageStageClass(slideIndex)}
+                        >
+                          {slideIndex === SLIDE_TWO_OFFICE_INDEX ? (
+                            <div className="flex h-full w-full min-h-0 items-center justify-center origin-center transition-transform duration-300 max-lg:!scale-100 scale-[1.04] sm:scale-105">
+                              <Image
+                                src={img}
+                                alt={`${model.title} — ${
+                                  FINISH_SWATCHES[fIdx]?.name ?? 'render'
+                                }`}
+                                width={img.width}
+                                height={img.height}
+                                className="pointer-events-none h-full w-auto max-h-full max-w-full object-contain max-lg:h-auto max-lg:max-h-[min(400px,58vw)] max-lg:w-full max-lg:max-w-full"
+                                draggable={false}
+                                priority={false}
+                                sizes="(max-width: 1023px) 96vw, 960px"
+                                onLoad={updateEdgeSpacers}
+                              />
+                            </div>
+                          ) : (
                             <Image
                               src={img}
                               alt={`${model.title} — ${
                                 FINISH_SWATCHES[fIdx]?.name ?? 'render'
                               }`}
-                              className="pointer-events-none h-full w-full object-contain"
+                              width={img.width}
+                              height={img.height}
+                              className={
+                                slideIndex === SLIDE_660_INDEX
+                                  ? 'pointer-events-none max-h-[88%] w-auto max-w-full object-contain'
+                                  : 'pointer-events-none h-full w-auto max-w-full object-contain'
+                              }
                               draggable={false}
                               priority={slideIndex === 0}
                               onLoad={updateEdgeSpacers}
                             />
-                          </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -654,36 +686,61 @@ const RoofComponent = () => {
                 />
               </div>
             </div>
+
+            <aside
+              className={`order-2 flex shrink-0 flex-col items-center justify-center gap-4 self-center rounded-2xl border border-black/6 bg-[#E8EAED] px-4 py-10 transition-opacity duration-300 sm:gap-5 sm:px-5 sm:py-12 lg:order-1 lg:w-[72px] sm:lg:w-[84px] max-lg:!w-full max-lg:flex-col max-lg:items-stretch max-lg:self-stretch max-lg:rounded-xl max-lg:px-6 max-lg:py-4 ${
+                !isLgUp || finishBarVisible
+                  ? 'opacity-100'
+                  : 'pointer-events-none opacity-0'
+              }`}
+              aria-label="Exterior finish"
+              aria-hidden={isLgUp && !finishBarVisible}
+              onMouseEnter={isLgUp ? showFinishBar : undefined}
+              onMouseMove={isLgUp ? showFinishBar : undefined}
+            >
+              {/* lg+: swatches stack in the aside. &lt;lg: full-width row, centered (aside width must not use sm:w-[84px] or it stays ~84px wide). */}
+              <div className="flex flex-col items-center justify-center gap-4 lg:contents max-lg:flex max-lg:w-full max-lg:flex-row max-lg:flex-wrap max-lg:items-center max-lg:justify-center max-lg:gap-4">
+                {FINISH_SWATCHES.map((opt, idx) => (
+                  <div key={opt.name} className="group relative flex items-center">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        showFinishBar();
+                        setFinishBySlide((prev) => {
+                          const next = [...prev];
+                          next[activeSlide] = idx;
+                          return next;
+                        });
+                      }}
+                      aria-label={`${
+                        MODEL_SLIDES[activeSlide]?.title ?? 'Model'
+                      }: ${opt.name}`}
+                      className={`h-9 w-9 shrink-0 cursor-pointer rounded-full border-2 transition sm:h-10 sm:w-10 ${
+                        activeFinish === idx
+                          ? 'scale-105'
+                          : 'border-gray-300'
+                      }`}
+                      style={{
+                        backgroundColor: opt.color,
+                        borderColor:
+                          activeFinish === idx ? ACCENT_COLOR : undefined,
+                      }}
+                    />
+
+                    <span
+                      className="pointer-events-none absolute left-full top-1/2 z-50 ml-3 -translate-y-1/2 whitespace-nowrap rounded-md bg-white px-2 py-1 text-xs font-medium opacity-0 shadow-sm ring-1 ring-black/5 transition-opacity duration-200 group-hover:opacity-100 max-lg:left-1/2 max-lg:top-0 max-lg:ml-0 max-lg:-translate-x-1/2 max-lg:-translate-y-[calc(100%+6px)]"
+                      style={{ color: ACCENT_COLOR }}
+                    >
+                      {opt.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </aside>
           </div>
         </div>
       </div>
 
-      <style jsx global>{`
-        @keyframes roofFinishZoom {
-          from {
-            opacity: 0.88;
-            transform: scale(calc(var(--roof-scale) * 0.9));
-          }
-
-          to {
-            opacity: 1;
-            transform: scale(var(--roof-scale));
-          }
-        }
-
-        .roof-finish-img-mount {
-          animation: roofFinishZoom 0.48s cubic-bezier(0.34, 1.12, 0.64, 1)
-            both;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .roof-finish-img-mount {
-            animation: none;
-            opacity: 1;
-            transform: scale(var(--roof-scale));
-          }
-        }
-      `}</style>
     </section>
   );
 };

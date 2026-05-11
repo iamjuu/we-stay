@@ -272,9 +272,7 @@ export default function PropertyScorePage() {
 
   return (
     <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534]">
-      <div className="relative z-50 shrink-0">
-        <Navbar />
-      </div>
+      <Navbar />
 
       <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center">
         <div className="h-[400px] w-[500px] rounded-full bg-teal-400/10 blur-[130px]" />
@@ -282,7 +280,7 @@ export default function PropertyScorePage() {
 
       {/* Results scroll only between navbar and CTA — full page does not scroll */}
       <div className="relative z-10 flex min-h-0 flex-1 flex-col">
-        <div className="scrollbar min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 pt-4 pb-2 sm:px-6">
+        <div className="scrollbar min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 pb-2 pt-16 sm:px-6 sm:pt-20">
           <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-6 pb-2">
             <h1 className="text-center font-dm-sans text-2xl font-bold tracking-tight text-white">
               Your Property Potential Score

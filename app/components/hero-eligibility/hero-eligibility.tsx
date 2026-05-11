@@ -123,10 +123,10 @@ export default function HeroEligibility() {
           <div className="relative mx-auto w-full max-w-[570px]">
             <div className="relative w-full">
               <div
-                className="flex w-full  gap-3 rounded-full bg-black/50 p-2 shadow-[0px_3px_10px_0px_rgba(0,0,0,0.15)] backdrop-blur-2xl sm:flex-row sm:items-center sm:gap-4 sm:pl-5"
+                className="flex w-full gap-3 rounded-full bg-black/50 p-2 shadow-[0px_3px_10px_0px_rgba(0,0,0,0.15)] backdrop-blur-2xl max-[548px]:flex-col max-[548px]:items-stretch max-[548px]:gap-3 max-[548px]:rounded-[26px] sm:flex-row sm:items-center sm:gap-4 sm:pl-5"
                 data-node-id="11:8243"
               >
-                <div className="min-w-0 flex-1">
+                <div className="min-w-0 w-full flex-1 max-[548px]:flex-none">
                   <AddressInput
                     ref={addressRef}
                     onAddressSelect={handleAddressSelect}
@@ -140,6 +140,7 @@ export default function HeroEligibility() {
                 </div>
                 <CtaButton
                   buttonName="Check Eligibility"
+                  className="max-[548px]:w-full max-[548px]:self-stretch"
                   disabled={isRunning}
                   onClick={handleCheckClick}
                 />
@@ -171,7 +172,7 @@ export default function HeroEligibility() {
             className={`w-full  font-dm-sans font-normal text-white text-pretty ${
               modalOpen
                 ? 'mt-0 text-center lg:absolute lg:bottom-0 lg:-left-36 lg:z-[101] lg:mt-0 lg:max-w-[280px] lg:text-left xl:max-w-[300px]'
-                : 'mt-[-680px] text-center'
+                : 'mt-[-700px] sm:mt-[-680px] text-center'
             }`}
             style={{
               fontSize: 'clamp(13px, 2.06vw, 17px)',

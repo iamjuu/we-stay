@@ -19,6 +19,10 @@ import Eligibility from "./components/eligibility/eligibility";
 import Footer from "./components/footer/footer";
 import FlipClockHeadline from "./components/flip-clock-headline/flip-clock-headline";
 
+/** Headlines in the flip-clock strip — tighter type + padding below 709px */
+const flipClockStripHeadingClass =
+  "semi-heading max-[709px]:w-full max-[709px]:max-w-[min(100%,26rem)] max-[709px]:text-balance max-[709px]:text-center max-[709px]:text-[clamp(1.25rem,4.8vw,2rem)] max-[709px]:leading-snug";
+
 export default function Home() {
   const homeownerQuestions = [
     "If their property qualifies",
@@ -50,7 +54,7 @@ export default function Home() {
 
   return (
     <>
-      {/* Navbar outside #home-hero so fixed bar stacks above later sections (e.g. Builder Network) */}
+      {/* Navbar is fixed above the viewport; hero extends to the top behind it */}
       <Navbar />
       <div
         style={{
@@ -80,10 +84,10 @@ export default function Home() {
         <div className="relative z-[2] flex min-h-screen flex-col justify-between">
         <div className="relative z-20">
           <div>
-            <div className="mx-auto mb-[120px] mt-[80px] flex w-full max-w-[1100px] flex-col items-center gap-14 px-4 md:mt-[104px] lg:mt-[104px] md:px-[80px] md:gap-20">
-              <div className="flex w-full flex-col items-center text-center">
+            <div className="mx-auto mb-[120px] flex w-full max-w-275 flex-col items-center gap-14 px-4 md:px-20 md:gap-20" style={{ paddingTop: 'max(80px, 13vh)' }}>
+              <div className="flex w-full flex-col items-center gap-0 text-center">
                 <p
-                  className="mb-[4.5px] font-dm-sans font-normal tracking-tight text-white/95 max-w-xl"
+                  className="mt-10 max-w-xl font-dm-sans font-normal tracking-tight text-white/95 sm:mt-12 md:mt-14"
                   style={{
                     fontSize: 'clamp(13px, 2vw, 16px)',
                     lineHeight: 1.45,
@@ -94,7 +98,7 @@ export default function Home() {
                 </p>
                 {/* Figma underline: 275×1.49px gradient (same stops as border-image-source) */}
                 <div
-                  className="w-full shrink-0"
+                  className="mt-2 w-full shrink-0"
                   style={{
                     width: 'min(275px, 100%)',
                     height: '1.49px',
@@ -104,7 +108,7 @@ export default function Home() {
                   }}
                   aria-hidden
                 />
-                <h1 className="hero-heading mt-0 w-full pt-0 font-playfair-display font-bold leading-[1.06] text-white tracking-tight tran">
+                <h1 className="hero-heading m-0 mt-2 w-full p-0 font-playfair-display font-bold leading-[1.06] text-white tracking-tight">
                   <span className="block leading-[1.06]">See What Your</span>
                   <span className="block leading-[1.06]">Backyard Can Build</span>
                 </h1>
@@ -151,23 +155,23 @@ export default function Home() {
 
       {/* <Eligibility /> */}
 
-      <div className="flex py-[120px] flex-col items-center bg-[#0C1B2A]">
+      <div className="flex flex-col items-center gap-0 bg-[#0C1B2A] py-[120px] max-[709px]:gap-3 max-[709px]:px-5 max-[709px]:py-16">
         <h1
           style={{
             fontFamily: "DM Sans",
           }}
-          className="semi-heading text-white">
+          className={`${flipClockStripHeadingClass} text-white`}>
           No matter what your reason
         </h1>
         <FlipClockHeadline
           style={{ fontFamily: "DM Sans" }}
-          className="semi-heading text-[#F05C4A]"
+          className={`${flipClockStripHeadingClass} text-[#F05C4A]`}
         />
         <h1
           style={{
             fontFamily: "DM Sans",
           }}
-          className="semi-heading text-white">
+          className={`${flipClockStripHeadingClass} text-white`}>
           WeStay is for homeowners that need clarity
         </h1>
       </div>

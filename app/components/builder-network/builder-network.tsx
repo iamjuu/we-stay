@@ -334,33 +334,35 @@ const BuilderNetwork = () => {
               <span className="text-[#93928E]">Financing Network</span>
             </h1>
 
-            <Image
-              src={partnerImage}
-              className="block h-auto w-full"
-              alt="partner"
-              width={1000}
-              height={1000}
-              sizes="100vw"
-            />
-            <div className="grid grid-cols-2 gap-[20px] w-full">
-              <div className="group flex border border-[#33506E] rounded-[20px] items-center flex-col transition-transform duration-300 ease-out hover:scale-[1.02]">
-                <div className="flex w-full  p-[10px] justify-end">
+            <div className="group relative w-full overflow-hidden rounded-2xl sm:rounded-3xl">
+              <Image
+                src={partnerImage}
+                className="block h-auto w-full origin-center transition-transform duration-500 ease-out group-hover:scale-105"
+                alt="partner"
+                width={1000}
+                height={1000}
+                sizes="100vw"
+              />
+            </div>
+            <div className="grid w-full grid-cols-1 gap-4 min-[998px]:grid-cols-2 min-[998px]:gap-[20px]">
+              <div className="group flex flex-col items-center rounded-[20px] border border-[#33506E] px-4 pb-5 pt-2 transition-transform duration-300 ease-out min-[998px]:px-0 min-[998px]:pb-0 min-[998px]:pt-0 min-[998px]:hover:scale-[1.02]">
+                <div className="flex w-full justify-center p-[10px] min-[998px]:justify-end">
                   <p className="flex w-fit items-center gap-2 rounded-md bg-white/10 p-2 text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
                     <Info />
                   </p>
                 </div>
-                <div className="flex mb-[15px] items-center flex-col gap-[15px]">
-                  <h1 className="financing-network text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
+                <div className="mb-[15px] flex flex-col items-center gap-3 min-[998px]:gap-[15px]">
+                  <h1 className="financing-network text-balance text-center text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
                     Why It Matters
                   </h1>
-                  <p className="financing-paragraph text-center text-[#CECECE]">
+                  <p className="financing-paragraph max-w-prose text-center text-[#CECECE]">
                     Qualified ADU borrowers | Organized deal files <br />| Clear
                     pipeline visibility | Growth market <br /> opportunity
                   </p>
                 </div>
               </div>
-              <div className="group flex border border-[#33506E] rounded-[20px] items-center flex-col transition-transform duration-300 ease-out hover:scale-[1.02]">
-                <div className="flex w-full  p-[10px] justify-end">
+              <div className="group flex flex-col items-center rounded-[20px] border border-[#33506E] px-4 pb-5 pt-2 transition-transform duration-300 ease-out min-[998px]:px-0 min-[998px]:pb-0 min-[998px]:pt-0 min-[998px]:hover:scale-[1.02]">
+                <div className="flex w-full justify-center p-[10px] min-[998px]:justify-end">
                   <p className="flex w-fit items-center gap-2 rounded-md bg-white/10 p-2 text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
                     <Image
                       src="/images/filesave.svg"
@@ -371,11 +373,11 @@ const BuilderNetwork = () => {
                     />
                   </p>
                 </div>
-                <div className="flex mb-[15px] items-center flex-col gap-[15px]">
-                  <h1 className="financing-network text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
+                <div className="mb-[15px] flex flex-col items-center gap-3 min-[998px]:gap-[15px]">
+                  <h1 className="financing-network text-balance text-center text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
                     Lender-Ready File Concept
                   </h1>
-                  <p className="financing-paragraph text-center text-[#CECECE]">
+                  <p className="financing-paragraph max-w-prose text-center text-[#CECECE]">
                     Each lead comes organized:<br />| Clear
                     Homeowner Info | Property Data | Project Scope |  <br /> Estimated Costs | Qualification Notes  
                   </p>

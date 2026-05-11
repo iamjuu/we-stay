@@ -205,7 +205,7 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
         {showDropdown && predictions.length > 0 && (
           <div
             ref={dropdownRef}
-            className={`scrollbar absolute z-[60] mt-[9px] max-h-80 w-full overflow-y-auto rounded-lg shadow-lg
+            className={`scrollbar absolute inset-x-0 top-full z-[60] mt-[9px] max-h-80 min-w-0 w-full overflow-y-auto rounded-lg shadow-lg
                      ${darkMode ? 'border border-white/25 bg-[#0c1420]/95' : 'border border-black bg-white'}`}
           >
             {predictions.map((prediction, index) => (

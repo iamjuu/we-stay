@@ -236,7 +236,7 @@ export default function PropertyCarousel() {
                     return (
                       <div
                         key={property.id}
-                        className="shadow-xl"
+                        className="group shadow-xl"
                         style={{
                           ...base,
                           transition: isDragging ? "none" : base.transition,
@@ -247,7 +247,7 @@ export default function PropertyCarousel() {
                             alt={property.title}
                             src={property.image}
                             fill
-                            className="pointer-events-none object-cover"
+                            className="pointer-events-none origin-center object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                             sizes="(max-width: 768px) 100vw, 70vw"
                             priority={isActive}
                             draggable={false}

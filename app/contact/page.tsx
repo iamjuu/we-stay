@@ -11,7 +11,7 @@ export default function ContactPage() {
   return (
     <div className="flex min-h-screen flex-col bg-white">
       <div
-        className="flex flex-1 flex-col px-4 py-4 sm:px-6 [@media(min-width:1024px)_and_(max-width:1764px)]:px-20 [@media(min-width:1765px)_and_(max-width:1919px)]:px-16 [@media(min-width:1920px)]:px-[200px]"
+        className="flex flex-1 flex-col px-4 pb-4 pt-20 sm:px-6 sm:pt-24 [@media(min-width:1024px)_and_(max-width:1764px)]:px-20 [@media(min-width:1765px)_and_(max-width:1919px)]:px-16 [@media(min-width:1920px)]:px-[200px]"
       >
         <div className="mx-auto w-full">
           <Navbar />

@@ -489,11 +489,9 @@ export function AduConfiguratorClient() {
       className="font-dm-sans flex min-h-screen flex-col text-[#0f1412]"
       style={{ background: "#0f1412" }}
     >
-      <div className="relative z-10 bg-white">
-        <Navbar />
-      </div>
+      <Navbar />
 
-      <div className="flex flex-1 flex-col lg:flex-row">
+      <div className="flex flex-1 flex-col pt-16 lg:flex-row lg:pt-0">
 
       <aside
         className="order-2 flex w-full flex-1 flex-col gap-5 lg:order-2 lg:h-screen lg:w-[min(472px,40vw)] lg:shrink-0 lg:overflow-y-auto lg:border-l lg:border-white/10 lg:pb-12"

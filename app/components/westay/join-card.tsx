@@ -155,12 +155,12 @@ export default function JoinCard() {
           }}
         >
           {/* LEFT — Sticky Image */}
-          <div className="lg:sticky lg:top-[100px] lg:self-start overflow-hidden rounded-[20px] w-full">
+          <div className="group lg:sticky lg:top-25 lg:self-start overflow-hidden rounded-[20px] w-full">
             <Image
               src={ContainerImage1}
               width={634}
               height={596}
-              className="h-[260px] w-full object-cover sm:h-[380px] lg:h-[500px] xl:h-[560px]"
+              className="h-[260px] w-full object-cover sm:h-[380px] lg:h-[500px] xl:h-[560px] transition-transform duration-500 group-hover:scale-105"
               alt="Homeowners planning an ADU project"
             />
           </div>
@@ -215,14 +215,12 @@ export default function JoinCard() {
                   {/* Text */}
                   <div className="flex flex-col gap-[6px] sm:gap-[8px] lg:gap-[10px]">
                     <h3
-                      style={{ fontFamily: "DM Sans" }}
-                      className={`font-[600] transition-colors duration-300 text-sm sm:text-base lg:text-lg xl:text-xl ${accentClass}`}
+                      className={`section-three-card-heading transition-colors duration-300 ${accentClass}`}
                     >
                       {step.title}
                     </h3>
                     <p
-                      style={{ fontFamily: "DM Sans" }}
-                      className="font-[400] text-[#93928E] text-xs sm:text-sm lg:text-base"
+                      className="section-three-card-paragraph text-[#93928E]"
                     >
                       {step.description}
                     </p>

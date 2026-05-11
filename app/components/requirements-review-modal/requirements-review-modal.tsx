@@ -31,13 +31,13 @@ type RequirementsReviewModalProps = {
   open: boolean;
   onClose: () => void;
   onGamePlan: () => void;
-  /** While pipeline runs — blur overlay + spinner; CTA disabled. */
+  /** While pipeline runs — blur overlay + spinner. */
   isRunning?: boolean;
   /** Set when runEligibilityPipeline fails — shows error; CTA disabled. */
   errorMessage?: string | null;
   /**
-   * When set, CTA and loading row use this instead of inferring from `isRunning` alone.
-   * Pass `!!snapshot && !isRunning` from the parent so the button stays off until eligibility data exists.
+   * When set, loading row uses this instead of inferring from `isRunning` alone.
+   * Pass `!!snapshot && !isRunning` from the parent so the spinner stops when eligibility data exists.
    */
   gamePlanReady?: boolean;
   score?: number;
@@ -116,7 +116,9 @@ export default function RequirementsReviewModal({
       ? gamePlanReadyProp
       : !isRunning && !errorMessage;
 
-  const ctaDisabled = !!errorMessage || !gamePlanReadyResolved;
+  // Users should be able to click through while the location-details spinner is active.
+  // Only disable the CTA when we have an explicit error.
+  const ctaDisabled = !!errorMessage;
   const showLoadingRow = !errorMessage && !gamePlanReadyResolved;
 
   const radius = 64;
