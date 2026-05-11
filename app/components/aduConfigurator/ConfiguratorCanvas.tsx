@@ -91,7 +91,7 @@ export function ConfiguratorCanvas({
         gl={{
           antialias: true,
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.0,
+          toneMappingExposure: 1,
         }}
       >
         <color attach="background" args={["#eaecea"]} />
@@ -100,7 +100,7 @@ export function ConfiguratorCanvas({
         <directionalLight
           castShadow
           color="#fff8f0"
-          intensity={2.35}
+          intensity={.25}
           position={[14, 28, 10]}
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}

@@ -35,6 +35,11 @@ type RequirementsReviewModalProps = {
   isRunning?: boolean;
   /** Set when runEligibilityPipeline fails — shows error; CTA disabled. */
   errorMessage?: string | null;
+  /**
+   * When set, CTA and loading row use this instead of inferring from `isRunning` alone.
+   * Pass `!!snapshot && !isRunning` from the parent so the button stays off until eligibility data exists.
+   */
+  gamePlanReady?: boolean;
   score?: number;
   variant?: 'centered' | 'below-anchor';
 };
@@ -45,6 +50,7 @@ export default function RequirementsReviewModal({
   onGamePlan,
   isRunning = false,
   errorMessage = null,
+  gamePlanReady: gamePlanReadyProp,
   score = 60,
   variant = 'centered',
 }: RequirementsReviewModalProps) {
@@ -105,8 +111,13 @@ export default function RequirementsReviewModal({
 
   if (!open) return null;
 
-  const pipelineOk = !isRunning && !errorMessage;
-  const ctaDisabled = isRunning || !!errorMessage;
+  const gamePlanReadyResolved =
+    gamePlanReadyProp !== undefined
+      ? gamePlanReadyProp
+      : !isRunning && !errorMessage;
+
+  const ctaDisabled = !!errorMessage || !gamePlanReadyResolved;
+  const showLoadingRow = !errorMessage && !gamePlanReadyResolved;
 
   const radius = 64;
   const circumference = 2 * Math.PI * radius;
@@ -208,7 +219,7 @@ export default function RequirementsReviewModal({
     >
       {/* Title stays right-aligned in column like original; subtitle block anchors right (ms-auto), lines wrap with text-left */}
       <div className="flex w-full shrink-0 flex-wrap items-start justify-end">
-        <div className="min-w-0 max-w-full text-right">
+        {/* <div className="min-w-0 max-w-full text-right">
           <h2
             ref={titleRef}
             id="requirements-review-title"
@@ -236,7 +247,7 @@ export default function RequirementsReviewModal({
           >
             Review the following requirements. Items marked with ✗ or ⚠ need attention.
           </p>
-        </div>
+        </div> */}
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col">
@@ -274,13 +285,14 @@ export default function RequirementsReviewModal({
                   Preparing your report click the below button
                 </p>
               </div>
-              {isRunning ? (
-                <p className="font-dm-sans flex items-center justify-center gap-[7.52px] text-[13px] text-white/90" style={{ fontVariationSettings: "'opsz' 14" }}>
+              {showLoadingRow ? (
+                <p
+                  className="font-dm-sans flex items-center justify-center gap-[7.52px] text-[13px] text-white/90"
+                  style={{ fontVariationSettings: "'opsz' 14" }}
+                >
                   <Loader2 className="size-[18px] shrink-0 animate-spin" aria-hidden />
                   Reviewing location details...
                 </p>
-              ) : pipelineOk ? (
-                <span className="sr-only">Eligibility check complete.</span>
               ) : null}
             </div>
           </div>
@@ -314,7 +326,7 @@ export default function RequirementsReviewModal({
     </div>
   );
 
-  const dialogAriaBusy = isRunning;
+  const dialogAriaBusy = showLoadingRow;
 
   if (variant === 'below-anchor') {
     const scrimMount =

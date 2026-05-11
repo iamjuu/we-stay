@@ -375,13 +375,13 @@ export function AduConfiguratorClient() {
   const [claddingId, setCladdingId] = useState<CladdingId>("coastal");
   const [roofId, setRoofId] = useState<RoofStyle>("metal");
   const [features, setFeatures] = useState<OptionalFeatures>({
-    deck: true,
+    deck: false,
     lanai: false,
     shower: false,
   });
   const [interiorId, setInteriorId] = useState<InteriorId>("kai");
   const [upgrades, setUpgrades] = useState<UpgradesPick>({
-    solar: true,
+    solar: false,
     premiumAppliances: false,
     ac: false,
     smartHome: false,

@@ -608,7 +608,7 @@ const RoofComponent = () => {
                               className="pointer-events-none h-full w-full object-contain"
                               draggable={false}
                               priority={slideIndex === 0}
-                              onLoadingComplete={updateEdgeSpacers}
+                              onLoad={updateEdgeSpacers}
                             />
                           </span>
                         </div>

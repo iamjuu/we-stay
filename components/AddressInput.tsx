@@ -23,6 +23,8 @@ export type AddressInputHandle = {
 
 interface AddressInputProps {
   onAddressSelect: (address: string) => void;
+  /** Fires on every keystroke with the raw input value (e.g. detect clear). */
+  onValueChange?: (value: string) => void;
   /** Enter runs eligibility check with the current input when not choosing a suggestion. */
   onEnterCheck?: (trimmedInput: string) => void;
   disabled?: boolean;
@@ -36,6 +38,7 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
   function AddressInput(
     {
       onAddressSelect,
+      onValueChange,
       onEnterCheck,
       disabled,
       darkMode = false,
@@ -133,7 +136,9 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setHasSelected(false);
-      setInput(e.target.value);
+      const next = e.target.value;
+      setInput(next);
+      onValueChange?.(next);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {

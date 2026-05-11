@@ -12,6 +12,8 @@ import { runEligibilityPipeline } from '@/lib/eligibility-pipeline';
 export default function HeroEligibility() {
   const router = useRouter();
   const addressRef = useRef<AddressInputHandle>(null);
+  /** Bumped when the user clears the address so in-flight `runEligibilityPipeline` results are ignored. */
+  const eligibilityRunGenerationRef = useRef(0);
   const { snapshot, setSnapshot, clearSnapshot } = useEligibilitySession();
   const { mergeJourney, syncJourneyForPropertyAddress } = useJourneyProgress();
 
@@ -39,6 +41,7 @@ export default function HeroEligibility() {
         return;
       }
 
+      const runGen = ++eligibilityRunGenerationRef.current;
       clearSnapshot();
       setModalOpen(true);
       setErrorMessage(null);
@@ -46,6 +49,10 @@ export default function HeroEligibility() {
 
       const startedAt = Date.now();
       const outcome = await runEligibilityPipeline(trimmed);
+
+      if (runGen !== eligibilityRunGenerationRef.current) {
+        return;
+      }
 
       if (!outcome.ok) {
         setIsRunning(false);
@@ -56,6 +63,9 @@ export default function HeroEligibility() {
       const remaining = ELIGIBILITY_MIN_LOAD_MS - (Date.now() - startedAt);
       if (remaining > 0) {
         await new Promise((r) => setTimeout(r, remaining));
+      }
+      if (runGen !== eligibilityRunGenerationRef.current) {
+        return;
       }
       setIsRunning(false);
 
@@ -83,6 +93,19 @@ export default function HeroEligibility() {
     void runCheck(v);
   }, [runCheck]);
 
+  const handleAddressValueChange = useCallback(
+    (value: string) => {
+      if (value.trim() !== '') return;
+      eligibilityRunGenerationRef.current += 1;
+      setModalOpen(false);
+      setIsRunning(false);
+      setErrorMessage(null);
+      setInlineError(null);
+      clearSnapshot();
+    },
+    [clearSnapshot]
+  );
+
   const handleGamePlan = useCallback(async () => {
     if (snapshot) {
       await mergeJourney({ eligibilitySnapshot: snapshot });
@@ -107,6 +130,7 @@ export default function HeroEligibility() {
                   <AddressInput
                     ref={addressRef}
                     onAddressSelect={handleAddressSelect}
+                    onValueChange={handleAddressValueChange}
                     onEnterCheck={(t) => void runCheck(t)}
                     disabled={isRunning}
                     darkMode
@@ -126,6 +150,7 @@ export default function HeroEligibility() {
                 onClose={() => setModalOpen(false)}
                 isRunning={isRunning}
                 errorMessage={errorMessage}
+                gamePlanReady={!!snapshot && !isRunning}
                 onGamePlan={handleGamePlan}
                 variant="below-anchor"
               />
