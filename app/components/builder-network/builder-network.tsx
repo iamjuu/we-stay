@@ -230,7 +230,16 @@ const BuilderNetwork = () => {
           >
             {/* LEFT COLUMN: Takes up 3 out of 10 columns (30%) */}
             <div className="flex flex-col gap-3 lg:col-span-4 lg:gap-4">
-              <div className="group relative flex flex-col items-center gap-2 rounded-3xl border border-white/10 bg-[#162032] text-center transition-transform duration-300 ease-out hover:scale-[1.02]">
+              <div 
+                  style={{
+                    background:
+                      "linear-gradient(114.49deg, rgba(57,92,126,0.1) 0.47%, rgba(162,184,206,0.1) 99.53%)",
+                    border: "1px solid #33506E",
+                    boxShadow: "5px 10px 20px rgba(0,0,0,0.1)",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                  }}
+              className="group relative flex flex-col items-center gap-2 rounded-3xl border border-white/10 bg-[#162032] text-center transition-transform duration-300 ease-out hover:scale-[1.02]">
                 <div className="w-full p-[10px]  flex justify-end">
                   <div className="flex items-center justify-center rounded-lg border border-[#F5F3ED1A]/20 bg-white/10 p-[15px] text-white backdrop-blur-md transition-colors duration-300 group-hover:text-[#4DB6AC]">
                     <Search className="transition-colors duration-300" />
@@ -250,6 +259,14 @@ const BuilderNetwork = () => {
 
               {/* Why Join */}
                <div
+                   style={{
+                    background:
+                      "linear-gradient(114.49deg, rgba(57,92,126,0.1) 0.47%, rgba(162,184,206,0.1) 99.53%)",
+                    border: "1px solid #33506E",
+                    boxShadow: "5px 10px 20px rgba(0,0,0,0.1)",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                  }}
                 ref={whyJoinRef}
                 className="group relative flex flex-1 flex-col overflow-visible rounded-3xl border border-white/10 bg-[#162032] text-center transition-transform duration-300 ease-out hover:scale-[1.02] lg:z-10 lg:-mr-40"
               >
@@ -304,7 +321,16 @@ const BuilderNetwork = () => {
                 {/* ... (Debug logic stays same) */}
               </div>
 
-              <div className="group relative flex flex-col justify-between rounded-3xl border border-white/10 bg-[#162032] pr-2 pl-8 py-6 sm:py-7 lg:ml-[160px] lg:min-h-[160px] lg:py-12 transition-transform duration-300 ease-out hover:scale-[1.02]">
+              <div
+                  style={{
+                    background:
+                      "linear-gradient(114.49deg, rgba(57,92,126,0.1) 0.47%, rgba(162,184,206,0.1) 99.53%)",
+                    border: "1px solid #33506E",
+                    boxShadow: "5px 10px 20px rgba(0,0,0,0.1)",
+                    backdropFilter: "blur(20px)",
+                    WebkitBackdropFilter: "blur(20px)",
+                  }}
+              className="group relative flex flex-col justify-between rounded-3xl border border-white/10 bg-[#162032] pr-2 pl-8 py-6 sm:py-7 lg:ml-[160px] lg:min-h-[160px] lg:py-12 transition-transform duration-300 ease-out hover:scale-[1.02]">
                 <div className="mb-4 flex items-center justify-between">
                   <h4 className="text-xl font-bold westay-section-heading text-white transition-colors duration-300 group-hover:text-[#4DB6AC] lg:text-2xl">
                     Process

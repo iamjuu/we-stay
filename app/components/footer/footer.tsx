@@ -25,7 +25,7 @@ const FOOTER_SOCIALS: FooterSocialLink[] = [
 
 export default function Footer() {
   return (
-    <footer className="bg-[#0f1e2e] text-white px-6 py-14 sm:px-12 lg:px-20 lg:py-16 2xl:px-50">
+    <footer className="bg-[#0f1e2e] text-white px-6 py-14 sm:px-12 lg:px-20 lg:py-16 2xl:px-30">
       <div className="mx-auto max-w-7xl 2xl:max-w-none">
         {/* 
             Grid: 1 column on mobile, 2 columns on lg (1024px+). 
@@ -36,23 +36,25 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="brand max-w-sm">
             <div className="">
-              <Image src={FooterLogo} className="w-[200px] mb-[30px] h-auto" alt="WeStay" priority />            </div>
-            <p 
-            style={{
-              fontFamily:'DM Sans',
-            }}
-            className="footer-section-one text-[#b0bec5] leading-relaxed">
-              WeStay helps homeowners unlock the value of their property through smarter ADU pathways.
+              <Image src={FooterLogo} className="w-[352px] mb-[30px] " alt="WeStay" priority />            </div>
+            <p
+              style={{
+                fontFamily: 'DM Sans',
+              }}
+              className="footer-section-one text-[#b0bec5] text-nowrap leading-relaxed">
+              WeStay helps homeowners unlock   the <br/> value of their property through smarter <br/> ADU pathways.
             </p>
           </div>
 
           {/* Links and Socials Wrapper */}
-          <div className="flex flex-col sm:flex-row justify-between gap-10 lg:justify-end lg:gap-32">
+          <div className="flex flex-col sm:flex-row justify-between gap-10 lg:justify-around lg:gap-32">
 
             {/* Quick Links */}
             <div>
-              <h4 className="text-base font-bold mb-6 text-white">Quick Links</h4>
-              <ul className="flex flex-col gap-3">
+              <h4 className="font-['DM_Sans'] font-bold leading-normal text-white mb-6 
+               text-[4px]  xl:text-[32px]">
+                Quick Links
+              </h4>              <ul className="flex flex-col gap-3">
                 {FOOTER_QUICK_LINKS.map((item) => (
                   <li key={item}>
                     <Link
@@ -68,7 +70,8 @@ export default function Footer() {
 
             {/* Socials */}
             <div>
-              <h4 className="text-base font-bold mb-6 text-white">Socials</h4>
+            <h4 className="font-['DM_Sans'] font-bold leading-normal text-white mb-6 
+               text-[4px]  xl:text-[32px]">Socials</h4>
 
               <div className="flex gap-3">
                 {FOOTER_SOCIALS.map((social) => (
@@ -94,14 +97,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom Bar (Optional but recommended for premium feel) */}
-        <div className="mt-16 pt-8 border-t border-white/5 text-xs text-[#b0bec5] flex flex-col sm:flex-row justify-between gap-4">
-          <p>© 2026 WeStay. All rights reserved.</p>
-          <div className="flex gap-6">
-            <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
-          </div>
-        </div>
+
       </div>
     </footer>
   );
