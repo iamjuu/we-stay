@@ -179,10 +179,10 @@ export default function Home() {
       <div className="w-full px-4 py-[120px] sm:px-6 lg:px-8 2xl:px-50">
         <div className="mx-auto max-w-7xl 2xl:max-w-none">
           <div className="flex flex-col overflow-hidden rounded-[20px] border border-[#E1E0DB] bg-[#F5F7FA] lg:flex-row">
-            <div className="relative w-full min-h-[240px] shrink-0 lg:min-h-0 lg:w-[46%]">
+            <div className="group relative w-full min-h-[240px] shrink-0 overflow-hidden lg:min-h-0 lg:w-[46%]">
               <Image
                 src={SectionTwo}
-                className="h-full min-h-[240px] w-full object-cover lg:min-h-full"
+                className="h-full min-h-[240px] w-full object-cover lg:min-h-full rounded-[20px] transition-transform duration-500 group-hover:scale-105"
                 alt="Homeowners planning an ADU project"
               />
             </div>
@@ -190,9 +190,12 @@ export default function Home() {
             {/* Content */}
             <div className="flex flex-1 flex-col justify-center px-6 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-12 xl:px-16 xl:py-16">
               <div className="flex flex-col gap-4 lg:gap-5">
-                <h1 className="second-section-heading flex flex-col text-left">
+                <h1
+                  style={{ fontFamily: "DM Sans" }}
+                  className="section-heading font-[500] flex flex-col text-left"
+                >
                   Most Homeowners Want to Build,
-                  <span className="second-section-heading text-[#93928E]">
+                  <span className="text-[#93928E]">
                     But Don't Know Where to Start
                   </span>
                 </h1>

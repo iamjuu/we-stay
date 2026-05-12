@@ -29,11 +29,14 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex w-full items-center justify-between">
             <Link href="/" className="inline-flex shrink-0" aria-label="WeStay home">
-              <Image
-                alt="WeStay logo"
-                className="h-8 w-auto object-contain sm:h-9 lg:h-[42px] lg:max-h-[42px]"
-                src={Logo}
-              />
+              <div className="relative h-[52px] w-[140px] sm:h-[56px] sm:w-[160px] lg:h-[100px] lg:w-[180px] ">
+                <Image
+                  alt="WeStay logo"
+                  fill
+                  className="object-contain"
+                  src={Logo}
+                />
+              </div>
             </Link>
 
             {/* Desktop nav items */}
