@@ -2,7 +2,8 @@ import Image from 'next/image';
 import { ArrowRight, Mail, MapPin, Phone } from 'lucide-react';
 import Navbar from '@/app/components/navbar/navbar';
 import Footer from '@/app/components/footer/footer';
-import { About3 } from '@/content';
+import {   ContactImage,
+} from '@/content';
 
 /** Map + primary CTA width from 1920px Figma. */
 const MAP_AND_CTA_WIDTH = 'w-full max-w-[578px]';
@@ -75,7 +76,8 @@ export default function ContactPage() {
               {/* Right hero image — stacks below form on narrow viewports */}
               <div className="relative mx-auto mt-2 min-h-[260px] w-full xl:mx-0 xl:mt-0 xl:min-h-0 xl:flex-1">
                 <Image
-                  src={About3}
+                  src={  ContactImage
+                  }
                   alt="WeStay ADU home"
                   fill
                   className="rounded-[20px] object-cover"

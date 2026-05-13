@@ -214,14 +214,17 @@
   font-size: clamp(20px, 3vw, 36px);
   line-height: clamp(19px, 2.7vw, 32.95px);
 }
-
 .footer-section-one {
   font-family: "DM Sans", sans-serif;
-  font-size: clamp(20px, 2vw, 27px);
-  line-height: 1.6;
+  /* Keep your 27px max for 2xl screens */
+  font-size: clamp(18px, 1.2vw + 12px, 27px); 
+  line-height: 1.4;
   font-weight: 400;
-  font-style: normal;
   color: #e2e8f0;
+
+  /* This forces the 3-line wrap you see in the first image */
+  width: 100%;
+  max-width: 32ch; 
 }
 .quick-link {
   font-family: "DM Sans", sans-serif;
@@ -229,7 +232,7 @@
   line-height: 1.5;
   font-weight: 400;
   font-style: normal;
-  color: #b0bec5;
+  color: #FAFAFA;
 }
 
 .financing-network {
