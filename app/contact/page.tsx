@@ -11,7 +11,7 @@ export default function ContactPage() {
         <div className="mx-auto w-full">
           <Navbar />
 
-          <div className="mx-auto mb-16 mt-8 w-full max-w-[1520px]">
+          <div className="mb-16 mt-8 w-full">
             <section className="grid grid-cols-1 gap-12 rounded-[20px] border border-[#E1E0DB] bg-[#F5F7FA] px-6 py-8 md:p-[40px] xl:grid-cols-2 xl:gap-[110px]">
               {/* Left stack */}
               <div className="flex w-full flex-col justify-between gap-[40px]">
@@ -75,7 +75,7 @@ export default function ContactPage() {
                   src={ContactImage}
                   alt="WeStay ADU home"
                   className="h-full w-full rounded-[20px] object-cover"
-                  sizes="(min-width: 1280px) 760px, 100vw"
+                  sizes="(min-width: 1280px) 50vw, 100vw"
                   priority
                 />
               </div>
