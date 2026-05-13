@@ -1,16 +1,17 @@
 "use client";
 
+<<<<<<< Updated upstream
 import { OrbitControls, useGLTF, useProgress } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useEffect } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+=======
+import { Environment, OrbitControls } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { Suspense } from "react";
+>>>>>>> Stashed changes
 import { ConfiguratorModel, type RoofStyle, type SidingId } from "./ConfiguratorModel";
-import { PLAN_MODEL_URL } from "./planModelUrls";
-
-for (const url of Object.values(PLAN_MODEL_URL)) {
-  useGLTF.preload(url);
-}
 
 type ConfiguratorCanvasProps = {
   modelUrl: string;
@@ -20,6 +21,7 @@ type ConfiguratorCanvasProps = {
   showDeckSlab: boolean;
   showLanaiMeshes: boolean;
   showShowerPortion: boolean;
+<<<<<<< Updated upstream
   showSolarMeshes: boolean;
   showEvChargingMeshes: boolean;
   showAcMeshes: boolean;
@@ -68,6 +70,10 @@ function LoadProgressReporter({
   return null;
 }
 
+=======
+};
+
+>>>>>>> Stashed changes
 export function ConfiguratorCanvas({
   modelUrl,
   roofStyle,
@@ -76,11 +82,14 @@ export function ConfiguratorCanvas({
   showDeckSlab,
   showLanaiMeshes,
   showShowerPortion,
+<<<<<<< Updated upstream
   showSolarMeshes,
   showEvChargingMeshes,
   showAcMeshes,
   onLoadIdle,
   onLoadProgress,
+=======
+>>>>>>> Stashed changes
 }: ConfiguratorCanvasProps) {
   return (
     <div className="h-full min-h-0 w-full max-lg:min-h-[260px]">

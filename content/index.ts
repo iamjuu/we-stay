@@ -29,12 +29,6 @@ import About3 from "./images/about/adu-evening-duo.png"
 
 import ContainerImage1 from "./images/stackimage.svg";
 
-
-import FacebookIcon from "./images/footer/Vector.svg"; 
-import TwitterIcon from "./images/footer/6239ba027a3bbd1ec055fda8_Twitter.svg fill.svg";
-import InstagramIcon from "./images/footer/6239ba03ad9611637a539ec3_Instagram.svg.svg";
-import LinkedInIcon from "./images/footer/6239ba027547cf7eb7430709_Linkedin.svg.svg";
-
 import FacebookIcon from "./images/footer/Vector.svg"; 
 import TwitterIcon from "./images/footer/6239ba027a3bbd1ec055fda8_Twitter.svg fill.svg";
 import InstagramIcon from "./images/footer/6239ba03ad9611637a539ec3_Instagram.svg.svg";
@@ -51,10 +45,6 @@ export {
   About2,
   About3,
   FooterLogo,
-  FacebookIcon,
-  TwitterIcon,
-  InstagramIcon,
-  LinkedInIcon,
   Avatar1,
   Avatar2,
   Avatar3,

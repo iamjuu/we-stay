@@ -7,8 +7,14 @@ import Navbar from "@/app/components/navbar/navbar";
 import { Home, Layers, Maximize2, User } from "lucide-react";
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
+<<<<<<< Updated upstream
 import { usePathname, useRouter } from "next/navigation";
 import { type ReactNode, useCallback, useLayoutEffect, useMemo, useState } from "react";
+=======
+import { useRouter } from "next/navigation";
+import { useGLTF } from "@react-three/drei";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
+>>>>>>> Stashed changes
 import { useBuildPath } from "@/app/context/build-path-session";
 import { useEligibilitySession } from "@/app/context/eligibility-session";
 import { ensureJourneyUserId, useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-progress";
@@ -357,6 +363,7 @@ export function AduConfiguratorClient() {
   const pathname = usePathname();
   const flowIdx = flowIndexFromPath(pathname) ?? 5;
   const { setConfiguratorSummary } = useBuildPath();
+<<<<<<< Updated upstream
   const { userId, ensureActiveJourneyId } = useJourneyProgress();
   useWizardRouteGuard(flowIdx);
   const { snapshot } = useEligibilitySession();
@@ -370,7 +377,25 @@ export function AduConfiguratorClient() {
   const handleLoadIdle = useCallback(() => setViewportReady(true), []);
   const handleLoadProgress = useCallback((p: number) => setLoadProgress(p), []);
 
+=======
+>>>>>>> Stashed changes
   const [planId, setPlanId] = useState<PlanId>("two-office");
+
+  /** Preload other plan GLBs in idle time so plan switches stay snappy (does not block first paint). */
+  useEffect(() => {
+    const activeUrl = PLAN_MODEL_URL[planId];
+    const prefetchOthers = () => {
+      for (const url of Object.values(PLAN_MODEL_URL)) {
+        if (url !== activeUrl) useGLTF.preload(url);
+      }
+    };
+    if (typeof globalThis.requestIdleCallback === "function") {
+      const id = globalThis.requestIdleCallback(prefetchOthers, { timeout: 5000 });
+      return () => globalThis.cancelIdleCallback!(id);
+    }
+    const t = globalThis.setTimeout(prefetchOthers, 200);
+    return () => globalThis.clearTimeout(t);
+  }, [planId]);
   const [sidingId, setSidingId] = useState<SidingId>("default-stucco");
   const [claddingId, setCladdingId] = useState<CladdingId>("coastal");
   const [roofId, setRoofId] = useState<RoofStyle>("metal");
@@ -766,7 +791,10 @@ export function AduConfiguratorClient() {
       </aside>
 
       <main className="relative order-1 h-[52svh] min-h-[300px] w-full shrink-0 bg-[#eaecea] lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch">
+<<<<<<< Updated upstream
         {!viewportReady ? <ConfiguratorModelSkeleton loadProgress={loadProgress} /> : null}
+=======
+>>>>>>> Stashed changes
         <ConfiguratorCanvas
           modelUrl={PLAN_MODEL_URL[planId]}
           roofStyle={roofId}
@@ -775,11 +803,14 @@ export function AduConfiguratorClient() {
           showDeckSlab={features.deck}
           showLanaiMeshes={features.lanai}
           showShowerPortion={features.shower}
+<<<<<<< Updated upstream
           showSolarMeshes={upgrades.solar}
           showEvChargingMeshes={upgrades.evCharging}
           showAcMeshes={upgrades.ac}
           onLoadIdle={handleLoadIdle}
           onLoadProgress={handleLoadProgress}
+=======
+>>>>>>> Stashed changes
         />
         <div
           aria-hidden
