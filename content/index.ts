@@ -34,7 +34,9 @@ import TwitterIcon from "./images/footer/6239ba027a3bbd1ec055fda8_Twitter.svg fi
 import InstagramIcon from "./images/footer/6239ba03ad9611637a539ec3_Instagram.svg.svg";
 import LinkedInIcon from "./images/footer/6239ba027547cf7eb7430709_Linkedin.svg.svg";
 
+import ContactImage from "./images/about/contact-image.svg"
 export {
+  ContactImage,
   FacebookIcon,
   TwitterIcon,
   InstagramIcon,
