@@ -49,20 +49,27 @@ type EligibilitySessionContextValue = {
 
 const EligibilitySessionContext = createContext<EligibilitySessionContextValue | null>(null);
 
+/** Validate unknown (e.g. from Mongo GET) as client eligibility snapshot shape. */
+export function parseEligibilitySnapshotFromUnknown(raw: unknown): EligibilitySnapshot | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const parsed = raw as Partial<EligibilitySnapshot>;
+  if (
+    typeof parsed.address === 'string' &&
+    parsed.eligibilityResult &&
+    typeof parsed.computedAt === 'number'
+  ) {
+    return parsed as EligibilitySnapshot;
+  }
+  return null;
+}
+
 function loadStoredSnapshot(): EligibilitySnapshot | null {
   if (typeof window === 'undefined') return null;
   try {
     const raw = sessionStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    const parsed = JSON.parse(raw) as EligibilitySnapshot;
-    if (
-      parsed &&
-      typeof parsed.address === 'string' &&
-      parsed.eligibilityResult &&
-      typeof parsed.computedAt === 'number'
-    ) {
-      return parsed;
-    }
+    const parsed = JSON.parse(raw) as unknown;
+    return parseEligibilitySnapshotFromUnknown(parsed);
   } catch {
     /* ignore */
   }

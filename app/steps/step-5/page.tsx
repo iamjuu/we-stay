@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
 import { StepsSubmitBtn } from "../components/steps-submit-btn";
@@ -10,40 +9,29 @@ import { StepFooter } from "../components/step-footer";
 import { useBuildPath } from "@/app/context/build-path-session";
 import { useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-progress";
 import { flowIndexFromPath, nextWizardPath, prevWizardPath } from "@/lib/wizard-flow";
-import backyardIcon from "@/content/icons/backyard.svg";
-import attachedIcon from "@/content/icons/attached.svg";
-import secondStoryIcon from "@/content/icons/seconsstory.svg";
+import clockIcon from "@/content/icons/clock.svg";
+import penIcon from "@/content/icons/pen.svg";
 import type { StaticImageData } from "next/image";
 
-type AduTypeId = "backyard" | "attached" | "second-story";
-
-const aduTypes: {
-  id: AduTypeId;
+const paths = [
+  {
+    id: "fast-track",
+    title: "Fast Track",
+    description: "Choose from standardized plans for a faster and simpler process.",
+    icon: clockIcon,
+  },
+  {
+    id: "custom",
+    title: "Custom",
+    description: "Work toward a more tailored design based on your property and goals.",
+    icon: penIcon,
+  },
+] as const satisfies {
+  id: "fast-track" | "custom";
   title: string;
   description: string;
   icon: StaticImageData;
-  wide?: boolean;
-}[] = [
-  {
-    id: "backyard",
-    title: "Backyard Home",
-    description: "A standalone structure built in your backyard, ideal for maximum privacy.",
-    icon: backyardIcon,
-  },
-  {
-    id: "attached",
-    title: "Attached Addition",
-    description: "Shares a wall with your main home—great for seamlessly expanding living space.",
-    icon: attachedIcon,
-  },
-  {
-    id: "second-story",
-    title: "Second Story Addition",
-    description: "Built above an existing structure—perfect for smaller lots with limited ground space.",
-    icon: secondStoryIcon,
-    wide: true,
-  },
-];
+}[];
 
 function SelectionToggle({ selected }: { selected: boolean }) {
   return selected ? (
@@ -57,22 +45,22 @@ function SelectionToggle({ selected }: { selected: boolean }) {
   );
 }
 
-export default function StepFiveAduType() {
+export default function StepFiveBuildPreference() {
   const router = useRouter();
   const pathname = usePathname();
-  const flowIdx = flowIndexFromPath(pathname) ?? 3;
+  const flowIdx = flowIndexFromPath(pathname) ?? 4;
   const { maxNavIndex, recordFlowComplete } = useJourneyProgress();
   useWizardRouteGuard(flowIdx);
   const { setSelections, selections, hydrated: buildPathHydrated } = useBuildPath();
-  const [selected, setSelected] = useState<AduTypeId | "">("");
+  const [selected, setSelected] = useState<"fast-track" | "custom" | "">("");
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!buildPathHydrated) return;
-    const id = selections.aduTypeId;
-    if (!id || !aduTypes.some((t) => t.id === id)) return;
-    setSelected((prev) => (prev === "" ? (id as AduTypeId) : prev));
-  }, [buildPathHydrated, selections.aduTypeId]);
+    const id = selections.buildPreferenceId;
+    if (id !== "fast-track" && id !== "custom") return;
+    setSelected((prev) => (prev === "" ? id : prev));
+  }, [buildPathHydrated, selections.buildPreferenceId]);
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
@@ -85,72 +73,27 @@ export default function StepFiveAduType() {
 
         <div className="relative mx-auto w-full max-w-7xl">
           <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10 lg:max-w-4xl">
-            <div className="space-y-2 px-1 text-center  w-full">
-              <h1 className=" text-[18px] md:text-[26px] mt-14 !text-white">
-                Which Type of ADU Fits Your Property Best?
+            <div className="space-y-2 text-center mt-36 w-full">
+              <h1 className="steps-heading text-balance !text-white">
+                How Would You Like to Build?
               </h1>
             </div>
 
-          <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
-            {aduTypes
-              .filter((t) => !t.wide)
-              .map((opt) => {
-                const isSelected = selected === opt.id;
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    onClick={() => setSelected(opt.id)}
-                    className={`relative flex min-h-[140px] flex-col rounded-2xl border px-5 py-4 text-left transition-all duration-200 md:min-h-[160px] ${
-                      isSelected
-                        ? "border-[#42B0A8] bg-white shadow-[0_0_0_1px_rgba(66,176,168,0.35)]"
-                        : "border-white/12 bg-[#FFFFFF33] hover:border-white/22 hover:bg-[#FFFFFF33]"
-                    }`}
-                  >
-                    <div className="mb-3 flex items-start justify-between gap-2">
-                      <div
-                        className={`flex h-11 w-11 items-center justify-center rounded-full ${
-                          isSelected ? "bg-[#0C1B2A]" : "bg-white/10"
-                        }`}
-                      >
-                        <Image
-                          src={opt.icon}
-                          alt=""
-                          width={19}
-                          height={16}
-                          className={isSelected ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]" : "opacity-85"}
-                          aria-hidden
-                        />
-                      </div>
-                      <SelectionToggle selected={isSelected} />
-                    </div>
-                    <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-[#000000]" : "text-[#F5F7FA]"}`}>
-                      {opt.title}
-                    </p>
-                    <p className={`mt-2 font-dm-sans text-sm leading-relaxed ${isSelected ? "text-[#93928E]" : "text-[#F5F7FA]"}`}>
-                      {opt.description}
-                    </p>
-                  </button>
-                );
-              })}
-          </div>
-
-          {aduTypes
-            .filter((t) => t.wide)
-            .map((opt) => {
+          <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
+            {paths.map((opt) => {
               const isSelected = selected === opt.id;
               return (
                 <button
                   key={opt.id}
                   type="button"
-                  onClick={() => setSelected(opt.id)}
-                  className={`relative flex w-full flex-col rounded-2xl border px-5 py-2 text-left transition-all duration-200 ${
+                  onClick={() => setSelected(opt.id as typeof selected)}
+                  className={`relative flex min-h-[170px] flex-col rounded-2xl border px-5 py-5 text-left transition-all duration-200 ${
                     isSelected
                       ? "border-[#42B0A8] bg-white shadow-[0_0_0_1px_rgba(66,176,168,0.35)]"
-                      : "border-white/12 bg-[#FFFFFF33] hover:border-white/22 hover:bg-[#FFFFFF33]"
+                      : "border-white/12 bg-white/5 hover:border-white/22 hover:bg-white/[0.07]"
                   }`}
                 >
-                  <div className="mb-3 flex items-start justify-between gap-2">
+                  <div className="mb-4 flex items-start justify-between gap-2">
                     <div
                       className={`flex h-11 w-11 items-center justify-center rounded-full ${
                         isSelected ? "bg-[#0C1B2A]" : "bg-white/10"
@@ -159,59 +102,56 @@ export default function StepFiveAduType() {
                       <Image
                         src={opt.icon}
                         alt=""
-                        width={19}
-                        height={16}
-                        className={isSelected ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]" : "opacity-85"}
+                        width={17}
+                        height={14}
+                        className={
+                          isSelected
+                            ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(100%)_sepia(0%)_saturate(1%)_hue-rotate(332deg)_brightness(102%)_contrast(101%)]"
+                            : "opacity-85"
+                        }
                         aria-hidden
                       />
                     </div>
                     <SelectionToggle selected={isSelected} />
                   </div>
-                  <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-[#000000]" : "text-[#F5F7FA]"}`}>{opt.title}</p>
-                  <p className={`mt-2 max-w-3xl font-dm-sans text-sm leading-relaxed ${isSelected ? "text-[#93928E]" : "text-[#F5F7FA]"}`}>
+                  <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-slate-900" : "text-white"}`}>{opt.title}</p>
+                  <p className={`mt-2 font-dm-sans text-sm leading-relaxed ${isSelected ? "text-slate-600" : "text-slate-400"}`}>
                     {opt.description}
                   </p>
                 </button>
               );
             })}
+          </div>
 
           <StepsSubmitBtn
             isComplete={Boolean(selected)}
-            idleText="Continue"
+            idleText="Choose My Path"
             disabled={!selected}
             loading={submitting}
-            loadingText="Continuing…"
+            loadingText="Opening configurator…"
             onClick={async () => {
               if (!selected) return;
               setSubmitting(true);
               try {
-                setSelections({ aduTypeId: selected });
-                await recordFlowComplete(3, {
+                setSelections({ buildPreferenceId: selected });
+                await recordFlowComplete(4, {
                   buildSelections: {
                     ...selections,
-                    aduTypeId: selected,
+                    buildPreferenceId: selected,
                   },
                 });
-                router.push("/steps/step-6");
+                router.push("/3dpage");
               } catch {
                 setSubmitting(false);
               }
             }}
           />
 
-          <p className="text-center font-dm-sans text-xs leading-relaxed text-slate-400">
-            Not sure? We&apos;ll help you determine the best fit during your{" "}
-            <Link href="/about" className="text-[#6BB8FF] underline underline-offset-2 hover:text-[#9dceff]">
-              Discovery Call
-            </Link>
-            .
-          </p>
-
-          <div className="w-full pt-0 ">
+          <div className="w-full pt-4">
             <StepFooter
               currentStep={6}
               totalSteps={7}
-              variant="step5"
+              variant="step6"
               onBack={() => router.push(prevWizardPath(flowIdx))}
               onForward={() => {
                 const n = nextWizardPath(flowIdx);

@@ -24,6 +24,9 @@
 .DS_Store
 *.pem
 
+# Claude Code local worktrees — keep the real project at repo root only
+.claude/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

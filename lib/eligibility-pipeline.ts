@@ -28,9 +28,9 @@ import {
   type RentalEstimateRow,
 } from '@/lib/pipeline-api-mapper';
 
-async function fetchGeocode(address: string) {
+async function fetchGeocode(address: string, signal?: AbortSignal) {
   const startTime = performance.now();
-  const res = await fetch(`/api/geocode?address=${encodeURIComponent(address)}`);
+  const res = await fetch(`/api/geocode?address=${encodeURIComponent(address)}`, { signal });
   const json = await res.json();
   return {
     ...json,
@@ -38,9 +38,9 @@ async function fetchGeocode(address: string) {
   };
 }
 
-async function fetchParcel(lat: number, lng: number) {
+async function fetchParcel(lat: number, lng: number, signal?: AbortSignal) {
   const startTime = performance.now();
-  const res = await fetch(`/api/parcel?lat=${lat}&lng=${lng}`);
+  const res = await fetch(`/api/parcel?lat=${lat}&lng=${lng}`, { signal });
   const json = await res.json();
   return {
     ...json,
@@ -48,9 +48,9 @@ async function fetchParcel(lat: number, lng: number) {
   };
 }
 
-async function fetchRegrid(tmk: string) {
+async function fetchRegrid(tmk: string, signal?: AbortSignal) {
   const startTime = performance.now();
-  const res = await fetch(`/api/regrid?tmk=${encodeURIComponent(tmk)}`);
+  const res = await fetch(`/api/regrid?tmk=${encodeURIComponent(tmk)}`, { signal });
   const json = await res.json();
   return {
     ...json,
@@ -58,9 +58,9 @@ async function fetchRegrid(tmk: string) {
   };
 }
 
-async function fetchZoning(lat: number, lng: number) {
+async function fetchZoning(lat: number, lng: number, signal?: AbortSignal) {
   const startTime = performance.now();
-  const res = await fetch(`/api/zoning?lat=${lat}&lng=${lng}`);
+  const res = await fetch(`/api/zoning?lat=${lat}&lng=${lng}`, { signal });
   const json = await res.json();
   return {
     ...json,
@@ -68,9 +68,9 @@ async function fetchZoning(lat: number, lng: number) {
   };
 }
 
-async function fetchFlood(lat: number, lng: number) {
+async function fetchFlood(lat: number, lng: number, signal?: AbortSignal) {
   const startTime = performance.now();
-  const res = await fetch(`/api/flood?lat=${lat}&lng=${lng}`);
+  const res = await fetch(`/api/flood?lat=${lat}&lng=${lng}`, { signal });
   const json = await res.json();
   return {
     ...json,
@@ -78,9 +78,9 @@ async function fetchFlood(lat: number, lng: number) {
   };
 }
 
-async function fetchAssessor(tmk: string) {
+async function fetchAssessor(tmk: string, signal?: AbortSignal) {
   const startTime = performance.now();
-  const res = await fetch(`/api/assessor?tmk=${encodeURIComponent(tmk)}`);
+  const res = await fetch(`/api/assessor?tmk=${encodeURIComponent(tmk)}`, { signal });
   const json = await res.json();
   return {
     ...json,
@@ -88,9 +88,9 @@ async function fetchAssessor(tmk: string) {
   };
 }
 
-async function fetchSMA(lat: number, lng: number) {
+async function fetchSMA(lat: number, lng: number, signal?: AbortSignal) {
   const startTime = performance.now();
-  const res = await fetch(`/api/sma?lat=${lat}&lng=${lng}`);
+  const res = await fetch(`/api/sma?lat=${lat}&lng=${lng}`, { signal });
   const json = await res.json();
   return {
     ...json,
@@ -98,9 +98,9 @@ async function fetchSMA(lat: number, lng: number) {
   };
 }
 
-async function fetchWater(lat: number, lng: number) {
+async function fetchWater(lat: number, lng: number, signal?: AbortSignal) {
   const startTime = performance.now();
-  const res = await fetch(`/api/water?lat=${lat}&lng=${lng}`);
+  const res = await fetch(`/api/water?lat=${lat}&lng=${lng}`, { signal });
   const json = await res.json();
   return {
     ...json,
@@ -108,9 +108,9 @@ async function fetchWater(lat: number, lng: number) {
   };
 }
 
-async function fetchSewer(lat: number, lng: number) {
+async function fetchSewer(lat: number, lng: number, signal?: AbortSignal) {
   const startTime = performance.now();
-  const res = await fetch(`/api/sewer?lat=${lat}&lng=${lng}`);
+  const res = await fetch(`/api/sewer?lat=${lat}&lng=${lng}`, { signal });
   const json = await res.json();
   return {
     ...json,
@@ -118,9 +118,9 @@ async function fetchSewer(lat: number, lng: number) {
   };
 }
 
-async function fetchRail(lat: number, lng: number) {
+async function fetchRail(lat: number, lng: number, signal?: AbortSignal) {
   const startTime = performance.now();
-  const res = await fetch(`/api/rail?lat=${lat}&lng=${lng}`);
+  const res = await fetch(`/api/rail?lat=${lat}&lng=${lng}`, { signal });
   const json = await res.json();
   return {
     ...json,
@@ -128,9 +128,9 @@ async function fetchRail(lat: number, lng: number) {
   };
 }
 
-async function fetchPermit(tmk: string) {
+async function fetchPermit(tmk: string, signal?: AbortSignal) {
   const startTime = performance.now();
-  const res = await fetch(`/api/permit?tmk=${encodeURIComponent(tmk)}`);
+  const res = await fetch(`/api/permit?tmk=${encodeURIComponent(tmk)}`, { signal });
   const json = await res.json();
   return {
     ...json,
@@ -138,9 +138,9 @@ async function fetchPermit(tmk: string) {
   };
 }
 
-async function fetchRent(zipCode: string) {
+async function fetchRent(zipCode: string, signal?: AbortSignal) {
   const startTime = performance.now();
-  const res = await fetch(`/api/rent?zipCode=${encodeURIComponent(zipCode)}`);
+  const res = await fetch(`/api/rent?zipCode=${encodeURIComponent(zipCode)}`, { signal });
   const json = await res.json();
   return {
     ...json,
@@ -177,7 +177,10 @@ export type EligibilityPipelineFailure = {
 
 export type EligibilityPipelineOutcome = EligibilityPipelineSuccess | EligibilityPipelineFailure;
 
-export async function runEligibilityPipeline(inputAddress: string): Promise<EligibilityPipelineOutcome> {
+export async function runEligibilityPipeline(
+  inputAddress: string,
+  signal?: AbortSignal
+): Promise<EligibilityPipelineOutcome> {
   let geocodeData: GeocodeData | null = null;
   let parcelData: ParcelData | null = null;
   let regridData: RegridData | null = null;
@@ -191,7 +194,11 @@ export async function runEligibilityPipeline(inputAddress: string): Promise<Elig
   let permitData: PermitData | null = null;
 
   try {
-    const geocodeResult = await fetchGeocode(inputAddress);
+    if (signal?.aborted) {
+      return { ok: false, error: 'Cancelled' };
+    }
+
+    const geocodeResult = await fetchGeocode(inputAddress, signal);
     const geoMapped = mapGeocodeFullFromApi(geocodeResult);
     if (!geoMapped) {
       const msg =
@@ -211,8 +218,8 @@ export async function runEligibilityPipeline(inputAddress: string): Promise<Elig
 
     // Run rent + parcel in parallel — both only need geocode data
     const [rentSettled, parcelSettled] = await Promise.allSettled([
-      zipCode ? fetchRent(zipCode) : Promise.resolve(null),
-      fetchParcel(geocodeData.lat, geocodeData.lng),
+      zipCode ? fetchRent(zipCode, signal) : Promise.resolve(null),
+      fetchParcel(geocodeData.lat, geocodeData.lng, signal),
     ]);
 
     let rentalData: EligibilityRentalPayload | null = null;
@@ -222,6 +229,9 @@ export async function runEligibilityPipeline(inputAddress: string): Promise<Elig
     }
 
     if (parcelSettled.status === 'rejected') {
+      if (parcelSettled.reason instanceof DOMException && parcelSettled.reason.name === 'AbortError') {
+        return { ok: false, error: 'Cancelled' };
+      }
       return { ok: false, error: 'Parcel lookup failed' };
     }
     const parcelMapped = mapParcelFromApi(parcelSettled.value);
@@ -242,15 +252,15 @@ export async function runEligibilityPipeline(inputAddress: string): Promise<Elig
       railResult,
       permitResult,
     ] = await Promise.allSettled([
-      fetchRegrid(parcelData.tmk),
-      fetchZoning(geocodeData.lat, geocodeData.lng),
-      fetchFlood(geocodeData.lat, geocodeData.lng),
-      parcelData.qpublicTmk ? fetchAssessor(parcelData.qpublicTmk) : Promise.reject(new Error('No TMK')),
-      fetchSMA(geocodeData.lat, geocodeData.lng),
-      fetchWater(geocodeData.lat, geocodeData.lng),
-      fetchSewer(geocodeData.lat, geocodeData.lng),
-      fetchRail(geocodeData.lat, geocodeData.lng),
-      fetchPermit(parcelData.tmk),
+      fetchRegrid(parcelData.tmk, signal),
+      fetchZoning(geocodeData.lat, geocodeData.lng, signal),
+      fetchFlood(geocodeData.lat, geocodeData.lng, signal),
+      parcelData.qpublicTmk ? fetchAssessor(parcelData.qpublicTmk, signal) : Promise.reject(new Error('No TMK')),
+      fetchSMA(geocodeData.lat, geocodeData.lng, signal),
+      fetchWater(geocodeData.lat, geocodeData.lng, signal),
+      fetchSewer(geocodeData.lat, geocodeData.lng, signal),
+      fetchRail(geocodeData.lat, geocodeData.lng, signal),
+      fetchPermit(parcelData.tmk, signal),
     ]);
 
     if (regridResult.status === 'fulfilled') {
@@ -309,6 +319,9 @@ export async function runEligibilityPipeline(inputAddress: string): Promise<Elig
       rentalData,
     };
   } catch (err) {
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      return { ok: false, error: 'Cancelled' };
+    }
     return {
       ok: false,
       error: err instanceof Error ? err.message : 'An error occurred',

@@ -32,6 +32,11 @@ interface AddressInputProps {
   hideHelperText?: boolean;
   wrapperClassName?: string;
   inputClassName?: string;
+  /**
+   * With `darkMode`, skip opaque black fills so the field can sit on a glass/dark pill
+   * (hero eligibility). Text/placeholder colors should come from `inputClassName`.
+   */
+  transparentDarkField?: boolean;
 }
 
 const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
@@ -45,6 +50,7 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
       hideHelperText = false,
       wrapperClassName = '',
       inputClassName = '',
+      transparentDarkField = false,
     },
     ref
   ) {
@@ -171,11 +177,18 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
       }
     };
 
-    const baseInputClass = `w-full px-4 py-3 text-lg border-2 rounded-lg
+    const darkTransparentShell =
+      darkMode && transparentDarkField ? 'border-0 rounded-lg' : 'border-2 rounded-lg';
+
+    const darkModeBase = transparentDarkField
+      ? 'bg-transparent text-white placeholder:text-white/40 outline-none focus:border-transparent focus:ring-0 focus:ring-transparent disabled:bg-transparent [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(0_0_0/0)] [&:-webkit-autofill]:[-webkit-text-fill-color:inherit] [&:-webkit-autofill]:[transition:background-color_99999s_ease-out]'
+      : 'bg-black/60 border-white text-white placeholder:text-white/40 focus:border-[#42B0A8] focus:ring-2 focus:ring-[#42B0A8]/20 disabled:bg-black/30';
+
+    const baseInputClass = `w-full px-4 py-3 text-lg ${darkTransparentShell}
                      outline-none transition-all duration-200
                      disabled:cursor-not-allowed 
                      ${darkMode
-                       ? 'bg-black/60 border-white text-white placeholder:text-white/40 focus:border-[#42B0A8] focus:ring-2 focus:ring-[#42B0A8]/20 disabled:bg-black/30'
+                       ? darkModeBase
                        : 'bg-white border-black text-black placeholder:text-gray-400 focus:border-[#42B0A8] focus:ring-2 focus:ring-[#42B0A8]/20 disabled:bg-gray-100 shadow-md'
                      }`;
 
@@ -192,6 +205,14 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
             disabled={disabled}
             placeholder="Enter your O‘ahu, Hawai'i address"
             className={`${baseInputClass} ${inputClassName}`}
+            style={
+              darkMode && transparentDarkField
+                ? {
+                    backgroundColor: 'transparent',
+                    ...(disabled ? { opacity: 1 } : {}),
+                  }
+                : undefined
+            }
           />
           {isLoading && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">

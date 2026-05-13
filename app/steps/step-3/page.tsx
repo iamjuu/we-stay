@@ -186,7 +186,7 @@ export default function GoalSelection() {
                       goalId: selected,
                     },
                   });
-                  router.push("/steps/step-5");
+                  router.push("/steps/step-4");
                 } catch {
                   setSubmitting(false);
                 }

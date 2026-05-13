@@ -280,13 +280,15 @@ export default function PropertyScorePage() {
 
       {/* Results scroll only between navbar and CTA — full page does not scroll */}
       <div className="relative z-10 flex min-h-0 flex-1 flex-col">
-        <div className="scrollbar min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 pb-2 pt-16 sm:px-6 sm:pt-20">
+        <div className="scrollbar min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 pb-2 pt-24 sm:px-6 sm:pt-32">
           <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-6 pb-2">
             <h1 className="text-center font-dm-sans text-2xl font-bold tracking-tight text-white">
-              Your Property Potential Score
+              Your Property Potential
             </h1>
 
-            <p className="max-w-2xl text-center font-dm-sans text-xs text-white/50">{addressLine}</p>
+            <p className="max-w-3xl text-balance px-2 text-center font-dm-sans text-sm leading-snug text-white/70 sm:text-base md:text-lg">
+              {addressLine}
+            </p>
 
             <div className="flex w-full flex-col items-center gap-5">
               <CircleProgress score={score} gradientId={gradientId} status={result.status} />

@@ -1,10 +1,10 @@
-/** Ordered wizard routes after eligibility (step-4 is skipped in UX). */
+/** Ordered wizard routes after eligibility. */
 export const WIZARD_FLOW = [
   "/steps/step-1",
   "/steps/step-2",
   "/steps/step-3",
+  "/steps/step-4",
   "/steps/step-5",
-  "/steps/step-6",
   "/3dpage",
 ] as const;
 

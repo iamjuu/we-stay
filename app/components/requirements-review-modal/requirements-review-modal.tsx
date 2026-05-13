@@ -2,9 +2,9 @@
 
 import Image from 'next/image';
 import { createPortal } from 'react-dom';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { AlertTriangle, CheckCircle, Loader2, MapPin } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Loader2, MapPin, X } from 'lucide-react';
 
 type Requirement = {
   status: 'pass' | 'warning' | 'fail';
@@ -27,18 +27,55 @@ const requirements: Requirement[] = [
   },
 ];
 
+const LOADING_PHASES = [
+  'Reviewing location details',
+  'Checking zoning',
+  'Measuring property potential',
+  'Preparing your report',
+] as const;
+
+const LOADING_ROTATE_MS = 2800;
+
+/** Fake metrics behind blur — ticks for “data generating” feel. */
+function GeneratingDataBackdrop() {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    const id = window.setInterval(() => setTick((n) => (n + 1) % 100000), 420);
+    return () => window.clearInterval(id);
+  }, []);
+  const rows = [
+    { label: 'PARCEL', seed: 1 },
+    { label: 'ZONING', seed: 3 },
+    { label: 'LOT SQFT', seed: 7 },
+    { label: 'RENT IDX', seed: 11 },
+  ] as const;
+  return (
+    <div className="pointer-events-none absolute inset-0 flex flex-col justify-center gap-1.5 px-8 py-8 font-mono text-[9px] leading-tight text-[#F05C4A]/40">
+      {rows.map(({ label, seed }, i) => (
+        <div
+          key={label}
+          className="flex justify-between gap-3 motion-safe:animate-pulse"
+          style={{ animationDelay: `${i * 180}ms`, animationDuration: '1.4s' }}
+        >
+          <span className="tracking-wider">{label}</span>
+          <span className="tabular-nums opacity-80">
+            {((tick + seed) * 7919) % 999999}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 type RequirementsReviewModalProps = {
   open: boolean;
   onClose: () => void;
   onGamePlan: () => void;
-  /** While pipeline runs — blur overlay + spinner. */
+  /** While pipeline runs — blur overlay + loading indicator. */
   isRunning?: boolean;
   /** Set when runEligibilityPipeline fails — shows error; CTA disabled. */
   errorMessage?: string | null;
-  /**
-   * When set, loading row uses this instead of inferring from `isRunning` alone.
-   * Pass `!!snapshot && !isRunning` from the parent so the spinner stops when eligibility data exists.
-   */
+  /** Legacy — parent still passes it; status animation runs whenever the modal is open (no error). */
   gamePlanReady?: boolean;
   score?: number;
   variant?: 'centered' | 'below-anchor';
@@ -47,79 +84,31 @@ type RequirementsReviewModalProps = {
 export default function RequirementsReviewModal({
   open,
   onClose,
-  onGamePlan,
+  onGamePlan: _onGamePlan,
   isRunning = false,
   errorMessage = null,
-  gamePlanReady: gamePlanReadyProp,
+  gamePlanReady: _gamePlanReadyProp,
   score = 60,
   variant = 'centered',
 }: RequirementsReviewModalProps) {
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const subtitleRef = useRef<HTMLParagraphElement>(null);
-  const [subtitlePadLeft, setSubtitlePadLeft] = useState(0);
+  const [loadingPhaseIndex, setLoadingPhaseIndex] = useState(0);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!open) {
-      setSubtitlePadLeft(0);
+      setLoadingPhaseIndex(0);
       return;
     }
-
-    function getTextLeft(el: HTMLElement): number | null {
-      const doc = el.ownerDocument;
-      const walker = doc.createTreeWalker(el, NodeFilter.SHOW_TEXT);
-      const node = walker.nextNode() as Text | null;
-      if (!node?.data?.length) return null;
-      const r = doc.createRange();
-      r.setStart(node, 0);
-      r.setEnd(node, 0);
-      return r.getBoundingClientRect().left;
+    if (errorMessage) {
+      setLoadingPhaseIndex(0);
+      return;
     }
-
-    function measure() {
-      const titleEl = titleRef.current;
-      const subEl = subtitleRef.current;
-      if (!titleEl || !subEl) return;
-
-      const titleLeft = getTextLeft(titleEl);
-
-      // Zero dynamic padding before measuring subtitle base position,
-      // then restore — prevents oscillation on resize.
-      const savedPad = subEl.style.paddingLeft;
-      subEl.style.paddingLeft = '0px';
-      const subtitleLeft = getTextLeft(subEl);
-      subEl.style.paddingLeft = savedPad;
-
-      if (titleLeft == null || subtitleLeft == null) return;
-      const next = Math.max(0, Math.round(titleLeft - subtitleLeft));
-      setSubtitlePadLeft((prev) => (prev === next ? prev : next));
-    }
-
-    measure();
-    window.addEventListener('resize', measure);
-
-    let ro: ResizeObserver | undefined;
-    if (typeof ResizeObserver !== 'undefined') {
-      ro = new ResizeObserver(measure);
-      if (titleRef.current) ro.observe(titleRef.current);
-    }
-
-    return () => {
-      window.removeEventListener('resize', measure);
-      ro?.disconnect();
-    };
-  }, [open]);
+    const id = window.setInterval(() => {
+      setLoadingPhaseIndex((i) => (i + 1) % LOADING_PHASES.length);
+    }, LOADING_ROTATE_MS);
+    return () => window.clearInterval(id);
+  }, [open, errorMessage]);
 
   if (!open) return null;
-
-  const gamePlanReadyResolved =
-    gamePlanReadyProp !== undefined
-      ? gamePlanReadyProp
-      : !isRunning && !errorMessage;
-
-  // Users should be able to click through while the location-details spinner is active.
-  // Only disable the CTA when we have an explicit error.
-  const ctaDisabled = !!errorMessage;
-  const showLoadingRow = !errorMessage && !gamePlanReadyResolved;
 
   const radius = 64;
   const circumference = 2 * Math.PI * radius;
@@ -128,7 +117,6 @@ export default function RequirementsReviewModal({
 
   const blurredBody = (
     <div className="flex min-h-[200px] w-full gap-0">
-      {/* LEFT — score strip (same visual weight as before; blurred with the body) */}
       <div className="flex w-[32%] shrink-0 flex-col items-center gap-2.5 pb-4 pr-2 pt-3">
         <div className="flex w-full items-start gap-1.5">
           <MapPin className="mt-0.5 size-3 shrink-0 text-white/35" />
@@ -173,7 +161,6 @@ export default function RequirementsReviewModal({
         </div>
       </div>
 
-      {/* RIGHT — static requirement rows (illustrative) */}
       <div className="flex min-w-0 flex-1 flex-col gap-2 pb-4 pl-4 pt-3">
         {requirements.map((req, i) => (
           <div
@@ -211,7 +198,7 @@ export default function RequirementsReviewModal({
 
   const panelInner = (
     <div
-      className="relative   isolate flex w-full flex-col  overflow-hidden rounded-[16.72px] border border-white/12 p-[15.83px] backdrop-blur-2xl"
+      className="relative flex w-full flex-col overflow-hidden rounded-[16.72px] border border-white/12 p-[15.83px] backdrop-blur-2xl"
       style={{
         maxWidth: '643.568px',
         minHeight: '369.903px',
@@ -219,38 +206,20 @@ export default function RequirementsReviewModal({
         boxShadow: '4.18px 8.36px 16.72px 0px #0000001A',
       }}
     >
-      {/* Title stays right-aligned in column like original; subtitle block anchors right (ms-auto), lines wrap with text-left */}
-      <div className="flex w-full shrink-0 flex-wrap items-start justify-end">
-        {/* <div className="min-w-0 max-w-full text-right">
-          <h2
-            ref={titleRef}
-            id="requirements-review-title"
-            className="font-dm-sans font-medium tracking-normal text-right text-white"
-            style={{
-              fontSize: '20.06px',
-              lineHeight: '16.72px',
-              letterSpacing: '0px',
-              fontVariationSettings: "'opsz' 14",
-            }}
-          >
-            Requirements Review
-          </h2>
-          <p
-            ref={subtitleRef}
-            className="font-dm-sans mt-2 max-w-[340px] text-left font-normal tracking-normal"
-            style={{
-              fontSize: '13.37px',
-              lineHeight: '18.39px',
-              letterSpacing: '0px',
-              color: '#C4C7C8',
-              fontVariationSettings: "'opsz' 14",
-              paddingLeft: subtitlePadLeft,
-            }}
-          >
-            Review the following requirements. Items marked with ✗ or ⚠ need attention.
-          </p>
-        </div> */}
-      </div>
+      <h2 id="requirements-review-title" className="sr-only">
+        Requirements review
+      </h2>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+        className="absolute right-2 top-2 z-20 flex size-9 items-center justify-center rounded-full text-white/85 transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-300/80"
+        aria-label="Close"
+      >
+        <X className="size-5" strokeWidth={2} />
+      </button>
 
       <div className="flex min-h-0 flex-1 flex-col">
         {errorMessage ? (
@@ -261,74 +230,66 @@ export default function RequirementsReviewModal({
             {errorMessage}
           </div>
         ) : (
-          <div className="relative min-h-0 flex-1 overflow-hidden">
-            <div className="pointer-events-none select-none blur-lg" aria-hidden>
-              {blurredBody}
-            </div>
-            <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-[16px] bg-black/8 px-5">
-              <div className="flex max-w-[min(100%,400px)] flex-row flex-wrap items-center justify-center gap-3 gap-y-2 text-center">
-                <Image
-                  src="/images/Lock-icon.svg"
-                  alt=""
-                  width={17}
-                  height={21}
-                  className="shrink-0"
-                  unoptimized
+          <div className="relative z-0 min-h-0 flex-1 overflow-hidden rounded-[12px]">
+            {/* Orange ring + ticking “data” behind blurred preview */}
+            <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden rounded-[12px]">
+              <div className="absolute left-1/2 top-1/2 size-[min(72%,220px)] -translate-x-1/2 -translate-y-1/2">
+                <div className="absolute inset-0 rounded-full border-2 border-white/[0.07]" aria-hidden />
+                <div
+                  className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#F05C4A] border-r-[#ff8a65]/90 motion-safe:animate-spin"
+                  style={{ animationDuration: '2.4s' }}
                   aria-hidden
                 />
-                <p
-                  className="font-dm-sans font-medium text-white"
-                  style={{
-                    fontSize: '13.37px',
-                    lineHeight: '18.39px',
-                    fontVariationSettings: "'opsz' 14",
-                  }}
-                >
-                  Preparing your report click the below button
-                </p>
+                <div
+                  className="absolute inset-[10px] rounded-full border border-dashed border-orange-500/25 motion-safe:animate-spin"
+                  style={{ animationDuration: '4.5s', animationDirection: 'reverse' }}
+                  aria-hidden
+                />
               </div>
-              {showLoadingRow ? (
-                <p
-                  className="font-dm-sans flex items-center justify-center gap-[7.52px] text-[13px] text-white/90"
-                  style={{ fontVariationSettings: "'opsz' 14" }}
-                >
-                  <Loader2 className="size-[18px] shrink-0 animate-spin" aria-hidden />
-                  Reviewing location details...
-                </p>
-              ) : null}
+              <GeneratingDataBackdrop />
             </div>
+            <div className="pointer-events-none relative z-[2] select-none blur-lg" aria-hidden>
+              {blurredBody}
+            </div>
+            <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-4 bg-black/25 px-5 pt-8 backdrop-blur-[2px]">
+                <div className="flex w-full max-w-[min(100%,440px)] flex-col items-center justify-center gap-4 text-center">
+                  <Image
+                    src="/gif/house-stats.gif"
+                    alt=""
+                    width={112}
+                    height={112}
+                    unoptimized
+                    className="size-[104px] shrink-0 rounded-lg object-contain sm:size-[112px]"
+                    aria-hidden
+                  />
+                  <div className="flex flex-row items-center justify-center gap-2">
+                    <Loader2
+                      className="size-[18px] shrink-0 animate-spin text-white/90"
+                      aria-hidden
+                    />
+                    <p
+                      className="font-dm-sans font-medium text-white drop-shadow-[0_1px_8px_rgba(0,0,0,0.85)]"
+                      style={{
+                        fontSize: '13.37px',
+                        lineHeight: '18.39px',
+                        fontVariationSettings: "'opsz' 14",
+                      }}
+                      aria-live="polite"
+                    >
+                      {LOADING_PHASES[loadingPhaseIndex]}
+                    </p>
+                  </div>
+                </div>
+              </div>
           </div>
         )}
       </div>
 
-      <div className="flex shrink-0 justify-end  px-[20px] pt-[6px]">
-        <button
-          type="button"
-          onClick={() => {
-            if (!ctaDisabled) onGamePlan();
-          }}
-          disabled={ctaDisabled}
-          style={{
-            fontFamily: 'DM Sans, sans-serif',
-            background: '#F05C4AE5',
-            height: '42px',
-          }}
-          className={`cta-animated-border relative overflow-hidden inline-flex max-w-[392.082px] w-auto items-center justify-center gap-[1.88px] leading-[27px] rounded-[30px] px-[55px] py-[7px] font-dm-sans text-[14px] font-bold leading-none text-white transition-opacity ${
-            ctaDisabled ? 'cursor-not-allowed opacity-45' : 'cursor-pointer'
-          }`}
-        >
-          <span className="cta-glass-top" aria-hidden="true" />
-          <span className="cta-border-t"  aria-hidden="true" />
-          <span className="cta-border-l"  aria-hidden="true" />
-          <span className="cta-border-b"  aria-hidden="true" />
-          <span className="cta-border-r"  aria-hidden="true" />
-          <span className="cta-label">Build My ADU Game Plan</span>
-        </button>
-      </div>
+      <p className="sr-only">Eligibility complete. Continuing to your game plan shortly.</p>
     </div>
   );
 
-  const dialogAriaBusy = showLoadingRow;
+  const dialogAriaBusy = !!isRunning && !errorMessage;
 
   if (variant === 'below-anchor') {
     const scrimMount =

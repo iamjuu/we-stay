@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AddressInput, { type AddressInputHandle } from '@/components/AddressInput';
 import CtaButton from '@/app/components/ctaButton/ctaButton';
@@ -9,11 +9,30 @@ import { eligibilityInputMatchesSnapshot, useEligibilitySession } from '@/app/co
 import { useJourneyProgress } from '@/app/context/journey-progress';
 import { runEligibilityPipeline } from '@/lib/eligibility-pipeline';
 
+function delay(ms: number, signal?: AbortSignal): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (signal?.aborted) {
+      reject(new DOMException('Aborted', 'AbortError'));
+      return;
+    }
+    const t = window.setTimeout(() => resolve(), ms);
+    signal?.addEventListener(
+      'abort',
+      () => {
+        window.clearTimeout(t);
+        reject(new DOMException('Aborted', 'AbortError'));
+      },
+      { once: true }
+    );
+  });
+}
+
 export default function HeroEligibility() {
   const router = useRouter();
   const addressRef = useRef<AddressInputHandle>(null);
   /** Bumped when the user clears the address so in-flight `runEligibilityPipeline` results are ignored. */
   const eligibilityRunGenerationRef = useRef(0);
+  const pipelineAbortRef = useRef<AbortController | null>(null);
   const { snapshot, setSnapshot, clearSnapshot } = useEligibilitySession();
   const { mergeJourney, syncJourneyForPropertyAddress } = useJourneyProgress();
 
@@ -23,6 +42,8 @@ export default function HeroEligibility() {
   const [inlineError, setInlineError] = useState<string | null>(null);
 
   const ELIGIBILITY_MIN_LOAD_MS = 3000;
+  /** After a successful check (modal open, no error), auto-advance to step 1. */
+  const AUTO_ADVANCE_MS = 7000;
 
   const runCheck = useCallback(
     async (rawAddress: string) => {
@@ -41,6 +62,10 @@ export default function HeroEligibility() {
         return;
       }
 
+      pipelineAbortRef.current?.abort();
+      const ac = new AbortController();
+      pipelineAbortRef.current = ac;
+
       const runGen = ++eligibilityRunGenerationRef.current;
       clearSnapshot();
       setModalOpen(true);
@@ -48,13 +73,17 @@ export default function HeroEligibility() {
       setIsRunning(true);
 
       const startedAt = Date.now();
-      const outcome = await runEligibilityPipeline(trimmed);
+      const outcome = await runEligibilityPipeline(trimmed, ac.signal);
 
       if (runGen !== eligibilityRunGenerationRef.current) {
         return;
       }
 
       if (!outcome.ok) {
+        if (outcome.error === 'Cancelled') {
+          setIsRunning(false);
+          return;
+        }
         setIsRunning(false);
         setErrorMessage(outcome.error);
         return;
@@ -62,7 +91,13 @@ export default function HeroEligibility() {
 
       const remaining = ELIGIBILITY_MIN_LOAD_MS - (Date.now() - startedAt);
       if (remaining > 0) {
-        await new Promise((r) => setTimeout(r, remaining));
+        try {
+          await delay(remaining, ac.signal);
+        } catch {
+          if (runGen !== eligibilityRunGenerationRef.current) return;
+          setIsRunning(false);
+          return;
+        }
       }
       if (runGen !== eligibilityRunGenerationRef.current) {
         return;
@@ -93,10 +128,19 @@ export default function HeroEligibility() {
     void runCheck(v);
   }, [runCheck]);
 
+  const handleModalClose = useCallback(() => {
+    eligibilityRunGenerationRef.current += 1;
+    pipelineAbortRef.current?.abort();
+    setIsRunning(false);
+    setModalOpen(false);
+    setErrorMessage(null);
+  }, []);
+
   const handleAddressValueChange = useCallback(
     (value: string) => {
       if (value.trim() !== '') return;
       eligibilityRunGenerationRef.current += 1;
+      pipelineAbortRef.current?.abort();
       setModalOpen(false);
       setIsRunning(false);
       setErrorMessage(null);
@@ -112,6 +156,14 @@ export default function HeroEligibility() {
     }
     router.push('/steps/step-1');
   }, [router, snapshot, mergeJourney]);
+
+  useEffect(() => {
+    if (!modalOpen || errorMessage || isRunning || !snapshot) return;
+    const t = window.setTimeout(() => {
+      void handleGamePlan();
+    }, AUTO_ADVANCE_MS);
+    return () => window.clearTimeout(t);
+  }, [modalOpen, errorMessage, isRunning, snapshot, handleGamePlan]);
 
   return (
     <>
@@ -134,8 +186,9 @@ export default function HeroEligibility() {
                     onEnterCheck={(t) => void runCheck(t)}
                     disabled={isRunning}
                     darkMode
+                    transparentDarkField
                     hideHelperText
-                    inputClassName="!rounded-none !border-0 !bg-transparent !ring-0 !shadow-none px-4 py-3 text-center text-[clamp(18px,4vw,22px)] font-light leading-[1.2] text-[#adadad] placeholder:text-[#adadad] focus:!ring-0 sm:px-0 sm:py-0 sm:text-left"
+                    inputClassName="!rounded-none !shadow-none px-4 py-3 text-center text-[clamp(18px,4vw,22px)] font-light leading-[1.2] text-[#adadad] placeholder:text-[#adadad] focus:!ring-0 disabled:!cursor-not-allowed disabled:!bg-transparent disabled:!text-[#adadad] disabled:!opacity-100 disabled:placeholder:!text-[#adadad] sm:px-0 sm:py-0 sm:text-left"
                   />
                 </div>
                 <CtaButton
@@ -148,7 +201,7 @@ export default function HeroEligibility() {
 
               <RequirementsReviewModal
                 open={modalOpen}
-                onClose={() => setModalOpen(false)}
+                onClose={handleModalClose}
                 isRunning={isRunning}
                 errorMessage={errorMessage}
                 gamePlanReady={!!snapshot && !isRunning}

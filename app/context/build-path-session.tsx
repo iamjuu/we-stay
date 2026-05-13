@@ -85,6 +85,8 @@ type BuildPathContextValue = {
   configuratorSummary: ConfiguratorSummary | null;
   setSelections: (next: Partial<BuildPathSelections>) => void;
   setConfiguratorSummary: (next: ConfiguratorSummary | null) => void;
+  /** Replace wizard selections + optional summary from Mongo (resume after refresh). */
+  hydrateFromMongo: (selections: BuildPathSelections, summary: ConfiguratorSummary | null) => void;
   clearBuildPath: () => void;
 };
 
@@ -148,6 +150,11 @@ export function BuildPathProvider({ children }: { children: ReactNode }) {
     setConfiguratorSummaryState(next);
   }, []);
 
+  const hydrateFromMongo = useCallback((nextSelections: BuildPathSelections, summary: ConfiguratorSummary | null) => {
+    setSelectionsState(coerceSelections(nextSelections));
+    setConfiguratorSummaryState(summary);
+  }, []);
+
   const clearBuildPath = useCallback(() => {
     setSelectionsState(emptySelections());
     setConfiguratorSummaryState(null);
@@ -163,9 +170,10 @@ export function BuildPathProvider({ children }: { children: ReactNode }) {
       configuratorSummary,
       setSelections,
       setConfiguratorSummary,
+      hydrateFromMongo,
       clearBuildPath,
     }),
-    [hydrated, selections, configuratorSummary, setSelections, setConfiguratorSummary, clearBuildPath]
+    [hydrated, selections, configuratorSummary, setSelections, setConfiguratorSummary, hydrateFromMongo, clearBuildPath]
   );
 
   return <BuildPathContext.Provider value={value}>{children}</BuildPathContext.Provider>;

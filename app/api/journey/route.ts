@@ -28,6 +28,8 @@ export async function GET(req: Request) {
     maxNavIndex: doc.maxNavIndex ?? 0,
     contact: doc.contact ?? null,
     buildSelections: doc.buildSelections ?? null,
+    configuratorSummary: doc.configuratorSummary ?? null,
+    eligibilitySnapshot: doc.eligibilitySnapshot ?? null,
     hasEligibility: Boolean(doc.eligibilitySnapshot),
     hasConfigurator: Boolean(doc.configuratorSummary),
   });

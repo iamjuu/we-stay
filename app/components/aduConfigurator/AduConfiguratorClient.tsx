@@ -15,6 +15,7 @@ import { useEligibilitySession } from "@/app/context/eligibility-session";
 import { ensureJourneyUserId, useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-progress";
 import { useReportContact } from "@/app/context/report-contact";
 import { flowIndexFromPath } from "@/lib/wizard-flow";
+import { clearWestayClientStorage } from "@/lib/westay-client-reset";
 import type { FullEligibilityResult } from "@/lib/eligibility-gates";
 import kaiInterior from "@/content/interior/kai interior.png";
 import ainaInterior from "@/content/interior/aina interior.png";
@@ -491,7 +492,10 @@ export function AduConfiguratorClient() {
       if (!r.ok) throw new Error("finish failed");
       setFinishSuccess(true);
       window.open(BOOKING_URL, "_blank", "noopener,noreferrer");
-      setTimeout(() => router.push("/"), 2200);
+      clearWestayClientStorage();
+      window.setTimeout(() => {
+        window.location.assign("/");
+      }, 2200);
     } catch {
       setFinishError(true);
     } finally {

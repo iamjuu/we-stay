@@ -23,6 +23,10 @@ import FlipClockHeadline from "./components/flip-clock-headline/flip-clock-headl
 const flipClockStripHeadingClass =
   "semi-heading max-[709px]:w-full max-[709px]:max-w-[min(100%,26rem)] max-[709px]:text-balance max-[709px]:text-center max-[709px]:text-[clamp(1.25rem,4.8vw,2rem)] max-[709px]:leading-snug";
 
+/** Top-of-hero vignette — always painted on `/` above the photo, below copy (z-stacking). */
+const HERO_TOP_VIGNETTE =
+  "linear-gradient(180deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.72) 22%, rgba(0, 0, 0, 0.38) 48%, rgba(0, 0, 0, 0) 100%)";
+
 export default function Home() {
   const homeownerQuestions = [
     "If their property qualifies",
@@ -66,13 +70,11 @@ export default function Home() {
         id="home-hero"
         className="relative min-h-screen bg-[#0C1B2A]"
       >
-        {/* Gradient overlay — top half of hero */}
+        {/* Hero top fade — full viewport height so the vignette always reads on `/` (with or without modal) */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 h-1/2"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(0, 0, 0, 0.9) -5.47%, rgba(0, 0, 0, 0) 121.87%)",
-          }}
+          className="pointer-events-none absolute inset-x-0 top-0 z-0 min-h-screen w-full"
+          style={{ background: HERO_TOP_VIGNETTE }}
+          aria-hidden
         />
 
         {/* Modal dimmer portals here — above hero BG, below main hero content */}
