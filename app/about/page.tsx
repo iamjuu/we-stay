@@ -15,7 +15,7 @@ const About = () => {
         paragraph="Building an ADU is a major decision. It involves your home, your money, and your future. WeStay was built to make that journey clearer, smarter, and easier to navigate."
       />
 
-      <div className="flex flex-col gap-[80px] lg:gap-0">
+      <div className="flex flex-col gap-[80px] lg:gap-[20px] pt-[120px]">
         <AboutSection
           featured
           titlePrimary="Helping Homeowners Build"
