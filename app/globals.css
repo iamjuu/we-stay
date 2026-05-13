@@ -472,3 +472,17 @@
     }
   }
 }
+
+/*
+ * Homeowners strip title: strictly wider than 1849px (≥1850px).
+ * Plain CSS wins over stacked Tailwind responsive utilities (e.g. md: after min-[1850px]: in output).
+ * Inspect the <h1>, not the padding wrapper, to see font-size in DevTools.
+ */
+@media (min-width: 1850px) {
+  h1.homeowners-title-wide,
+  h1.homeowners-title-wide > span {
+    font-size: 42px;
+    line-height: 1.14;
+    letter-spacing: normal;
+  }
+}
