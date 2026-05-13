@@ -1,16 +1,10 @@
 "use client";
 
-<<<<<<< Updated upstream
-import { OrbitControls, useGLTF, useProgress } from "@react-three/drei";
+import { OrbitControls, useProgress } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Suspense, useEffect } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
-=======
-import { Environment, OrbitControls } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import { Suspense } from "react";
->>>>>>> Stashed changes
 import { ConfiguratorModel, type RoofStyle, type SidingId } from "./ConfiguratorModel";
 
 type ConfiguratorCanvasProps = {
@@ -21,7 +15,6 @@ type ConfiguratorCanvasProps = {
   showDeckSlab: boolean;
   showLanaiMeshes: boolean;
   showShowerPortion: boolean;
-<<<<<<< Updated upstream
   showSolarMeshes: boolean;
   showEvChargingMeshes: boolean;
   showAcMeshes: boolean;
@@ -70,10 +63,6 @@ function LoadProgressReporter({
   return null;
 }
 
-=======
-};
-
->>>>>>> Stashed changes
 export function ConfiguratorCanvas({
   modelUrl,
   roofStyle,
@@ -82,14 +71,11 @@ export function ConfiguratorCanvas({
   showDeckSlab,
   showLanaiMeshes,
   showShowerPortion,
-<<<<<<< Updated upstream
   showSolarMeshes,
   showEvChargingMeshes,
   showAcMeshes,
   onLoadIdle,
   onLoadProgress,
-=======
->>>>>>> Stashed changes
 }: ConfiguratorCanvasProps) {
   return (
     <div className="h-full min-h-0 w-full max-lg:min-h-[260px]">
@@ -109,7 +95,7 @@ export function ConfiguratorCanvas({
         <directionalLight
           castShadow
           color="#fff8f0"
-          intensity={.25}
+          intensity={0.25}
           position={[14, 28, 10]}
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}

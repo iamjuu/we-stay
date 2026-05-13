@@ -10,7 +10,7 @@ import {
   useState,
 } from "react";
 import { partnerImage } from "@/content";
-import { CircleQuestionMark, Info, Search } from "lucide-react";
+import { Info, Search } from "lucide-react";
 import CtaButton from "../ctaButton/ctaButton";
 
 const LENDING_PARTNER_MAILTO = "mailto:richie.westayhome@gmail.com";
@@ -50,6 +50,21 @@ const RefreshIcon = (props: SVGProps<SVGSVGElement>) => (
     <path d="M3 12a9 9 0 0 1 15.5-6.4L21 8" />
     <path d="M21 3v5h-5" />
     <path d="M3 21v-5h5" />
+  </svg>
+);
+
+const WhyJoinQuestionIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg
+    viewBox="0 0 27 47"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden
+    {...props}
+  >
+    <path
+      d="M11.0598 24.3312C12.9397 20.8977 16.5531 18.8721 18.6527 15.8338C20.8745 12.6473 19.6293 6.69418 13.3304 6.69418C9.2043 6.69418 7.17789 9.856 6.32338 12.4744L0 9.78189C1.73344 4.52042 6.44545 0 13.306 0C19.0434 0 22.9741 2.64309 24.9761 5.95312C26.6852 8.79382 27.6861 14.1047 25.0494 18.057C22.1196 22.4292 19.3119 23.7631 17.7982 26.5791C17.1879 27.7154 16.9437 28.4564 16.9437 32.1123H9.88791C9.8635 30.1855 9.57052 27.0484 11.0598 24.3312ZM18.2133 41.993C18.2133 44.7102 16.016 46.9333 13.3304 46.9333C10.6448 46.9333 8.44745 44.7102 8.44745 41.993C8.44745 39.2758 10.6448 37.0526 13.3304 37.0526C16.016 37.0526 18.2133 39.2758 18.2133 41.993Z"
+      fill="currentColor"
+    />
   </svg>
 );
 
@@ -271,8 +286,8 @@ const BuilderNetwork = () => {
                 className="group relative flex flex-1 flex-col overflow-visible rounded-3xl border border-white/10 bg-[#162032] text-center transition-transform duration-300 ease-out hover:scale-[1.02] lg:z-10 lg:-mr-40"
               >
                 <div className="w-full p-[10px]  flex justify-end">
-                  <div className="flex items-center justify-center rounded-lg border border-[#F5F3ED1A]/20 bg-white/10 p-[15px] text-white backdrop-blur-md transition-colors duration-300 group-hover:text-[#4DB6AC]">
-                    <CircleQuestionMark className="transition-colors duration-300" />
+                  <div className="flex size-[80px] shrink-0 items-center justify-center rounded-[20px] border border-[#F5F3ED1A]/20 bg-white/10 text-white opacity-100 backdrop-blur-md transition-colors duration-300 group-hover:border-[#4DB6AC]/40 group-hover:text-[#4DB6AC]">
+                    <WhyJoinQuestionIcon className="h-[46.93333435058594px] w-[26.66666603088379px] shrink-0" />
                   </div>
                 </div>
                 <div className="flex flex-col gap-[30px] ">

@@ -151,7 +151,6 @@ export function ConfiguratorModel({
     const patternVisible = sidingPatternVisibleNames(sidingId);
 
     cloned.traverse((o) => {
-<<<<<<< Updated upstream
       const n = o.name;
       if ((ASPHALT_ROOF_NAMES as readonly string[]).includes(n)) o.visible = showAsphalt;
       if ((METAL_ROOF_NAMES as readonly string[]).includes(n)) o.visible = showMetal;
@@ -159,17 +158,9 @@ export function ConfiguratorModel({
       if ((DECK_SLAB_NAMES as readonly string[]).includes(n)) o.visible = showDeckSlab;
       if ((LANAI_MESH_NAMES as readonly string[]).includes(n)) o.visible = showLanaiMeshes;
       if (n === SHOWER_PORTION_NAME) o.visible = showShowerPortion;
-      if (n === SURF_BOARD_NAME) o.visible = !showShowerPortion;
+      if (isSurfBoardMeshName(n)) o.visible = !showShowerPortion;
       if ((WALL_PATTERN_MESH_NAMES as readonly string[]).includes(n)) {
         o.visible = patternVisible.has(n);
-=======
-      if ((DECK_SLAB_NAMES as readonly string[]).includes(o.name)) o.visible = showDeckSlab;
-      if ((LANAI_MESH_NAMES as readonly string[]).includes(o.name)) o.visible = showLanaiMeshes;
-      if (o.name === SHOWER_PORTION_NAME) o.visible = showShowerPortion;
-      if (isSurfBoardMeshName(o.name)) o.visible = !showShowerPortion;
-      if ((WALL_PATTERN_MESH_NAMES as readonly string[]).includes(o.name)) {
-        o.visible = patternVisible.has(o.name);
->>>>>>> Stashed changes
       }
 
       if ((SOLAR_ASSEMBLY_ROOT_NAMES as readonly string[]).includes(n)) o.visible = showSolarMeshes;

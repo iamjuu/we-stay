@@ -67,40 +67,21 @@ export default function GoalSelection() {
   ];
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
-      <div className="flex flex-col w-full">
-        <div className="">
-          <Navbar />
+    <div className="relative min-h-screen bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
+      <div className="relative w-full">
+        <Navbar />
+
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="h-[500px] w-[500px] rounded-full bg-teal-400/10 blur-[120px]" />
         </div>
 
-        {/* Ambient glow */}
-        <div className="pt-[120px]">
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="w-[500px] h-[400px] rounded-full bg-teal-400/10 blur-[130px]" />
-          </div>
-
-          <div className="w-full max-w-[550px] lg:max-w-3xl mx-auto flex flex-col items-center gap-6 py-10">
-            {/* Heading */}
-            <div className="text-center space-y-1.5">
-              <h1
-                className="font-dm-sans text-center align-middle font-semibold text-white"
-                style={{
-                  fontSize: "36px",
-                  lineHeight: "36px",
-                  letterSpacing: "-0.64px",
-                }}
-              >
+        <div className="relative mx-auto w-full max-w-7xl">
+          <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10 lg:max-w-3xl">
+            <div className="space-y-2 text-center mt-36">
+              <h1 className="steps-heading text-balance !text-white">
                 What Are You Trying to Do?
               </h1>
-              <p
-                className="font-dm-sans text-center align-middle font-normal"
-                style={{
-                  color: "#F5F7FA",
-                  fontSize: "22px",
-                  lineHeight: "28px",
-                  letterSpacing: "0px",
-                }}
-              >
+              <p className="steps-subheading text-sm leading-relaxed !text-[#F5F7FA]">
                 What Are You Hoping to Create?
               </p>
             </div>
@@ -211,21 +192,19 @@ export default function GoalSelection() {
                 }
               }}
             />
-<div className="pt-[90px]  w-full">
-
-
-            <StepFooter
-              currentStep={4}
-              totalSteps={7}
-              variant="step2"
-              onBack={() => router.push(prevWizardPath(flowIdx))}
-              onForward={() => {
-                const n = nextWizardPath(flowIdx);
-                if (n) router.push(n);
-              }}
-              canGoForward={maxNavIndex > flowIdx}
-            />
-</div>
+            <div className="w-full pt-[10px]">
+              <StepFooter
+                currentStep={4}
+                totalSteps={7}
+                variant="step2"
+                onBack={() => router.push(prevWizardPath(flowIdx))}
+                onForward={() => {
+                  const n = nextWizardPath(flowIdx);
+                  if (n) router.push(n);
+                }}
+                canGoForward={maxNavIndex > flowIdx}
+              />
+            </div>
           </div>
         </div>
       </div>

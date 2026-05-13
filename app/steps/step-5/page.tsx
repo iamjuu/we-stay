@@ -75,20 +75,21 @@ export default function StepFiveAduType() {
   }, [buildPathHydrated, selections.aduTypeId]);
 
   return (
-    <div className="relative flex min-h-screen bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
-      <div className="flex w-full flex-col">
+    <div className="relative min-h-screen bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
+      <div className="relative w-full">
         <Navbar />
 
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center pt-[80px]">
-          <div className="h-[400px] w-[500px] rounded-full bg-teal-400/10 blur-[130px]" />
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <div className="h-[500px] w-[500px] rounded-full bg-teal-400/10 blur-[120px]" />
         </div>
 
-        <div className="relative mx-auto flex w-full max-w-[640px] flex-col items-center gap-6 pb-10 pt-[100px] lg:max-w-4xl">
-          <div className="space-y-2 px-1 text-center">
-            <h1 className="font-dm-sans text-2xl font-bold tracking-tight text-white md:text-[26px]">
-              Which Type of ADU Fits Your Property Best?
-            </h1>
-          </div>
+        <div className="relative mx-auto w-full max-w-7xl">
+          <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10 lg:max-w-4xl">
+            <div className="space-y-2 px-1 text-center  w-full">
+              <h1 className=" text-[18px] md:text-[26px] mt-14 !text-white">
+                Which Type of ADU Fits Your Property Best?
+              </h1>
+            </div>
 
           <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
             {aduTypes
@@ -143,7 +144,7 @@ export default function StepFiveAduType() {
                   key={opt.id}
                   type="button"
                   onClick={() => setSelected(opt.id)}
-                  className={`relative flex w-full flex-col rounded-2xl border px-5 py-4 text-left transition-all duration-200 ${
+                  className={`relative flex w-full flex-col rounded-2xl border px-5 py-2 text-left transition-all duration-200 ${
                     isSelected
                       ? "border-[#42B0A8] bg-white shadow-[0_0_0_1px_rgba(66,176,168,0.35)]"
                       : "border-white/12 bg-[#FFFFFF33] hover:border-white/22 hover:bg-[#FFFFFF33]"
@@ -206,7 +207,7 @@ export default function StepFiveAduType() {
             .
           </p>
 
-          <div className="w-full pt-4 ">
+          <div className="w-full pt-0 ">
             <StepFooter
               currentStep={6}
               totalSteps={7}
@@ -218,6 +219,7 @@ export default function StepFiveAduType() {
               }}
               canGoForward={maxNavIndex > flowIdx}
             />
+          </div>
           </div>
         </div>
       </div>

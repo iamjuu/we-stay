@@ -6,15 +6,9 @@ import { type SidingId } from "@/app/components/aduConfigurator/ConfiguratorMode
 import Navbar from "@/app/components/navbar/navbar";
 import { Home, Layers, Maximize2, User } from "lucide-react";
 import Image, { type StaticImageData } from "next/image";
-import Link from "next/link";
-<<<<<<< Updated upstream
 import { usePathname, useRouter } from "next/navigation";
-import { type ReactNode, useCallback, useLayoutEffect, useMemo, useState } from "react";
-=======
-import { useRouter } from "next/navigation";
 import { useGLTF } from "@react-three/drei";
-import { type ReactNode, useEffect, useMemo, useState } from "react";
->>>>>>> Stashed changes
+import { type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { useBuildPath } from "@/app/context/build-path-session";
 import { useEligibilitySession } from "@/app/context/eligibility-session";
 import { ensureJourneyUserId, useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-progress";
@@ -363,7 +357,6 @@ export function AduConfiguratorClient() {
   const pathname = usePathname();
   const flowIdx = flowIndexFromPath(pathname) ?? 5;
   const { setConfiguratorSummary } = useBuildPath();
-<<<<<<< Updated upstream
   const { userId, ensureActiveJourneyId } = useJourneyProgress();
   useWizardRouteGuard(flowIdx);
   const { snapshot } = useEligibilitySession();
@@ -377,8 +370,6 @@ export function AduConfiguratorClient() {
   const handleLoadIdle = useCallback(() => setViewportReady(true), []);
   const handleLoadProgress = useCallback((p: number) => setLoadProgress(p), []);
 
-=======
->>>>>>> Stashed changes
   const [planId, setPlanId] = useState<PlanId>("two-office");
 
   /** Preload other plan GLBs in idle time so plan switches stay snappy (does not block first paint). */
@@ -414,13 +405,10 @@ export function AduConfiguratorClient() {
   });
   const [fundingId, setFundingId] = useState<FundingId>("cash");
 
-  useLayoutEffect(() => {
-    if (!isCladdingId(claddingId)) {
-      setCladdingId(DEFAULT_CLADDING_ID);
-    }
-  }, [claddingId]);
-
-  const cladding = CLADDING.find((c) => c.id === claddingId) ?? CLADDING[0];
+  const resolvedCladdingId: CladdingId = isCladdingId(claddingId)
+    ? claddingId
+    : DEFAULT_CLADDING_ID;
+  const cladding = CLADDING.find((c) => c.id === resolvedCladdingId) ?? CLADDING[0];
   const interior = INTERIOR.find((i) => i.id === interiorId)!;
   const interiorPreview = INTERIOR_PREVIEW[interiorId];
   const selectedPlan = PLANS.find((p) => p.id === planId)!;
@@ -791,10 +779,7 @@ export function AduConfiguratorClient() {
       </aside>
 
       <main className="relative order-1 h-[52svh] min-h-[300px] w-full shrink-0 bg-[#eaecea] lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch">
-<<<<<<< Updated upstream
         {!viewportReady ? <ConfiguratorModelSkeleton loadProgress={loadProgress} /> : null}
-=======
->>>>>>> Stashed changes
         <ConfiguratorCanvas
           modelUrl={PLAN_MODEL_URL[planId]}
           roofStyle={roofId}
@@ -803,14 +788,11 @@ export function AduConfiguratorClient() {
           showDeckSlab={features.deck}
           showLanaiMeshes={features.lanai}
           showShowerPortion={features.shower}
-<<<<<<< Updated upstream
           showSolarMeshes={upgrades.solar}
           showEvChargingMeshes={upgrades.evCharging}
           showAcMeshes={upgrades.ac}
           onLoadIdle={handleLoadIdle}
           onLoadProgress={handleLoadProgress}
-=======
->>>>>>> Stashed changes
         />
         <div
           aria-hidden
