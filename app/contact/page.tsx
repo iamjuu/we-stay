@@ -29,18 +29,18 @@ export default function ContactPage() {
 
                 {/* Contact points */}
                 <ul className="flex flex-col gap-[30px]">
-                  <li className="flex items-center gap-[10px] font-dm-sans text-[clamp(13px,0.94vw,16px)] font-normal leading-[25px] text-[#4DB6AC]">
-                    <MapPin className="size-[19px] shrink-0 opacity-95" aria-hidden strokeWidth={2} />
+                  <li className="flex items-center gap-[10px]  font-[400] font-dm-sans text-[clamp(13px,0.94vw,20px)]  leading-[25px] text-[#4DB6AC]">
+                    <MapPin className="size-[20px]  opacity-95" aria-hidden strokeWidth={2} />
                     <span>loremipsum, address</span>
                   </li>
 
-                  <li className="flex items-center gap-[10px] font-dm-sans text-[clamp(13px,0.94vw,16px)] font-normal leading-[25px] text-[#4DB6AC]">
-                    <Mail className="size-[19px] shrink-0 opacity-95" aria-hidden strokeWidth={2} />
+                  <li className="flex items-center gap-[10px] font-[400] font-dm-sans text-[clamp(13px,0.94vw,20px)]  leading-[25px] text-[#4DB6AC]">
+                    <Mail className="size-[20px]  opacity-95" aria-hidden strokeWidth={2} />
                     <span>westay@example.com</span>
                   </li>
 
-                  <li className="flex items-center gap-[10px] font-dm-sans text-[clamp(13px,0.94vw,16px)] font-normal leading-[25px] text-[#4DB6AC]">
-                    <Phone className="size-[19px] shrink-0 opacity-95" aria-hidden strokeWidth={2} />
+                  <li className="flex items-center gap-[10px] font-[400] font-dm-sans text-[clamp(13px,0.94vw,20px)]  leading-[25px] text-[#4DB6AC]">
+                    <Phone className="size-[20px] opacity-95" aria-hidden strokeWidth={2} />
                     <span>+000 000 0000</span>
                   </li>
                 </ul>
