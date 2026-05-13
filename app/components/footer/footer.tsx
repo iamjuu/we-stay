@@ -51,10 +51,9 @@ export default function Footer() {
 
             {/* Quick Links */}
             <div>
-              <h4 className="font-['DM_Sans'] font-bold leading-normal text-white mb-6 
-               text-[4px]  xl:text-[32px]">
-                Quick Links
-              </h4>              <ul className="flex flex-col gap-3">
+            <h4 className="font-dm-sans mb-6 font-bold leading-normal text-white text-[18px] sm:text-[20px] md:text-[22px] lg:text-[26px] xl:text-[32px]">
+  Quick Links
+</h4>             <ul className="flex flex-col gap-3">
                 {FOOTER_QUICK_LINKS.map((item) => (
                   <li key={item}>
                     <Link
@@ -70,8 +69,8 @@ export default function Footer() {
 
             {/* Socials */}
             <div>
-            <h4 className="font-['DM_Sans'] font-bold leading-normal text-white mb-6 
-               text-[4px]  xl:text-[32px]">Socials</h4>
+            <h4 className="font-dm-sans mb-6 font-bold leading-normal text-white text-[18px] sm:text-[20px] md:text-[22px] lg:text-[26px] xl:text-[32px]">
+                Socials</h4>
 
               <div className="flex gap-3">
                 {FOOTER_SOCIALS.map((social) => (

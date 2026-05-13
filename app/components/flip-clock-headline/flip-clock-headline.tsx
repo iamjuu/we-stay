@@ -187,7 +187,7 @@ export default function FlipClockHeadline({
           style={style}
           aria-hidden
         >
-          <span className="wrap-anywhere">{visible}</span>
+          <span className="wrap-anywhere italic">{visible}</span>
           <span className={`typewriter-caret ${caretClassName}`} aria-hidden />
         </p>
         <span className="typewriter-sr-only" aria-live="polite">

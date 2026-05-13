@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Sectioncomponent from '../components/section-component/section-component';
-import { About2, About3, HeroImage } from '@/content';
+import { About2, About3, HeroImage,AboutSectionImage } from '@/content';
 import AboutSection from '../components/about/section';
 import Eligibility from '../components/eligibility/eligibility';
 import Footer from '../components/footer/footer';
@@ -9,7 +9,7 @@ const About = () => {
   return (
     <div>
       <Sectioncomponent
-        bgImage={HeroImage}
+        bgImage={AboutSectionImage}
         heading="Built by People Who"
         headingsecondary="Understand What's at Stake"
         paragraph="Building an ADU is a major decision. It involves your home, your money, and your future. WeStay was built to make that journey clearer, smarter, and easier to navigate."

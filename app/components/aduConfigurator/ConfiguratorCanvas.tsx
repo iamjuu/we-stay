@@ -2,7 +2,7 @@
 
 import { OrbitControls, useProgress } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { ConfiguratorModel, type RoofStyle, type SidingId } from "./ConfiguratorModel";
@@ -24,6 +24,45 @@ type ConfiguratorCanvasProps = {
   onLoadProgress?: (progress: number) => void;
 };
 
+function GradientBackground() {
+  const uniforms = useRef({
+    uColorTop: { value: new THREE.Color("#f2f0ec") },
+    uColorBottom: { value: new THREE.Color("#ce8d2b ") },
+  });
+
+  const vertexShader = /* glsl */ `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = vec4(position.xy, 1.0, 1.0);
+    }
+  `;
+
+  const fragmentShader = /* glsl */ `
+    uniform vec3 uColorTop;
+    uniform vec3 uColorBottom;
+    varying vec2 vUv;
+    void main() {
+      // mix from bottom to top based on UV coordinates
+      vec3 blended = mix(uColorBottom, uColorTop, vUv.y);
+      gl_FragColor = vec4(blended, 1.0);
+    }
+  `;
+
+  return (
+    <mesh frustumCulled={false} renderOrder={-100}>
+      <planeGeometry args={[2, 2]} />
+      <shaderMaterial
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={uniforms.current}
+        depthWrite={false}
+        // depthTest={false} is good here to keep it in the background
+        depthTest={false}
+      />
+    </mesh>
+  );
+}
 function SceneEnvironment() {
   const { scene, gl } = useThree();
   useEffect(() => {
@@ -89,7 +128,7 @@ export function ConfiguratorCanvas({
           toneMappingExposure: 1,
         }}
       >
-        <color attach="background" args={["#eaecea"]} />
+        <GradientBackground />
         <SceneEnvironment />
         <ambientLight intensity={0.22} />
         <directionalLight

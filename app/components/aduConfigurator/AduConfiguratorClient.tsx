@@ -3,8 +3,9 @@
 import { ConfiguratorCanvas } from "@/app/components/aduConfigurator/ConfiguratorCanvas";
 import { type PlanId, PLAN_MODEL_URL } from "@/app/components/aduConfigurator/planModelUrls";
 import { type SidingId } from "@/app/components/aduConfigurator/ConfiguratorModel";
+import CtaButton from "@/app/components/ctaButton/ctaButton";
 import Navbar from "@/app/components/navbar/navbar";
-import { Home, Layers, Maximize2, User } from "lucide-react";
+import { ArrowRight, Home, Layers, Maximize2, User } from "lucide-react";
 import Image, { type StaticImageData } from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useGLTF } from "@react-three/drei";
@@ -166,7 +167,7 @@ const FUNDING_OPTS: {
     id: "cash",
     title: "Cash",
     sub: "Funding path",
-    snapshotBuildPath: "Straightforward build path with phased advisor check-ins.",
+    snapshotBuildPath: "Straightforward build path with phased co-ordinator check-ins.",
   },
   {
     id: "financing",
@@ -178,7 +179,7 @@ const FUNDING_OPTS: {
     id: "exploring",
     title: "Exploring Options",
     sub: "Funding path",
-    snapshotBuildPath: "Explore options with advisor support.",
+    snapshotBuildPath: "Explore options with co-ordinator support.",
   },
 ];
 
@@ -189,6 +190,14 @@ const INTERIOR: {
   label: string;
   description: string;
 }[] = [
+
+  {
+    id: "lani",
+    hex: "#C7AF8D",
+    swatchBg: "#C7AF8D",
+    label: "Lani",
+    description: "Light and calm finish for open, airy interiors.",
+  },
   {
     id: "kai",
     hex: "#8B6B52",
@@ -204,16 +213,9 @@ const INTERIOR: {
     description: "A grounded, rich interior tone.",
   },
   {
-    id: "lani",
-    hex: "#C7AF8D",
-    swatchBg: "#C7AF8D",
-    label: "Lani",
-    description: "Light and calm finish for open, airy interiors.",
-  },
-  {
     id: "anu",
-    hex: "#907D6B",
-    swatchBg: "#907D6B",
+    hex: "#8C92AC",
+    swatchBg: "#8C92AC",
     label: "Anu",
     description: "Balanced earthy finish with soft depth.",
   },
@@ -504,7 +506,7 @@ export function AduConfiguratorClient() {
     >
       <Navbar />
 
-      <div className="flex flex-1 flex-col pt-16 lg:flex-row lg:pt-0">
+      <div className="flex   flex-1 flex-col pt-16 lg:flex-row lg:pt-0">
 
       <aside
         className="order-2 flex w-full flex-1 flex-col gap-5 lg:order-2 lg:h-screen lg:w-[min(472px,40vw)] lg:shrink-0 lg:overflow-y-auto lg:border-l lg:border-white/10 lg:pb-12"
@@ -751,18 +753,16 @@ export function AduConfiguratorClient() {
                 label="Customization Summary"
                 value={`${addonCount} site add-ons · ${upgradeCount} upgrades`}
               />
-              <SnapshotRow label="Estimated Starting Range" value="$3,400 – $3,600" />
+              <SnapshotRow label="Estimated Rental Income" value="$3,400 – $3,600" />
             </div>
 
-            <button
-              type="button"
+            <CtaButton
+              buttonName={finishSending ? "Sending…" : "Finish & Book Discovery Call"}
+              icon={<ArrowRight className="size-[18px] shrink-0" aria-hidden strokeWidth={2.5} />}
+              className="mt-6 w-full self-stretch! disabled:pointer-events-none disabled:opacity-60"
               onClick={() => void handleFinish()}
               disabled={finishSending || finishSuccess}
-              className="font-dm-sans mt-6 w-full rounded-[14px] bg-[#ff6b5c] py-4 text-[15px] font-semibold text-white transition-colors hover:bg-[#ef5d4f] enabled:active:bg-[#e55548] disabled:opacity-60"
-              style={{ fontVariationSettings: "'opsz' 14" }}
-            >
-              {finishSending ? "Sending…" : "Finish & Book Discovery Call"}
-            </button>
+            />
             {finishSuccess ? (
               <p className="font-dm-sans mt-4 text-center text-[13px] leading-relaxed text-[#2a6b5f]">
                 Thank you — we received your configuration. We&apos;ll verify the details and get back to you. Taking you
@@ -778,7 +778,7 @@ export function AduConfiguratorClient() {
         </div>
       </aside>
 
-      <main className="relative order-1 h-[52svh] min-h-[300px] w-full shrink-0 bg-[#eaecea] lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch">
+      <main className="relative order-1 h-[52svh] min-h-[300px] w-full shrink-0  lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch">
         {!viewportReady ? <ConfiguratorModelSkeleton loadProgress={loadProgress} /> : null}
         <ConfiguratorCanvas
           modelUrl={PLAN_MODEL_URL[planId]}
@@ -796,7 +796,7 @@ export function AduConfiguratorClient() {
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-1 h-24 bg-linear-to-t from-[#eaecea] via-[#eaecea]/75 to-transparent"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-1 h-24  to-transparent"
         />
       </main>
       </div>

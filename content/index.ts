@@ -24,8 +24,9 @@ import Avatar4 from "./images/avatar/avatar-4.svg";
 import FooterLogo from "./images/footer1.svg"
 
 import Adu1000SqFt from "./assets/banner-card-user/26982776f616d0c9c081899531308d77b5fb085d (1).png"
-import About2 from "./images/about/richie-story.png"
+import About2 from "./images/about/about-setion.svg"
 import About3 from "./images/about/adu-evening-duo.png"
+import AboutSectionImage  from "./images/about/about-setion.svg"
 
 import ContainerImage1 from "./images/stackimage.svg";
 
@@ -35,7 +36,9 @@ import InstagramIcon from "./images/footer/6239ba03ad9611637a539ec3_Instagram.sv
 import LinkedInIcon from "./images/footer/6239ba027547cf7eb7430709_Linkedin.svg.svg";
 
 import ContactImage from "./images/about/contact-image.svg"
-export {
+
+
+export {AboutSectionImage,
   ContactImage,
   FacebookIcon,
   TwitterIcon,
