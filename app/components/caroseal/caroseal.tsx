@@ -186,7 +186,7 @@ export default function PropertyCarousel() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-6">
           <div>
             <h1 className="carousel-heading text-gray-900">Choose What Fits</h1>
-            <p className="carousel-subheading !text-[#93928E]">Your Property</p>
+            <p className="carousel-heading !text-[#93928E]">Your Property</p>
           </div>
           <div className="shrink-0 w-full sm:w-auto">
             <CtaButton

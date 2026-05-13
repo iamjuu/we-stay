@@ -27,9 +27,9 @@ export default function Eligibility() {
 
         {/* 2. Added 'z-20' to ensure content stays above the image and overlay */}
         <div className="relative z-20 flex min-h-[400px] md:min-h-[520px] flex-col items-center justify-center gap-8 px-6 py-16 text-center sm:px-10 sm:py-20">
-          <div className="flex max-w-2xl flex-col gap-5">
-            <h2 className="semi-heading font-dm-sans text-balance text-white">
-              Your Property May Hold More Potential Than You Think
+          <div className="flex max-w-4xl flex-col gap-5">
+            <h2 className="semi-heading font-dm-sans text-white">
+              Your Property May Hold More <br />Potential Than You Think
             </h2>
             <p className="font-dm-sans text-[clamp(17px,2vw,22px)] font-normal leading-snug text-white/95">
               Start with a quick check and see what&apos;s possible.
