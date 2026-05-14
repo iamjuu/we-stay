@@ -120,10 +120,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className="absolute  border-[10px] border border-[#0C1B2A] rounded-full bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10">
+        {/* <div className="absolute  border-[10px] border border-[#0C1B2A] rounded-full bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10">
           <div className="bg-[#F3FFFE] rounded-full border-[5px] sm:border-[7px] border-white flex flex-row items-center gap-2 sm:gap-3 px-3 sm:px-4 py-[10px] sm:py-[15px]">
 
-            {/* Avatar stack */}
+           
             <div className="flex flex-row items-center -space-x-2">
               {image.map((item, index) => (
                 <Image
@@ -135,7 +135,7 @@ export default function Home() {
               ))}
             </div>
 
-            {/* Stars + text — vertical stack */}
+          
             <div className="flex flex-col justify-center gap-2">
               <div className="flex flex-row items-center gap-[2px]">
                 {[...Array(5)].map((_, i) => (
@@ -151,7 +151,7 @@ export default function Home() {
             </div>
 
           </div>
-        </div>
+        </div> */}
         </div>
       </div>
 
