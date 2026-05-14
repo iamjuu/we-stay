@@ -96,7 +96,7 @@ export default function Home() {
                     fontVariationSettings: "'opsz' 14",
                   }}
                 >
-                  From one of the World&apos;s The coordination platform for ADU homeowners
+                   The coordination platform for ADU homeowners
                 </p>
                 {/* Figma underline: 275×1.49px gradient (same stops as border-image-source) */}
                 <div
