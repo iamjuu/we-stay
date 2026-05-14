@@ -118,18 +118,18 @@ function GateCard({ gate }: { gate: EligibilityGate }) {
     );
 
   const shell = isPass
-    ? "bg-[#FFFFFF33] border-[#2E7D32]/60"
+    ? "bg-white/95 border-slate-200"
     : isFail
-      ? "bg-[#FFFFFF33] border-red-500/50"
+      ? "bg-red-50/95 border-red-200"
       : isFlag
-        ? "bg-[#FFFFFF33] border-orange-500/50"
-        : "bg-[#FFFFFF33] border-white/15";
+        ? "bg-amber-50/95 border-amber-200"
+        : "bg-white/90 border-slate-200";
 
   const titleClass =
-    isPass ? "text-white" : isFail ? "text-red-100" : isFlag ? "text-orange-100" : "text-white/60";
+    isPass ? "text-slate-900" : isFail ? "text-red-900" : isFlag ? "text-amber-950" : "text-slate-600";
 
   const detailClass =
-    isPass ? "text-slate-400" : isFail ? "text-red-200/90" : isFlag ? "text-orange-200/90" : "text-white/45";
+    isPass ? "text-slate-600" : isFail ? "text-red-800/90" : isFlag ? "text-amber-900/90" : "text-slate-500";
 
   return (
     <div
@@ -140,7 +140,7 @@ function GateCard({ gate }: { gate: EligibilityGate }) {
         <span className={`text-[13px] font-semibold leading-tight ${titleClass}`}>{gate.name}</span>
         <span className={`mt-1 text-[11px] leading-tight ${detailClass}`}>{gateDetail(gate)}</span>
         {isPending && (
-          <span className="mt-0.5 text-[10px] uppercase tracking-wide text-white/35">Pending data</span>
+          <span className="mt-0.5 text-[10px] uppercase tracking-wide text-slate-500">Pending data</span>
         )}
       </div>
     </div>
@@ -187,7 +187,7 @@ function CircleProgress({
           cy={radius}
           r={normalizedRadius}
           fill="none"
-          stroke="rgba(255,255,255,0.08)"
+          stroke="rgba(15,23,42,0.12)"
           strokeWidth={stroke}
         />
         <circle
@@ -224,8 +224,8 @@ function CircleProgress({
         }}
       />
       <div className="absolute flex flex-col items-center justify-center">
-        <span className="text-3xl font-bold leading-none text-white">{score}%</span>
-        <span className="mt-1 text-xs tracking-wide text-slate-400">Your Score</span>
+        <span className="text-3xl font-bold leading-none text-slate-900">{score}%</span>
+        <span className="mt-1 text-xs tracking-wide text-slate-500">Your Score</span>
       </div>
     </div>
   );
@@ -257,7 +257,7 @@ export default function PropertyScorePage() {
 
   if (!hydrated) {
     return (
-      <div className="flex h-dvh max-h-dvh items-center justify-center overflow-hidden bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534]">
+      <div className="flex h-dvh max-h-dvh items-center justify-center overflow-hidden bg-transparent">
         <div className="h-10 w-10 animate-spin rounded-full border-2 border-teal-400 border-t-transparent" />
       </div>
     );
@@ -271,7 +271,7 @@ export default function PropertyScorePage() {
   const summary = summaryCopy(addressLine, result);
 
   return (
-    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534]">
+    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-transparent">
       <Navbar />
 
       <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center">
@@ -282,21 +282,21 @@ export default function PropertyScorePage() {
       <div className="relative z-10 flex min-h-0 flex-1 flex-col">
         <div className="scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain px-4 pb-2 pt-24 sm:px-6 sm:pt-32">
           <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-6 py-6 sm:py-8">
-            <h1 className="text-center font-dm-sans text-2xl font-bold tracking-tight text-white">
+            <h1 className="text-center font-dm-sans text-2xl font-bold tracking-tight text-slate-900">
               Your Property Potential
             </h1>
 
-            <p className="max-w-3xl text-balance px-2 text-center font-dm-sans text-sm leading-snug text-white/70 sm:text-base md:text-lg">
+            <p className="max-w-3xl text-balance px-2 text-center font-dm-sans text-sm leading-snug text-slate-600 sm:text-base md:text-lg">
               {addressLine}
             </p>
 
             <div className="flex w-full flex-col items-center gap-5">
               <CircleProgress score={score} gradientId={gradientId} status={result.status} />
               <StatusBadge result={result} />
-              <p className="max-w-xl text-center font-dm-sans text-sm leading-relaxed text-slate-300">{summary}</p>
+              <p className="max-w-xl text-center font-dm-sans text-sm leading-relaxed text-slate-600">{summary}</p>
             </div>
 
-            <div className="my-2 h-px w-full max-w-4xl bg-white/10" />
+            <div className="my-2 h-px w-full max-w-4xl bg-slate-300/70" />
 
             <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
               {result.gates.map((gate) => (
@@ -305,17 +305,17 @@ export default function PropertyScorePage() {
             </div>
 
             {result.aduSize && (
-              <div className="w-full max-w-4xl rounded-xl border border-white/15 bg-[#FFFFFF33] px-5 py-4">
+              <div className="w-full max-w-4xl rounded-xl border border-slate-200 bg-white/95 px-5 py-4 shadow-sm">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-teal-400/20">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-teal-400/15">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
                       <path d="M3 9.5L12 3L21 9.5V20C21 20.5523 20.5523 21 20 21H15V15H9V21H4C3.44772 21 3 20.5523 3 20V9.5Z" stroke="#4DB6AC" strokeWidth="1.8" strokeLinejoin="round"/>
                       <path d="M9 21V15H15V21" stroke="#4DB6AC" strokeWidth="1.8" strokeLinejoin="round"/>
                     </svg>
                   </div>
                   <div className="flex flex-col gap-0.5">
-                    <span className="font-dm-sans text-sm font-bold text-white">Maximum ADU Size</span>
-                    <span className="font-dm-sans text-sm text-white">
+                    <span className="font-dm-sans text-sm font-bold text-slate-900">Maximum ADU Size</span>
+                    <span className="font-dm-sans text-sm text-slate-700">
                       <span className="font-semibold text-[#4DB6AC]">{result.aduSize.maxAduSizeSqFt.toLocaleString()} sq ft</span>
                       {' '}based on lot size
                     </span>
@@ -328,7 +328,7 @@ export default function PropertyScorePage() {
                       <path d="M7 4.5V7.5" stroke="#f97316" strokeWidth="1.4" strokeLinecap="round"/>
                       <circle cx="7" cy="9.5" r="0.7" fill="#f97316"/>
                     </svg>
-                    <span className="font-dm-sans text-xs text-white">{result.aduSize.sizeNote}</span>
+                    <span className="font-dm-sans text-xs text-slate-800">{result.aduSize.sizeNote}</span>
                   </div>
                 ) : null}
               </div>
@@ -345,7 +345,7 @@ export default function PropertyScorePage() {
           </div>
         </div>
 
-        <div className="shrink-0 border-t border-white/10 bg-[#162534]/95 px-4 pt-3 backdrop-blur-md pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <div className="shrink-0 border-t border-slate-200/90 bg-[#f2f0ec]/95 px-4 pt-3 backdrop-blur-md pb-[max(1rem,env(safe-area-inset-bottom))]">
           <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-3">
             <button
               type="button"

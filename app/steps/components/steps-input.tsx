@@ -3,7 +3,7 @@
 import { forwardRef, type InputHTMLAttributes } from "react";
 
 const inputClassName =
-  "w-full px-4 py-4 rounded-xl bg-white/20 backdrop-blur-sm text-white placeholder-slate-400 text-sm border border-white/10 outline-none focus:border-teal-400/60 focus:bg-white/15 transition-all duration-200";
+  "w-full px-4 py-4 rounded-xl bg-white text-slate-900 placeholder-slate-400 text-sm border border-slate-200 outline-none focus:border-[#42B0A8] focus:ring-2 focus:ring-[#42B0A8]/20 transition-all duration-200";
 
 type StepsInputProps = InputHTMLAttributes<HTMLInputElement>;
 

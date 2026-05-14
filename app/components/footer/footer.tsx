@@ -2,12 +2,17 @@ import { FacebookIcon, FooterLogo, InstagramIcon, LinkedInIcon, TwitterIcon } fr
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 
-const FOOTER_QUICK_LINKS = [
-  "About us",
-  "Contact us",
-  "Blog",
-  "FAQ",
-] as const;
+type FooterQuickLink = {
+  label: string;
+  href: string;
+};
+
+const FOOTER_QUICK_LINKS: FooterQuickLink[] = [
+  { label: "About us", href: "#" },
+  { label: "Contact us", href: "/contact" },
+  { label: "Blog", href: "#" },
+  { label: "FAQ", href: "#" },
+];
 
 type FooterSocialLink = {
   label: string;
@@ -55,12 +60,12 @@ export default function Footer() {
   Quick Links
 </h4>             <ul className="flex flex-col gap-3">
                 {FOOTER_QUICK_LINKS.map((item) => (
-                  <li key={item}>
+                  <li key={item.label}>
                     <Link
-                      href="#"
+                      href={item.href}
                       className="quick-link text-[#b0bec5] text-sm hover:text-white transition-colors duration-200"
                     >
-                      {item}
+                      {item.label}
                     </Link>
                   </li>
                 ))}

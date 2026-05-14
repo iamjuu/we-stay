@@ -89,7 +89,7 @@ export default function ReportForm() {
   };
 
   return (
-    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534]">
+    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-transparent">
       <Navbar />
 
       <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center">
@@ -99,11 +99,11 @@ export default function ReportForm() {
       <div className="relative z-10 flex min-h-0 flex-1 flex-col">
         <div className="scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain px-4 pb-2 pt-24 sm:px-6 sm:pt-32">
           <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-6 py-6 sm:py-8">
-            <h1 className="text-center font-dm-sans text-2xl font-bold tracking-tight text-white">
+            <h1 className="steps-heading text-center text-balance whitespace-nowrap !text-[#1a2a3a]">
               Your Report Is Being Prepared
             </h1>
 
-            <p className="max-w-3xl text-balance px-2 text-center font-dm-sans text-sm leading-snug text-white/70 sm:text-base md:text-lg">
+            <p className="max-w-3xl text-balance px-2 text-center font-dm-sans text-sm leading-snug text-slate-600 sm:text-base md:text-lg">
               Enter your details to unlock your ADU eligibility score and next steps
             </p>
 
@@ -143,12 +143,12 @@ export default function ReportForm() {
             </div>
 
             {error ? (
-              <p className="w-full max-w-xl text-center font-dm-sans text-sm text-red-300">{error}</p>
+              <p className="w-full max-w-xl text-center font-dm-sans text-sm text-red-600">{error}</p>
             ) : null}
           </div>
         </div>
 
-        <div className="shrink-0 border-t border-white/10 bg-[#162534]/95 px-4 pt-3 backdrop-blur-md pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <div className="shrink-0 border-t border-slate-200/90 bg-[#f2f0ec]/95 px-4 pt-3 backdrop-blur-md pb-[max(1rem,env(safe-area-inset-bottom))]">
           <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-3">
             <button
               type="button"

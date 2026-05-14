@@ -134,7 +134,7 @@ export function StepFooter({
             </div>
           </NavCircleWrap>
 
-          <p className="pointer-events-none absolute left-[74%] top-1/2 -translate-x-1/2 -translate-y-[15px] whitespace-nowrap text-xs tracking-wide text-slate-300">
+          <p className="pointer-events-none absolute left-[74%] top-1/2 -translate-x-1/2 -translate-y-[15px] whitespace-nowrap text-xs tracking-wide text-slate-600">
             Step {currentStep} of {totalSteps}
           </p>
         </div>
@@ -183,7 +183,7 @@ export function StepFooter({
           </NavCircleWrap>
 
           <p
-            className="pointer-events-none absolute top-1/2 -translate-x-1/2 translate-y-[-15px] whitespace-nowrap text-xs tracking-wide text-slate-300"
+            className="pointer-events-none absolute top-1/2 -translate-x-1/2 translate-y-[-15px] whitespace-nowrap text-xs tracking-wide text-slate-600"
             style={{ left: "calc(75% - 18px)" }}
           >
             Step {currentStep} of {totalSteps}
@@ -233,7 +233,7 @@ export function StepFooter({
           </NavCircleWrap>
 
           <p
-            className="pointer-events-none absolute top-1/2 -translate-x-1/2 translate-y-[-15px] whitespace-nowrap text-xs tracking-wide text-slate-300"
+            className="pointer-events-none absolute top-1/2 -translate-x-1/2 translate-y-[-15px] whitespace-nowrap text-xs tracking-wide text-slate-600"
             style={{ left: "calc(75% - 18px)" }}
           >
             Step {currentStep} of {totalSteps}
@@ -263,10 +263,10 @@ export function StepFooter({
         </NavCircleWrap>
 
         <div className="flex min-w-0 flex-1 flex-col items-center gap-1.5 px-3">
-          <p className="whitespace-nowrap text-xs tracking-wide text-slate-400">
+          <p className="whitespace-nowrap text-xs tracking-wide text-slate-600">
             Step {currentStep} of {totalSteps}
           </p>
-          <div className="h-px w-full bg-white/10">
+          <div className="h-px w-full bg-slate-300/80">
             <div
               className="h-full bg-teal-400/50 transition-all duration-500"
               style={{ width: isDone ? "100%" : "0%" }}

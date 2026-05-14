@@ -85,7 +85,7 @@ export default function GoalSelection() {
   };
 
   return (
-    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534]">
+    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-transparent">
       <Navbar />
 
       <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center">
@@ -95,11 +95,11 @@ export default function GoalSelection() {
       <div className="relative z-10 flex min-h-0 flex-1 flex-col">
         <div className="scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain px-4 pb-2 pt-24 sm:px-6 sm:pt-32">
           <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-6 py-6 sm:py-8">
-            <h1 className="text-center font-dm-sans text-2xl font-bold tracking-tight text-white">
+            <h1 className="steps-heading text-center text-balance !text-[#1a2a3a]">
               What Are You Trying to Do?
             </h1>
 
-            <p className="max-w-3xl text-balance px-2 text-center font-dm-sans text-sm leading-snug text-white/70 sm:text-base md:text-lg">
+            <p className="max-w-3xl text-balance px-2 text-center font-dm-sans text-sm leading-snug text-slate-600 sm:text-base md:text-lg">
               What Are You Hoping to Create?
             </p>
 
@@ -128,7 +128,7 @@ export default function GoalSelection() {
                           ${
                             isSelected
                               ? "border-2 border-[#4DB6AC] bg-white shadow-[0_0_0_1px_rgba(45,212,191,0.22)]"
-                              : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/8"
+                              : "border border-slate-200 bg-white/90 hover:border-slate-300 hover:bg-white"
                           }
                         `}
                       >
@@ -136,7 +136,7 @@ export default function GoalSelection() {
                           <div
                             className={`
                               flex h-8 w-8 shrink-0 items-center justify-center rounded-lg
-                              ${isSelected ? "bg-[#F5F7FA] text-[#4DB6AC]" : "bg-white/10 text-slate-400"}
+                              ${isSelected ? "bg-[#F5F7FA] text-[#4DB6AC]" : "border border-slate-200 bg-white text-slate-600"}
                               transition-colors duration-200
                             `}
                             style={{ width: 40, height: 40, borderRadius: "9999px" }}
@@ -156,7 +156,7 @@ export default function GoalSelection() {
                           </div>
                           <span
                             className={`step-four-content text-sm font-medium leading-tight whitespace-nowrap ${
-                              isSelected ? "!text-black" : "text-slate-300"
+                              isSelected ? "!text-black" : "text-slate-700"
                             }`}
                           >
                             {opt.label}
@@ -190,7 +190,7 @@ export default function GoalSelection() {
           </div>
         </div>
 
-        <div className="shrink-0 border-t border-white/10 bg-[#162534]/95 px-4 pt-3 backdrop-blur-md pb-[max(1rem,env(safe-area-inset-bottom))]">
+        <div className="shrink-0 border-t border-slate-200/90 bg-[#f2f0ec]/95 px-4 pt-3 backdrop-blur-md pb-[max(1rem,env(safe-area-inset-bottom))]">
           <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-3">
             <button
               type="button"

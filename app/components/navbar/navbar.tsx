@@ -22,7 +22,7 @@ const Navbar = () => {
   return (
     <nav className="fixed inset-x-0 top-2 z-[100] w-full px-4 sm:top-3 sm:px-6 lg:top-4 lg:px-8">
       <div
-        className="mx-auto flex w-full max-w-[1280px] flex-col rounded-[34px] border-b border-r border-[#bdbdbd]  shadow-[0px_3px_10px_0px_rgba(0,0,0,0.05),0px_3px_10px_0px_rgba(0,0,0,0.1)] backdrop-blur-[10px] sm:rounded-[40px] lg:rounded-[50px] bg-white!"
+        className="mx-auto flex w-full max-w-[1280px] flex-col rounded-[34px] border-b border-r border-[#bdbdbd] bg-[rgba(255,255,255,0.3)] shadow-[0px_3px_10px_0px_rgba(0,0,0,0.05),0px_3px_10px_0px_rgba(0,0,0,0.1)] backdrop-blur-[10px] sm:rounded-[40px] lg:rounded-[50px]"
       >
         {/* Main row — lg: fixed 70px bar height; mobile unchanged */}
         <div className="flex items-center justify-between px-5 py-3 sm:px-7 lg:h-[70px] lg:min-h-[70px] lg:px-[42px] lg:py-0">
