@@ -168,7 +168,7 @@ const FUNDING_OPTS: {
     id: "cash",
     title: "Cash",
     sub: "Funding path",
-    snapshotBuildPath: "Straightforward build path with phased co-ordinator check-ins.",
+    snapshotBuildPath: "Straightforward build path with phased coordinator check-ins.",
   },
   {
     id: "financing",
@@ -180,7 +180,7 @@ const FUNDING_OPTS: {
     id: "exploring",
     title: "Exploring Options",
     sub: "Funding path",
-    snapshotBuildPath: "Explore options with co-ordinator support.",
+    snapshotBuildPath: "Explore options with coordinator support.",
   },
 ];
 
