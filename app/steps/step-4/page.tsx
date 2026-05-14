@@ -14,16 +14,16 @@ import backyardIcon from "@/content/icons/backyard.svg";
 import attachedIcon from "@/content/icons/attached.svg";
 import secondStoryIcon from "@/content/icons/seconsstory.svg";
 import type { StaticImageData } from "next/image";
+import type { IconType } from "react-icons";
+import { MdOutlineMeetingRoom } from "react-icons/md";
 
-type AduTypeId = "backyard" | "attached" | "second-story";
+type AduTypeId = "backyard" | "attached" | "second-story" | "interior-suite";
 
-const aduTypes: {
-  id: AduTypeId;
-  title: string;
-  description: string;
-  icon: StaticImageData;
-  wide?: boolean;
-}[] = [
+type AduTypeOption =
+  | { id: AduTypeId; title: string; description: string; icon: StaticImageData }
+  | { id: AduTypeId; title: string; description: string; Icon: IconType };
+
+const aduTypes: AduTypeOption[] = [
   {
     id: "backyard",
     title: "Backyard Home",
@@ -41,9 +41,43 @@ const aduTypes: {
     title: "Second Story Addition",
     description: "Built above an existing structure—perfect for smaller lots with limited ground space.",
     icon: secondStoryIcon,
-    wide: true,
+  },
+  {
+    id: "interior-suite",
+    title: "Interior Suite",
+    description:
+      "An ADU within your existing home that adds space and value without expanding the footprint.",
+    Icon: MdOutlineMeetingRoom,
   },
 ];
+
+function AduTypeCardIcon({ opt, isSelected }: { opt: AduTypeOption; isSelected: boolean }) {
+  if ("icon" in opt) {
+    return (
+      <Image
+        src={opt.icon}
+        alt=""
+        width={19}
+        height={16}
+        className={
+          isSelected
+            ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]"
+            : "opacity-85"
+        }
+        aria-hidden
+      />
+    );
+  }
+  const Icon = opt.Icon;
+  return (
+    <Icon
+      className={
+        isSelected ? "h-[22px] w-[22px] shrink-0 text-[#42B0A8]" : "h-[22px] w-[22px] shrink-0 text-slate-500 opacity-90"
+      }
+      aria-hidden
+    />
+  );
+}
 
 function SelectionToggle({ selected }: { selected: boolean }) {
   return selected ? (
@@ -92,59 +126,14 @@ export default function StepFourAduType() {
             </div>
 
           <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
-            {aduTypes
-              .filter((t) => !t.wide)
-              .map((opt) => {
-                const isSelected = selected === opt.id;
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    onClick={() => setSelected(opt.id)}
-                    className={`relative flex min-h-[140px] flex-col rounded-2xl border px-5 py-4 text-left transition-all duration-200 md:min-h-[160px] ${
-                      isSelected
-                        ? "border-[#42B0A8] bg-white shadow-[0_0_0_1px_rgba(66,176,168,0.35)]"
-                        : "border-slate-200 bg-white/90 hover:border-slate-300 hover:bg-white"
-                    }`}
-                  >
-                    <div className="mb-3 flex items-start justify-between gap-2">
-                      <div
-                        className={`flex h-11 w-11 items-center justify-center rounded-full ${
-                          isSelected ? "bg-[#0C1B2A]" : "bg-slate-100"
-                        }`}
-                      >
-                        <Image
-                          src={opt.icon}
-                          alt=""
-                          width={19}
-                          height={16}
-                          className={isSelected ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]" : "opacity-85"}
-                          aria-hidden
-                        />
-                      </div>
-                      <SelectionToggle selected={isSelected} />
-                    </div>
-                    <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-[#000000]" : "text-slate-800"}`}>
-                      {opt.title}
-                    </p>
-                    <p className={`mt-2 font-dm-sans text-sm leading-relaxed ${isSelected ? "text-[#93928E]" : "text-slate-600"}`}>
-                      {opt.description}
-                    </p>
-                  </button>
-                );
-              })}
-          </div>
-
-          {aduTypes
-            .filter((t) => t.wide)
-            .map((opt) => {
+            {aduTypes.map((opt) => {
               const isSelected = selected === opt.id;
               return (
                 <button
                   key={opt.id}
                   type="button"
                   onClick={() => setSelected(opt.id)}
-                  className={`relative flex w-full flex-col rounded-2xl border px-5 py-2 text-left transition-all duration-200 ${
+                  className={`relative flex min-h-[140px] flex-col rounded-2xl border px-5 py-4 text-left transition-all duration-200 md:min-h-[160px] ${
                     isSelected
                       ? "border-[#42B0A8] bg-white shadow-[0_0_0_1px_rgba(66,176,168,0.35)]"
                       : "border-slate-200 bg-white/90 hover:border-slate-300 hover:bg-white"
@@ -156,24 +145,20 @@ export default function StepFourAduType() {
                         isSelected ? "bg-[#0C1B2A]" : "bg-slate-100"
                       }`}
                     >
-                      <Image
-                        src={opt.icon}
-                        alt=""
-                        width={19}
-                        height={16}
-                        className={isSelected ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]" : "opacity-85"}
-                        aria-hidden
-                      />
+                      <AduTypeCardIcon opt={opt} isSelected={isSelected} />
                     </div>
                     <SelectionToggle selected={isSelected} />
                   </div>
-                  <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-[#000000]" : "text-slate-800"}`}>{opt.title}</p>
-                  <p className={`mt-2 max-w-3xl font-dm-sans text-sm leading-relaxed ${isSelected ? "text-[#93928E]" : "text-slate-600"}`}>
+                  <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-[#000000]" : "text-slate-800"}`}>
+                    {opt.title}
+                  </p>
+                  <p className={`mt-2 font-dm-sans text-sm leading-relaxed ${isSelected ? "text-[#93928E]" : "text-slate-600"}`}>
                     {opt.description}
                   </p>
                 </button>
               );
             })}
+          </div>
 
           <StepsSubmitBtn
             isComplete={Boolean(selected)}
