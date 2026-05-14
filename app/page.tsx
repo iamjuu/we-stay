@@ -252,7 +252,7 @@ export default function Home() {
       <div id="eligibility" className="scroll-mt-28">
         <Eligibility />
       </div>
-      <div className="">
+      <div className=" pt-[120px]">
         <Footer />
       </div>
     </>

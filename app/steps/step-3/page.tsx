@@ -99,7 +99,7 @@ export default function GoalSelection() {
               What Are You Trying to Do?
             </h1>
 
-            <p className="max-w-3xl text-balance px-2 text-center font-dm-sans text-sm leading-snug text-slate-600 sm:text-base md:text-lg">
+            <p className="max-w-3xl text-balance px-2 text-center font-dm-sans text-sm leading-snug text-black sm:text-base md:text-lg">
               What Are You Hoping to Create?
             </p>
 
@@ -136,7 +136,7 @@ export default function GoalSelection() {
                           <div
                             className={`
                               flex h-8 w-8 shrink-0 items-center justify-center rounded-lg
-                              ${isSelected ? "bg-[#F5F7FA] text-[#4DB6AC]" : "border border-slate-200 bg-white text-slate-600"}
+                              ${isSelected ? "bg-[#F5F7FA] text-[#4DB6AC]" : "border border-slate-200 bg-white text-black"}
                               transition-colors duration-200
                             `}
                             style={{ width: 40, height: 40, borderRadius: "9999px" }}
@@ -155,9 +155,7 @@ export default function GoalSelection() {
                             />
                           </div>
                           <span
-                            className={`step-four-content text-sm font-medium leading-tight whitespace-nowrap ${
-                              isSelected ? "!text-black" : "text-slate-700"
-                            }`}
+                            className="step-four-content text-sm font-medium leading-tight whitespace-nowrap !text-black"
                           >
                             {opt.label}
                           </span>
@@ -196,7 +194,7 @@ export default function GoalSelection() {
               type="button"
               disabled={submitting || !selected}
               onClick={() => void handleContinue()}
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-teal-400 py-4 text-sm font-semibold tracking-wide text-slate-900 shadow-lg shadow-teal-400/20 transition-all duration-200 hover:bg-teal-300 enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-teal-400 py-4 text-sm font-semibold tracking-wide text-black shadow-lg shadow-teal-400/20 transition-all duration-200 hover:bg-teal-300 enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
             >
               {submitting ? (
                 <>
