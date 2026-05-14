@@ -38,7 +38,6 @@ const ADU_TYPE_LABELS: Record<string, string> = {
   "backyard": "Backyard Home",
   "attached": "Attached Addition",
   "second-story": "Second Story Addition",
-  "interior-suite": "Interior Suite",
 };
 const BUILD_PREF_LABELS: Record<string, string> = {
   "fast-track": "Fast Track",

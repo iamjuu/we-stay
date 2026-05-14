@@ -147,15 +147,7 @@ function GateCard({ gate }: { gate: EligibilityGate }) {
   );
 }
 
-function CircleProgress({
-  score,
-  gradientId,
-  status,
-}: {
-  score: number;
-  gradientId: string;
-  status: FullEligibilityResult["status"];
-}) {
+function CircleProgress({ score, gradientId }: { score: number; gradientId: string }) {
   const [animated, setAnimated] = useState(0);
   const radius = 70;
   const stroke = 8;
@@ -163,10 +155,10 @@ function CircleProgress({
   const circumference = 2 * Math.PI * normalizedRadius;
   const offset = circumference - (animated / 100) * circumference;
   const markerDeg = (animated / 100) * 360;
-  const ringStops =
-    status === "NEEDS_REVIEW"
-      ? { from: "#E65100", mid: "#FF8A4B", to: "#E65100" }
-      : { from: "#4DB6AC", mid: "#35AEA2", to: "#26A69A" };
+  const strongScore = score >= 75;
+  const ringStops = strongScore
+    ? { from: "#4DB6AC", mid: "#35AEA2", to: "#26A69A" }
+    : { from: "#E65100", mid: "#FF8A4B", to: "#E65100" };
 
   useEffect(() => {
     const timer = setTimeout(() => setAnimated(score), 100);
@@ -216,7 +208,7 @@ function CircleProgress({
           width: 15.00000286102295,
           height: 15.00000286102295,
           border: "1.5px solid #FFFFFFB2",
-          backgroundColor: status === "NEEDS_REVIEW" ? "#E65100" : "#4DB6AC",
+          backgroundColor: strongScore ? "#4DB6AC" : "#E65100",
           top: "50%",
           left: "50%",
           transform: `translate(-50%, -50%) rotate(${markerDeg}deg) translateY(-${normalizedRadius}px)`,
@@ -291,7 +283,7 @@ export default function PropertyScorePage() {
             </p>
 
             <div className="flex w-full flex-col items-center gap-5">
-              <CircleProgress score={score} gradientId={gradientId} status={result.status} />
+              <CircleProgress score={score} gradientId={gradientId} />
               <StatusBadge result={result} />
               <p className="max-w-xl text-center font-dm-sans text-sm leading-relaxed text-slate-600">{summary}</p>
             </div>
