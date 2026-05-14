@@ -244,7 +244,7 @@ export default function Home() {
         <InteriorTourClient />
       </div>
       <div>
-        {/* <BuilderNetwork /> */}
+        <BuilderNetwork />
       </div>
       <div>
         <TestimonialCarousel />
