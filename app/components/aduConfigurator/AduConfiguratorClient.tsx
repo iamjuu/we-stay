@@ -34,7 +34,8 @@ type OptionalFeatures = {
 
 /** Teal accent aligned with layout reference */
 const ACCENT = "#5fb3b3";
-const PANEL_BG = "#f7f9f8";
+/** Left/right configurator columns + canvas scene background */
+const VIEWER_BG = "#f5f7fa";
 const CARD_BORDER = "#e8ebea";
 
 const PLANS: {
@@ -294,7 +295,7 @@ function ConfiguratorModelSkeleton({ loadProgress }: { loadProgress: number }) {
       aria-live="polite"
       aria-busy="true"
       className="absolute inset-0 z-30 flex flex-col"
-      style={{ background: PANEL_BG }}
+      style={{ background: VIEWER_BG }}
     >
       <div className="flex min-h-0 flex-1 flex-col gap-5 px-5 py-8 sm:px-8 lg:px-12 lg:py-10">
         <div className="space-y-2">
@@ -515,7 +516,7 @@ export function AduConfiguratorClient() {
 
       <aside
         className="order-2 flex w-full flex-1 flex-col gap-5 lg:order-2 lg:h-screen lg:w-[min(472px,40vw)] lg:shrink-0 lg:overflow-y-auto lg:border-l lg:border-white/10 lg:pb-12"
-        style={{ background: PANEL_BG }}
+        style={{ background: VIEWER_BG }}
       >
         <div className="hidden px-8 pb-2 pt-8 lg:block">
           
@@ -784,8 +785,8 @@ export function AduConfiguratorClient() {
       </aside>
 
       <main
-        className="relative order-1 h-[52svh] min-h-[300px] w-full shrink-0  lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch"
-        style={{ background: PANEL_BG }}
+        className="relative order-1 h-[52svh] min-h-[300px] w-full shrink-0 lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch"
+        style={{ background: VIEWER_BG }}
       >
         {!viewportReady ? <ConfiguratorModelSkeleton loadProgress={loadProgress} /> : null}
         <ConfiguratorCanvas

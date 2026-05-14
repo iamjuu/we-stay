@@ -86,7 +86,7 @@ export default function StepFourAduType() {
         <div className="relative mx-auto w-full max-w-7xl">
           <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10 lg:max-w-4xl">
             <div className="space-y-2 px-1 text-center  w-full">
-              <h1 className=" text-[18px] md:text-[26px] mt-14 !text-[#1a2a3a]">
+              <h1 className=" text-[18px] md:text-[26px] mt-14 !text-[#1a2a3a] font-medium">
                 Which Type of ADU Fits Your Property Best?
               </h1>
             </div>
