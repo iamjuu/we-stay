@@ -90,10 +90,10 @@ export default function ReportForm() {
           <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10">
             <div className="space-y-2 text-center mt-36">
               <h1 className="steps-heading whitespace-nowrap !text-[#1a2a3a]">
-                Your Report Is Being Prepared
+                Your Report Is Ready here
               </h1>
               <p className="steps-subheading text-sm leading-relaxed !text-slate-600">
-                Enter your details to unlock your ADU eligibility score and next steps
+                Enter your details to view your ADU eligibility score and next steps
               </p>
             </div>
 
