@@ -529,7 +529,7 @@ export function AduConfiguratorClient() {
           
         </div>
 
-        <div className="flex flex-col gap-5 px-4 py-8 sm:px-6 lg:gap-6 lg:px-8 lg:pb-12">
+        <div className="flex flex-col gap-5 px-4 py-8 sm:px-6 lg:gap-6 lg:px-8 lg:pb-12 mt-6 ">
           <SidebarSection title="Choose Your Starting Plan" subtitle="UI only for now — will drive the model when plan assets are ready.">
             <div className="mt-4 flex flex-col gap-2">
               {PLANS.map((plan) => {

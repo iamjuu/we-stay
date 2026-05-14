@@ -90,7 +90,7 @@ function StatusBadge({ result }: { result: FullEligibilityResult }) {
   }
   if (result.status === "NEEDS_REVIEW") {
     return (
-      <div className="flex items-center gap-2 rounded-full border border-amber-500/70 bg-amber-500/15 px-[30px] py-[10px] text-[14px] font-medium leading-4 text-amber-200">
+      <div className="flex items-center gap-2 rounded-full border border-amber-500/70 bg-[#0c1b2a] px-[30px] py-[10px] text-[14px] font-medium leading-4 text-white">
         Needs review
       </div>
     );
