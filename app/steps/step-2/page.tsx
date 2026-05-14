@@ -280,8 +280,8 @@ export default function PropertyScorePage() {
 
       {/* Results scroll only between navbar and CTA — full page does not scroll */}
       <div className="relative z-10 flex min-h-0 flex-1 flex-col">
-        <div className="scrollbar min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 pb-2 pt-24 sm:px-6 sm:pt-32">
-          <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-6 pb-2">
+        <div className="scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain px-4 pb-2 pt-24 sm:px-6 sm:pt-32">
+          <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-6 py-6 sm:py-8">
             <h1 className="text-center font-dm-sans text-2xl font-bold tracking-tight text-white">
               Your Property Potential
             </h1>

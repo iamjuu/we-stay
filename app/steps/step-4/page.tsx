@@ -1,11 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, startTransition } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
-import { StepsSubmitBtn } from "../components/steps-submit-btn";
 import { StepFooter } from "../components/step-footer";
 import { useBuildPath } from "@/app/context/build-path-session";
 import { useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-progress";
@@ -71,143 +70,182 @@ export default function StepFourAduType() {
     if (!buildPathHydrated) return;
     const id = selections.aduTypeId;
     if (!id || !aduTypes.some((t) => t.id === id)) return;
-    setSelected((prev) => (prev === "" ? (id as AduTypeId) : prev));
+    startTransition(() => {
+      setSelected((prev) => (prev === "" ? (id as AduTypeId) : prev));
+    });
   }, [buildPathHydrated, selections.aduTypeId]);
 
+  const handleContinue = async () => {
+    if (!selected) return;
+    setSubmitting(true);
+    try {
+      setSelections({ aduTypeId: selected });
+      await recordFlowComplete(3, {
+        buildSelections: {
+          ...selections,
+          aduTypeId: selected,
+        },
+      });
+      router.push("/steps/step-5");
+    } catch {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
-      <div className="relative w-full">
-        <Navbar />
+    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534]">
+      <Navbar />
 
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="h-[500px] w-[500px] rounded-full bg-teal-400/10 blur-[120px]" />
-        </div>
+      <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center">
+        <div className="h-[400px] w-[500px] rounded-full bg-teal-400/10 blur-[130px]" />
+      </div>
 
-        <div className="relative mx-auto w-full max-w-7xl">
-          <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10 lg:max-w-4xl">
-            <div className="space-y-2 px-1 text-center  w-full">
-              <h1 className=" text-[18px] md:text-[26px] mt-14 !text-white">
-                Which Type of ADU Fits Your Property Best?
-              </h1>
-            </div>
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col">
+        <div className="scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain px-4 pb-2 pt-24 sm:px-6 sm:pt-32">
+          <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-6 py-6 sm:py-8">
+            <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 lg:max-w-4xl">
+              <div className="space-y-2 px-1 text-center  w-full">
+                <h1 className=" text-[18px] md:text-[26px] mt-14 !text-white">
+                  Which Type of ADU Fits Your Property Best?
+                </h1>
+              </div>
 
-          <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
-            {aduTypes
-              .filter((t) => !t.wide)
-              .map((opt) => {
-                const isSelected = selected === opt.id;
-                return (
-                  <button
-                    key={opt.id}
-                    type="button"
-                    onClick={() => setSelected(opt.id)}
-                    className={`relative flex min-h-[140px] flex-col rounded-2xl border px-5 py-4 text-left transition-all duration-200 md:min-h-[160px] ${
-                      isSelected
-                        ? "border-[#42B0A8] bg-white shadow-[0_0_0_1px_rgba(66,176,168,0.35)]"
-                        : "border-white/12 bg-[#FFFFFF33] hover:border-white/22 hover:bg-[#FFFFFF33]"
-                    }`}
-                  >
-                    <div className="mb-3 flex items-start justify-between gap-2">
-                      <div
-                        className={`flex h-11 w-11 items-center justify-center rounded-full ${
-                          isSelected ? "bg-[#0C1B2A]" : "bg-white/10"
+              <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">
+                {aduTypes
+                  .filter((t) => !t.wide)
+                  .map((opt) => {
+                    const isSelected = selected === opt.id;
+                    return (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => setSelected(opt.id)}
+                        className={`relative flex min-h-[140px] flex-col rounded-2xl border px-5 py-4 text-left transition-all duration-200 md:min-h-[160px] ${
+                          isSelected
+                            ? "border-[#42B0A8] bg-white shadow-[0_0_0_1px_rgba(66,176,168,0.35)]"
+                            : "border-white/12 bg-[#FFFFFF33] hover:border-white/22 hover:bg-[#FFFFFF33]"
                         }`}
                       >
-                        <Image
-                          src={opt.icon}
-                          alt=""
-                          width={19}
-                          height={16}
-                          className={isSelected ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]" : "opacity-85"}
-                          aria-hidden
-                        />
-                      </div>
-                      <SelectionToggle selected={isSelected} />
-                    </div>
-                    <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-[#000000]" : "text-[#F5F7FA]"}`}>
-                      {opt.title}
-                    </p>
-                    <p className={`mt-2 font-dm-sans text-sm leading-relaxed ${isSelected ? "text-[#93928E]" : "text-[#F5F7FA]"}`}>
-                      {opt.description}
-                    </p>
-                  </button>
-                );
-              })}
-          </div>
+                        <div className="mb-3 flex items-start justify-between gap-2">
+                          <div
+                            className={`flex h-11 w-11 items-center justify-center rounded-full ${
+                              isSelected ? "bg-[#0C1B2A]" : "bg-white/10"
+                            }`}
+                          >
+                            <Image
+                              src={opt.icon}
+                              alt=""
+                              width={19}
+                              height={16}
+                              className={
+                                isSelected
+                                  ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]"
+                                  : "opacity-85"
+                              }
+                              aria-hidden
+                            />
+                          </div>
+                          <SelectionToggle selected={isSelected} />
+                        </div>
+                        <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-[#000000]" : "text-[#F5F7FA]"}`}>
+                          {opt.title}
+                        </p>
+                        <p className={`mt-2 font-dm-sans text-sm leading-relaxed ${isSelected ? "text-[#93928E]" : "text-[#F5F7FA]"}`}>
+                          {opt.description}
+                        </p>
+                      </button>
+                    );
+                  })}
+              </div>
 
-          {aduTypes
-            .filter((t) => t.wide)
-            .map((opt) => {
-              const isSelected = selected === opt.id;
-              return (
-                <button
-                  key={opt.id}
-                  type="button"
-                  onClick={() => setSelected(opt.id)}
-                  className={`relative flex w-full flex-col rounded-2xl border px-5 py-2 text-left transition-all duration-200 ${
-                    isSelected
-                      ? "border-[#42B0A8] bg-white shadow-[0_0_0_1px_rgba(66,176,168,0.35)]"
-                      : "border-white/12 bg-[#FFFFFF33] hover:border-white/22 hover:bg-[#FFFFFF33]"
-                  }`}
-                >
-                  <div className="mb-3 flex items-start justify-between gap-2">
-                    <div
-                      className={`flex h-11 w-11 items-center justify-center rounded-full ${
-                        isSelected ? "bg-[#0C1B2A]" : "bg-white/10"
+              {aduTypes
+                .filter((t) => t.wide)
+                .map((opt) => {
+                  const isSelected = selected === opt.id;
+                  return (
+                    <button
+                      key={opt.id}
+                      type="button"
+                      onClick={() => setSelected(opt.id)}
+                      className={`relative flex w-full flex-col rounded-2xl border px-5 py-2 text-left transition-all duration-200 ${
+                        isSelected
+                          ? "border-[#42B0A8] bg-white shadow-[0_0_0_1px_rgba(66,176,168,0.35)]"
+                          : "border-white/12 bg-[#FFFFFF33] hover:border-white/22 hover:bg-[#FFFFFF33]"
                       }`}
                     >
-                      <Image
-                        src={opt.icon}
-                        alt=""
-                        width={19}
-                        height={16}
-                        className={isSelected ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]" : "opacity-85"}
-                        aria-hidden
-                      />
-                    </div>
-                    <SelectionToggle selected={isSelected} />
-                  </div>
-                  <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-[#000000]" : "text-[#F5F7FA]"}`}>{opt.title}</p>
-                  <p className={`mt-2 max-w-3xl font-dm-sans text-sm leading-relaxed ${isSelected ? "text-[#93928E]" : "text-[#F5F7FA]"}`}>
-                    {opt.description}
-                  </p>
-                </button>
-              );
-            })}
+                      <div className="mb-3 flex items-start justify-between gap-2">
+                        <div
+                          className={`flex h-11 w-11 items-center justify-center rounded-full ${
+                            isSelected ? "bg-[#0C1B2A]" : "bg-white/10"
+                          }`}
+                        >
+                          <Image
+                            src={opt.icon}
+                            alt=""
+                            width={19}
+                            height={16}
+                            className={
+                              isSelected
+                                ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]"
+                                : "opacity-85"
+                            }
+                            aria-hidden
+                          />
+                        </div>
+                        <SelectionToggle selected={isSelected} />
+                      </div>
+                      <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-[#000000]" : "text-[#F5F7FA]"}`}>{opt.title}</p>
+                      <p className={`mt-2 max-w-3xl font-dm-sans text-sm leading-relaxed ${isSelected ? "text-[#93928E]" : "text-[#F5F7FA]"}`}>
+                        {opt.description}
+                      </p>
+                    </button>
+                  );
+                })}
 
-          <StepsSubmitBtn
-            isComplete={Boolean(selected)}
-            idleText="Continue"
-            disabled={!selected}
-            loading={submitting}
-            loadingText="Continuing…"
-            onClick={async () => {
-              if (!selected) return;
-              setSubmitting(true);
-              try {
-                setSelections({ aduTypeId: selected });
-                await recordFlowComplete(3, {
-                  buildSelections: {
-                    ...selections,
-                    aduTypeId: selected,
-                  },
-                });
-                router.push("/steps/step-5");
-              } catch {
-                setSubmitting(false);
-              }
-            }}
-          />
+            </div>
+          </div>
+        </div>
 
-          <p className="text-center font-dm-sans text-xs leading-relaxed text-slate-400">
-            Not sure? We&apos;ll help you determine the best fit during your{" "}
-            <Link href="/about" className="text-[#6BB8FF] underline underline-offset-2 hover:text-[#9dceff]">
-              Discovery Call
-            </Link>
-            .
-          </p>
-
-          <div className="w-full pt-0 ">
+        <div className="shrink-0 border-t border-white/10 bg-[#162534]/95 px-4 pt-3 backdrop-blur-md pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-3">
+            <button
+              type="button"
+              disabled={submitting || !selected}
+              onClick={() => void handleContinue()}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-teal-400 py-4 text-sm font-semibold tracking-wide text-slate-900 shadow-lg shadow-teal-400/20 transition-all duration-200 hover:bg-teal-300 enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {submitting ? (
+                <>
+                  <svg className="h-4 w-4 shrink-0 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden>
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                  </svg>
+                  Continuing…
+                </>
+              ) : (
+                <>
+                  Continue
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                    aria-hidden
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </>
+              )}
+            </button>
+            <p className="text-center font-dm-sans text-xs leading-relaxed text-slate-400">
+              Not sure? We&apos;ll help you determine the best fit during your{" "}
+              <Link href="/about" className="text-[#6BB8FF] underline underline-offset-2 hover:text-[#9dceff]">
+                Discovery Call
+              </Link>
+              .
+            </p>
             <StepFooter
               currentStep={5}
               totalSteps={7}
@@ -219,7 +257,6 @@ export default function StepFourAduType() {
               }}
               canGoForward={maxNavIndex > flowIdx}
             />
-          </div>
           </div>
         </div>
       </div>

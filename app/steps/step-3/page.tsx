@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useState, startTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
-import { StepsSubmitBtn } from "../components/steps-submit-btn";
 import { StepFooter } from "../components/step-footer";
 import { useBuildPath } from "@/app/context/build-path-session";
 import { useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-progress";
@@ -57,7 +56,9 @@ export default function GoalSelection() {
     if (!buildPathHydrated) return;
     const id = selections.goalId;
     if (!id || !options.some((o) => o.id === id)) return;
-    setSelected((prev) => (prev === "" ? id : prev));
+    startTransition(() => {
+      setSelected((prev) => (prev === "" ? id : prev));
+    });
   }, [buildPathHydrated, selections.goalId]);
 
   const rows: (typeof options)[] = [
@@ -66,34 +67,48 @@ export default function GoalSelection() {
     options.slice(4),
   ];
 
+  const handleContinue = async () => {
+    if (!selected) return;
+    setSubmitting(true);
+    try {
+      setSelections({ goalId: selected });
+      await recordFlowComplete(2, {
+        buildSelections: {
+          ...selections,
+          goalId: selected,
+        },
+      });
+      router.push("/steps/step-4");
+    } catch {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
-      <div className="relative w-full">
-        <Navbar />
+    <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534]">
+      <Navbar />
 
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="h-[500px] w-[500px] rounded-full bg-teal-400/10 blur-[120px]" />
-        </div>
+      <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center">
+        <div className="h-[400px] w-[500px] rounded-full bg-teal-400/10 blur-[130px]" />
+      </div>
 
-        <div className="relative mx-auto w-full max-w-7xl">
-          <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10 lg:max-w-3xl">
-            <div className="space-y-2 text-center mt-36">
-              <h1 className="steps-heading text-balance !text-white">
-                What Are You Trying to Do?
-              </h1>
-              <p className="steps-subheading text-sm leading-relaxed !text-[#F5F7FA]">
-                What Are You Hoping to Create?
-              </p>
-            </div>
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col">
+        <div className="scrollbar flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-y-contain px-4 pb-2 pt-24 sm:px-6 sm:pt-32">
+          <div className="mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-6 py-6 sm:py-8">
+            <h1 className="text-center font-dm-sans text-2xl font-bold tracking-tight text-white">
+              What Are You Trying to Do?
+            </h1>
 
-            {/* Options grid */}
-            <div className="w-full flex flex-col gap-3">
+            <p className="max-w-3xl text-balance px-2 text-center font-dm-sans text-sm leading-snug text-white/70 sm:text-base md:text-lg">
+              What Are You Hoping to Create?
+            </p>
+
+            <div className="flex w-full max-w-[550px] flex-col gap-3 lg:max-w-3xl">
               {rows.map((row, ri) => (
                 <div key={ri} className="flex gap-3">
                   {row.map((opt, oi) => {
                     const isSelected = selected === opt.id;
 
-                    // Row 2 (index 1): first button 20%, second button takes remaining 80%
                     const flexClass =
                       ri === 1
                         ? oi === 0
@@ -104,23 +119,23 @@ export default function GoalSelection() {
                     return (
                       <button
                         key={opt.id}
+                        type="button"
                         onClick={() => setSelected(opt.id)}
                         className={`
                           ${flexClass} flex items-center justify-between gap-3
-                          px-4 py-4 rounded-full text-left
-                          border transition-all duration-200
+                          rounded-full border px-4 py-4 text-left
+                          transition-all duration-200
                           ${
                             isSelected
-                              ? "bg-white border-2 border-[#4DB6AC] shadow-[0_0_0_1px_rgba(45,212,191,0.22)]"
-                              : "bg-white/5 border-white/10 hover:bg-white/8 hover:border-white/20"
+                              ? "border-2 border-[#4DB6AC] bg-white shadow-[0_0_0_1px_rgba(45,212,191,0.22)]"
+                              : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/8"
                           }
                         `}
                       >
-                        <div className="flex items-center gap-3 min-w-0">
-                          {/* Icon container */}
+                        <div className="flex min-w-0 items-center gap-3">
                           <div
                             className={`
-                              flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center
+                              flex h-8 w-8 shrink-0 items-center justify-center rounded-lg
                               ${isSelected ? "bg-[#F5F7FA] text-[#4DB6AC]" : "bg-white/10 text-slate-400"}
                               transition-colors duration-200
                             `}
@@ -131,12 +146,16 @@ export default function GoalSelection() {
                               alt=""
                               width={22}
                               height={22}
-                              className={isSelected ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]" : "opacity-70"}
+                              className={
+                                isSelected
+                                  ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]"
+                                  : "opacity-70"
+                              }
                               aria-hidden
                             />
                           </div>
                           <span
-                            className={` step-four-content text-sm font-medium leading-tight whitespace-nowrap ${
+                            className={`step-four-content text-sm font-medium leading-tight whitespace-nowrap ${
                               isSelected ? "!text-black" : "text-slate-300"
                             }`}
                           >
@@ -144,22 +163,23 @@ export default function GoalSelection() {
                           </span>
                         </div>
 
-                        {/* Radio indicator */}
                         <div
                           className={`
-                            flex-shrink-0 w-5 h-5 rounded-full border-2 flex items-center justify-center
+                            flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2
                             transition-all duration-200
                             ${isSelected ? "border-[#4DB6AC] bg-[#4DB6AC]" : "border-slate-500 bg-transparent"}
                           `}
                         >
-                          {isSelected && (
-                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                           <rect x="1" y="1" width="22" height="22" rx="11" fill="#4DB6AC"/>
-                           <rect x="1" y="1" width="22" height="22" rx="11" stroke="#4DB6AC" stroke-width="2"/>
-                           <path d="M10.3671 16.3146L6.26562 12.2131L7.52651 10.9522L10.3671 13.7928L16.4743 7.68555L17.7352 8.94643L10.3671 16.3146Z" fill="white"/>
-                           </svg>
-                           
-                          )}
+                          {isSelected ? (
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                              <rect x="1" y="1" width="22" height="22" rx="11" fill="#4DB6AC" />
+                              <rect x="1" y="1" width="22" height="22" rx="11" stroke="#4DB6AC" strokeWidth="2" />
+                              <path
+                                d="M10.3671 16.3146L6.26562 12.2131L7.52651 10.9522L10.3671 13.7928L16.4743 7.68555L17.7352 8.94643L10.3671 16.3146Z"
+                                fill="white"
+                              />
+                            </svg>
+                          ) : null}
                         </div>
                       </button>
                     );
@@ -167,44 +187,53 @@ export default function GoalSelection() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
 
-            {/* CTA */}
-            <StepsSubmitBtn
-              isComplete={Boolean(selected)}
-              idleText="Continue"
-              disabled={!selected}
-              loading={submitting}
-              loadingText="Continuing…"
-              onClick={async () => {
-                if (!selected) return;
-                setSubmitting(true);
-                try {
-                  setSelections({ goalId: selected });
-                  await recordFlowComplete(2, {
-                    buildSelections: {
-                      ...selections,
-                      goalId: selected,
-                    },
-                  });
-                  router.push("/steps/step-4");
-                } catch {
-                  setSubmitting(false);
-                }
+        <div className="shrink-0 border-t border-white/10 bg-[#162534]/95 px-4 pt-3 backdrop-blur-md pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-3">
+            <button
+              type="button"
+              disabled={submitting || !selected}
+              onClick={() => void handleContinue()}
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-teal-400 py-4 text-sm font-semibold tracking-wide text-slate-900 shadow-lg shadow-teal-400/20 transition-all duration-200 hover:bg-teal-300 enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              {submitting ? (
+                <>
+                  <svg className="h-4 w-4 shrink-0 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden>
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                  </svg>
+                  Continuing…
+                </>
+              ) : (
+                <>
+                  Continue
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 shrink-0"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2.5}
+                    aria-hidden
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                  </svg>
+                </>
+              )}
+            </button>
+            <StepFooter
+              currentStep={4}
+              totalSteps={7}
+              variant="step2"
+              onBack={() => router.push(prevWizardPath(flowIdx))}
+              onForward={() => {
+                const n = nextWizardPath(flowIdx);
+                if (n) router.push(n);
               }}
+              canGoForward={maxNavIndex > flowIdx}
             />
-            <div className="w-full pt-[10px]">
-              <StepFooter
-                currentStep={4}
-                totalSteps={7}
-                variant="step2"
-                onBack={() => router.push(prevWizardPath(flowIdx))}
-                onForward={() => {
-                  const n = nextWizardPath(flowIdx);
-                  if (n) router.push(n);
-                }}
-                canGoForward={maxNavIndex > flowIdx}
-              />
-            </div>
           </div>
         </div>
       </div>
