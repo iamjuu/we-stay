@@ -41,7 +41,17 @@ const options = [
     label: "Not Sure Yet",
     icon: notSureIcon,
   },
-];
+] as const;
+
+/** Calendar SVG uses #4DB6AC; other icons are gray and use the filter when selected. */
+function goalOptionIconClass(optId: (typeof options)[number]["id"], isSelected: boolean): string {
+  const tealFilter =
+    "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]";
+  if (isSelected) {
+    return optId === "long-term" ? "opacity-100" : tealFilter;
+  }
+  return optId === "long-term" ? "opacity-100" : "opacity-70";
+}
 
 export default function GoalSelection() {
   const router = useRouter();
@@ -114,11 +124,7 @@ export default function GoalSelection() {
                           alt=""
                           width={22}
                           height={22}
-                          className={
-                            isSelected
-                              ? "opacity-100 [filter:brightness(0)_saturate(100%)_invert(59%)_sepia(28%)_saturate(819%)_hue-rotate(124deg)_brightness(92%)_contrast(90%)]"
-                              : "opacity-70"
-                          }
+                          className={goalOptionIconClass(opt.id, isSelected)}
                           aria-hidden
                         />
                       </div>
