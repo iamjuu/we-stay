@@ -78,7 +78,7 @@ export default function RequirementsReviewModal({
 
   const panelInner = (
     <div
-      className="relative flex w-full flex-col overflow-hidden rounded-[999px] border border-white/12 bg-black px-5 pb-6 pt-10 shadow-lg"
+      className="relative flex w-full flex-col overflow-hidden rounded-[999px] border border-white/12 bg-black/60 px-5 pb-6 pt-10 shadow-lg"
       style={{
         maxWidth: '643.568px',
       }}
