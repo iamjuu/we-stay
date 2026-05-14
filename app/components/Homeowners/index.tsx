@@ -54,7 +54,7 @@ const index = () => {
     {
       number: "4",
       title: "Built for Real Life",
-      description: "Rental income, family space, long-term value.",
+      description: "For rental potential, family space, or long-term value",
     },
   ];
 

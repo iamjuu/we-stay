@@ -96,7 +96,7 @@ export default function Home() {
                     fontVariationSettings: "'opsz' 14",
                   }}
                 >
-                  From one of the World&apos;s leading ADU Platform
+                  From one of the World&apos;s The coordination platform for ADU homeowners
                 </p>
                 {/* Figma underline: 275×1.49px gradient (same stops as border-image-source) */}
                 <div
@@ -112,7 +112,7 @@ export default function Home() {
                 />
                 <h1 className="hero-heading m-0 mt-2 w-full p-0 font-playfair-display font-bold leading-[1.06] text-white tracking-tight">
                   <span className="block leading-[1.06]">See What Your</span>
-                  <span className="block leading-[1.06]">Backyard Can Build</span>
+                  <span className="block leading-[1.06]">Property Can Become </span>
                 </h1>
               </div>
 

@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 const DEFAULT_PHRASES = [
-  "Generate rental income",
-  "Create space for family",
-  "Increase property value",
-  "Use your land smarter",
-  "Move forward confidently",
+  "Bring everyone home.",
+  "Your land, your legacy.",
+  "From someday to today.",
+  "Let your land work too.",
+  // "Move forward confidently",
 ];
 
 const TYPE_MS = 58;

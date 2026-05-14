@@ -243,7 +243,7 @@ export default function TestimonialCarousel() {
       <section className="w-full relative">
         <h2 className="carousel-heading text-center text-2xl sm:text-4xl font-medium text-gray-900 mb-8 sm:mb-10 leading-snug px-1">
           Homeowners Want <br /> Confidence.{" "}
-          <span className="text-gray-400">We Build It.</span>
+          <span className="text-gray-400">We Bring the Clarity</span>
         </h2>
 
         {/*
