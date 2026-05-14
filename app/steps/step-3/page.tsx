@@ -78,7 +78,7 @@ export default function GoalSelection() {
         <div className="relative mx-auto w-full max-w-7xl">
           <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10 lg:max-w-3xl">
             <div className="space-y-2 text-center mt-36">
-              <h1 className="steps-heading text-balance !text-[#1a2a3a]">
+              <h1 className="steps-heading text-balance text-[#1a2a3a]">
                 What Are You Trying to Do?
               </h1>
               <p className="steps-subheading text-sm leading-relaxed !text-slate-600">
@@ -121,7 +121,7 @@ export default function GoalSelection() {
                           <div
                             className={`
                               flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center
-                              ${isSelected ? "bg-[#F5F7FA] text-[#4DB6AC]" : "border border-slate-200 bg-white text-slate-600"}
+                              ${isSelected ? "bg-[#F5F7FA] text-[#4DB6AC]" : "border border-slate-200 bg-white text-black"}
                               transition-colors duration-200
                             `}
                             style={{ width: 40, height: 40, borderRadius: "9999px" }}
@@ -135,11 +135,7 @@ export default function GoalSelection() {
                               aria-hidden
                             />
                           </div>
-                          <span
-                            className={` step-four-content text-sm font-medium leading-tight whitespace-nowrap ${
-                              isSelected ? "!text-black" : "text-slate-700"
-                            }`}
-                          >
+                          <span className="step-four-content text-sm font-medium leading-tight whitespace-nowrap !text-black">
                             {opt.label}
                           </span>
                         </div>

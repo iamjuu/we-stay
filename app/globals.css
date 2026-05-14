@@ -214,7 +214,7 @@
   font-size: clamp(20px, 3vw, 36px);
   line-height: clamp(19px, 2.7vw, 32.95px);
 }
-.footer-section-one {
+ha.footer-section-one {
   font-family: "DM Sans", sans-serif;
   /* Keep your 27px max for 2xl screens */
   font-size: clamp(18px, 1.2vw + 12px, 27px); 

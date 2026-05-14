@@ -293,7 +293,8 @@ function ConfiguratorModelSkeleton({ loadProgress }: { loadProgress: number }) {
       role="status"
       aria-live="polite"
       aria-busy="true"
-      className="absolute inset-0 z-30 flex flex-col bg-[#eaecea]"
+      className="absolute inset-0 z-30 flex flex-col"
+      style={{ background: PANEL_BG }}
     >
       <div className="flex min-h-0 flex-1 flex-col gap-5 px-5 py-8 sm:px-8 lg:px-12 lg:py-10">
         <div className="space-y-2">
@@ -782,7 +783,10 @@ export function AduConfiguratorClient() {
         </div>
       </aside>
 
-      <main className="relative order-1 h-[52svh] min-h-[300px] w-full shrink-0  lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch">
+      <main
+        className="relative order-1 h-[52svh] min-h-[300px] w-full shrink-0  lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch"
+        style={{ background: PANEL_BG }}
+      >
         {!viewportReady ? <ConfiguratorModelSkeleton loadProgress={loadProgress} /> : null}
         <ConfiguratorCanvas
           modelUrl={PLAN_MODEL_URL[planId]}
