@@ -9,24 +9,6 @@ import { eligibilityInputMatchesSnapshot, useEligibilitySession } from '@/app/co
 import { useJourneyProgress } from '@/app/context/journey-progress';
 import { runEligibilityPipeline } from '@/lib/eligibility-pipeline';
 
-function delay(ms: number, signal?: AbortSignal): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (signal?.aborted) {
-      reject(new DOMException('Aborted', 'AbortError'));
-      return;
-    }
-    const t = window.setTimeout(() => resolve(), ms);
-    signal?.addEventListener(
-      'abort',
-      () => {
-        window.clearTimeout(t);
-        reject(new DOMException('Aborted', 'AbortError'));
-      },
-      { once: true }
-    );
-  });
-}
-
 export default function HeroEligibility() {
   const router = useRouter();
   const addressRef = useRef<AddressInputHandle>(null);
@@ -40,10 +22,8 @@ export default function HeroEligibility() {
   const [isRunning, setIsRunning] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [inlineError, setInlineError] = useState<string | null>(null);
-
-  const ELIGIBILITY_MIN_LOAD_MS = 3000;
-  /** After a successful check (modal open, no error), auto-advance to step 1. */
-  const AUTO_ADVANCE_MS = 7000;
+  const [loadingSequenceComplete, setLoadingSequenceComplete] = useState(false);
+  const didAdvanceFromReviewRef = useRef(false);
 
   const runCheck = useCallback(
     async (rawAddress: string) => {
@@ -58,6 +38,7 @@ export default function HeroEligibility() {
       // Same query as last successful run — reopen modal instantly, skip pipeline / APIs
       if (snapshot && eligibilityInputMatchesSnapshot(trimmed, snapshot)) {
         setErrorMessage(null);
+        setLoadingSequenceComplete(false);
         setModalOpen(true);
         return;
       }
@@ -67,12 +48,12 @@ export default function HeroEligibility() {
       pipelineAbortRef.current = ac;
 
       const runGen = ++eligibilityRunGenerationRef.current;
+      setLoadingSequenceComplete(false);
       clearSnapshot();
       setModalOpen(true);
       setErrorMessage(null);
       setIsRunning(true);
 
-      const startedAt = Date.now();
       const outcome = await runEligibilityPipeline(trimmed, ac.signal);
 
       if (runGen !== eligibilityRunGenerationRef.current) {
@@ -86,19 +67,10 @@ export default function HeroEligibility() {
         }
         setIsRunning(false);
         setErrorMessage(outcome.error);
+        setLoadingSequenceComplete(false);
         return;
       }
 
-      const remaining = ELIGIBILITY_MIN_LOAD_MS - (Date.now() - startedAt);
-      if (remaining > 0) {
-        try {
-          await delay(remaining, ac.signal);
-        } catch {
-          if (runGen !== eligibilityRunGenerationRef.current) return;
-          setIsRunning(false);
-          return;
-        }
-      }
       if (runGen !== eligibilityRunGenerationRef.current) {
         return;
       }
@@ -134,6 +106,7 @@ export default function HeroEligibility() {
     setIsRunning(false);
     setModalOpen(false);
     setErrorMessage(null);
+    setLoadingSequenceComplete(false);
   }, []);
 
   const handleAddressValueChange = useCallback(
@@ -145,10 +118,15 @@ export default function HeroEligibility() {
       setIsRunning(false);
       setErrorMessage(null);
       setInlineError(null);
+      setLoadingSequenceComplete(false);
       clearSnapshot();
     },
     [clearSnapshot]
   );
+
+  const handleLoadingSequenceComplete = useCallback(() => {
+    setLoadingSequenceComplete(true);
+  }, []);
 
   const handleGamePlan = useCallback(async () => {
     if (snapshot) {
@@ -158,12 +136,17 @@ export default function HeroEligibility() {
   }, [router, snapshot, mergeJourney]);
 
   useEffect(() => {
-    if (!modalOpen || errorMessage || isRunning || !snapshot) return;
-    const t = window.setTimeout(() => {
-      void handleGamePlan();
-    }, AUTO_ADVANCE_MS);
-    return () => window.clearTimeout(t);
-  }, [modalOpen, errorMessage, isRunning, snapshot, handleGamePlan]);
+    if (!modalOpen || !loadingSequenceComplete) {
+      didAdvanceFromReviewRef.current = false;
+    }
+  }, [modalOpen, loadingSequenceComplete]);
+
+  useEffect(() => {
+    if (!modalOpen || errorMessage || !snapshot || !loadingSequenceComplete) return;
+    if (didAdvanceFromReviewRef.current) return;
+    didAdvanceFromReviewRef.current = true;
+    void handleGamePlan();
+  }, [modalOpen, errorMessage, snapshot, loadingSequenceComplete, handleGamePlan]);
 
   return (
     <>
@@ -175,7 +158,7 @@ export default function HeroEligibility() {
           <div className="relative mx-auto w-full max-w-[570px]">
             <div className="relative w-full">
               <div
-                className="flex w-full gap-3 rounded-full bg-black/50 p-2 shadow-[0px_3px_10px_0px_rgba(0,0,0,0.15)] backdrop-blur-2xl max-[548px]:flex-col max-[548px]:items-stretch max-[548px]:gap-3 max-[548px]:rounded-[26px] sm:flex-row sm:items-center sm:gap-4 sm:pl-5"
+                className="flex w-full gap-3 rounded-full bg-white/95 p-2 shadow-[0px_4px_24px_rgba(0,0,0,0.1)] ring-1 ring-black/[0.06] max-[548px]:flex-col max-[548px]:items-stretch max-[548px]:gap-3 max-[548px]:rounded-[26px] sm:flex-row sm:items-center sm:gap-4 sm:pl-5 text-black"
                 data-node-id="11:8243"
               >
                 <div className="min-w-0 w-full flex-1 max-[548px]:flex-none">
@@ -185,10 +168,9 @@ export default function HeroEligibility() {
                     onValueChange={handleAddressValueChange}
                     onEnterCheck={(t) => void runCheck(t)}
                     disabled={isRunning}
-                    darkMode
-                    transparentDarkField
                     hideHelperText
-                    inputClassName="!rounded-none !shadow-none px-4 py-3 text-center text-[clamp(18px,4vw,22px)] font-light leading-[1.2] text-[#adadad] placeholder:text-[#adadad] focus:!ring-0 disabled:!cursor-not-allowed disabled:!bg-transparent disabled:!text-[#adadad] disabled:!opacity-100 disabled:placeholder:!text-[#adadad] sm:px-0 sm:py-0 sm:text-left"
+                    navySuggestions
+                    inputClassName="!rounded-none !border-0 !shadow-none !bg-transparent px-4 py-3 text-center text-[clamp(18px,4vw,22px)] font-light leading-[1.2] text-black placeholder:text-gray-400 focus:!ring-0 focus:!ring-offset-0 disabled:!cursor-not-allowed disabled:!bg-gray-100/90 disabled:!text-gray-400 disabled:!opacity-100 disabled:placeholder:!text-gray-400 sm:px-0 sm:py-0 sm:text-left"
                   />
                 </div>
                 <CtaButton
@@ -204,8 +186,8 @@ export default function HeroEligibility() {
                 onClose={handleModalClose}
                 isRunning={isRunning}
                 errorMessage={errorMessage}
-                gamePlanReady={!!snapshot && !isRunning}
                 onGamePlan={handleGamePlan}
+                onLoadingSequenceComplete={handleLoadingSequenceComplete}
                 variant="below-anchor"
               />
             </div>

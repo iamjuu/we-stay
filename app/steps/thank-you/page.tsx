@@ -11,7 +11,7 @@ const CheckIcon = () => (
 
 export default function ThankYouAfterConfigurator() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0C1B2A] via-[#1a2f42] to-[#0C1B2A]">
+    <div className="min-h-screen bg-transparent">
       <Navbar />
       <div className="container mx-auto px-4 pb-16 pt-24 sm:pt-28">
         <div className="relative mx-auto flex w-full max-w-[640px] flex-col items-center rounded-[40px] p-8 text-center sm:p-11">
@@ -19,13 +19,13 @@ export default function ThankYouAfterConfigurator() {
             <CheckIcon />
             <div className="flex flex-col gap-3">
               <h1
-                className="font-dm-sans text-[28px] font-semibold leading-tight text-white sm:text-[36px]"
+                className="font-dm-sans text-[28px] font-semibold leading-tight text-slate-900 sm:text-[36px]"
                 style={{ fontVariationSettings: "'opsz' 14" }}
               >
                 Thank You!
               </h1>
               <p
-                className="font-dm-sans text-lg leading-7 text-[#F5F7FA] sm:text-[22px] sm:leading-8"
+                className="font-dm-sans text-lg leading-7 text-slate-600 sm:text-[22px] sm:leading-8"
                 style={{ fontVariationSettings: "'opsz' 14" }}
               >
                 Your report is being prepared.

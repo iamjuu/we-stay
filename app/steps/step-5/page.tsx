@@ -41,7 +41,7 @@ function SelectionToggle({ selected }: { selected: boolean }) {
       </svg>
     </div>
   ) : (
-    <div className="h-8 w-8 shrink-0 rounded-full border-2 border-white/30 bg-transparent" />
+    <div className="h-8 w-8 shrink-0 rounded-full border-2 border-slate-300 bg-transparent" />
   );
 }
 
@@ -63,7 +63,7 @@ export default function StepFiveBuildPreference() {
   }, [buildPathHydrated, selections.buildPreferenceId]);
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
+    <div className="relative min-h-screen bg-transparent px-4">
       <div className="relative w-full">
         <Navbar />
 
@@ -74,7 +74,7 @@ export default function StepFiveBuildPreference() {
         <div className="relative mx-auto w-full max-w-7xl">
           <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10 lg:max-w-4xl">
             <div className="space-y-2 text-center mt-36 w-full">
-              <h1 className="steps-heading text-balance !text-white">
+              <h1 className="steps-heading text-balance !text-[#1a2a3a]">
                 How Would You Like to Build?
               </h1>
             </div>
@@ -90,13 +90,13 @@ export default function StepFiveBuildPreference() {
                   className={`relative flex min-h-[170px] flex-col rounded-2xl border px-5 py-5 text-left transition-all duration-200 ${
                     isSelected
                       ? "border-[#42B0A8] bg-white shadow-[0_0_0_1px_rgba(66,176,168,0.35)]"
-                      : "border-white/12 bg-white/5 hover:border-white/22 hover:bg-white/[0.07]"
+                      : "border-slate-200 bg-white/90 hover:border-slate-300 hover:bg-white"
                   }`}
                 >
                   <div className="mb-4 flex items-start justify-between gap-2">
                     <div
                       className={`flex h-11 w-11 items-center justify-center rounded-full ${
-                        isSelected ? "bg-[#0C1B2A]" : "bg-white/10"
+                        isSelected ? "bg-[#0C1B2A]" : "bg-slate-100"
                       }`}
                     >
                       <Image
@@ -114,8 +114,8 @@ export default function StepFiveBuildPreference() {
                     </div>
                     <SelectionToggle selected={isSelected} />
                   </div>
-                  <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-slate-900" : "text-white"}`}>{opt.title}</p>
-                  <p className={`mt-2 font-dm-sans text-sm leading-relaxed ${isSelected ? "text-slate-600" : "text-slate-400"}`}>
+                  <p className={`font-dm-sans text-lg font-bold ${isSelected ? "text-slate-900" : "text-slate-800"}`}>{opt.title}</p>
+                  <p className={`mt-2 font-dm-sans text-sm leading-relaxed ${isSelected ? "text-slate-600" : "text-slate-600"}`}>
                     {opt.description}
                   </p>
                 </button>

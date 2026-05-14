@@ -78,7 +78,7 @@ export default function ReportForm() {
   };
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
+    <div className="relative min-h-screen bg-transparent px-4">
       <div className="relative w-full">
         <Navbar />
 
@@ -89,10 +89,10 @@ export default function ReportForm() {
         <div className="relative mx-auto w-full max-w-7xl">
           <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10">
             <div className="space-y-2 text-center mt-36">
-              <h1 className="steps-heading whitespace-nowrap !text-white">
+              <h1 className="steps-heading whitespace-nowrap !text-[#1a2a3a]">
                 Your Report Is Being Prepared
               </h1>
-              <p className="steps-subheading text-sm leading-relaxed !text-[#F5F7FA]">
+              <p className="steps-subheading text-sm leading-relaxed !text-slate-600">
                 Enter your details to unlock your ADU eligibility score and next steps
               </p>
             </div>
@@ -133,7 +133,7 @@ export default function ReportForm() {
             </div>
 
             {error && (
-              <p className="w-full text-center font-dm-sans text-sm text-red-300">{error}</p>
+              <p className="w-full text-center font-dm-sans text-sm text-red-600">{error}</p>
             )}
 
             <StepsSubmitBtn

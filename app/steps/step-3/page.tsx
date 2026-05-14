@@ -67,7 +67,7 @@ export default function GoalSelection() {
   ];
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-[#1a2a3a] via-[#1e3448] to-[#162534] px-4">
+    <div className="relative min-h-screen bg-transparent px-4">
       <div className="relative w-full">
         <Navbar />
 
@@ -78,10 +78,10 @@ export default function GoalSelection() {
         <div className="relative mx-auto w-full max-w-7xl">
           <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10 lg:max-w-3xl">
             <div className="space-y-2 text-center mt-36">
-              <h1 className="steps-heading text-balance !text-white">
+              <h1 className="steps-heading text-balance !text-[#1a2a3a]">
                 What Are You Trying to Do?
               </h1>
-              <p className="steps-subheading text-sm leading-relaxed !text-[#F5F7FA]">
+              <p className="steps-subheading text-sm leading-relaxed !text-slate-600">
                 What Are You Hoping to Create?
               </p>
             </div>
@@ -112,7 +112,7 @@ export default function GoalSelection() {
                           ${
                             isSelected
                               ? "bg-white border-2 border-[#4DB6AC] shadow-[0_0_0_1px_rgba(45,212,191,0.22)]"
-                              : "bg-white/5 border-white/10 hover:bg-white/8 hover:border-white/20"
+                              : "border-slate-200 bg-white/90 hover:border-slate-300 hover:bg-white"
                           }
                         `}
                       >
@@ -121,7 +121,7 @@ export default function GoalSelection() {
                           <div
                             className={`
                               flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center
-                              ${isSelected ? "bg-[#F5F7FA] text-[#4DB6AC]" : "bg-white/10 text-slate-400"}
+                              ${isSelected ? "bg-[#F5F7FA] text-[#4DB6AC]" : "border border-slate-200 bg-white text-slate-600"}
                               transition-colors duration-200
                             `}
                             style={{ width: 40, height: 40, borderRadius: "9999px" }}
@@ -137,7 +137,7 @@ export default function GoalSelection() {
                           </div>
                           <span
                             className={` step-four-content text-sm font-medium leading-tight whitespace-nowrap ${
-                              isSelected ? "!text-black" : "text-slate-300"
+                              isSelected ? "!text-black" : "text-slate-700"
                             }`}
                           >
                             {opt.label}

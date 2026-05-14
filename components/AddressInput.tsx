@@ -37,6 +37,11 @@ interface AddressInputProps {
    * (hero eligibility). Text/placeholder colors should come from `inputClassName`.
    */
   transparentDarkField?: boolean;
+  /**
+   * Navy suggestion list (`#0c1420` panel, white text) without turning the input into dark mode.
+   * Use on the white hero pill so autocomplete matches the previous dark-theme styling.
+   */
+  navySuggestions?: boolean;
 }
 
 const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
@@ -51,6 +56,7 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
       wrapperClassName = '',
       inputClassName = '',
       transparentDarkField = false,
+      navySuggestions = false,
     },
     ref
   ) {
@@ -181,8 +187,8 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
       darkMode && transparentDarkField ? 'border-0 rounded-lg' : 'border-2 rounded-lg';
 
     const darkModeBase = transparentDarkField
-      ? 'bg-transparent text-white placeholder:text-white/40 outline-none focus:border-transparent focus:ring-0 focus:ring-transparent disabled:bg-transparent [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(0_0_0/0)] [&:-webkit-autofill]:[-webkit-text-fill-color:inherit] [&:-webkit-autofill]:[transition:background-color_99999s_ease-out]'
-      : 'bg-black/60 border-white text-white placeholder:text-white/40 focus:border-[#42B0A8] focus:ring-2 focus:ring-[#42B0A8]/20 disabled:bg-black/30';
+      ? '!bg-white text-gray-900 placeholder:text-gray-500 outline-none focus:border-transparent focus:ring-0 focus:ring-transparent disabled:!bg-gray-100 [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_rgb(255_255_255)] [&:-webkit-autofill]:[-webkit-text-fill-color:inherit] [&:-webkit-autofill]:[transition:background-color_99999s_ease-out]'
+      : '!bg-white border-gray-300 text-gray-900 placeholder:text-gray-500 focus:border-[#42B0A8] focus:ring-2 focus:ring-[#42B0A8]/20 disabled:!bg-gray-100';
 
     const baseInputClass = `w-full px-4 py-3 text-lg ${darkTransparentShell}
                      outline-none transition-all duration-200
@@ -191,6 +197,8 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
                        ? darkModeBase
                        : 'bg-white border-black text-black placeholder:text-gray-400 focus:border-[#42B0A8] focus:ring-2 focus:ring-[#42B0A8]/20 disabled:bg-gray-100 shadow-md'
                      }`;
+
+    const suggestionPanelNavy = darkMode || navySuggestions;
 
     return (
       <div className={`relative w-full ${wrapperClassName}`}>
@@ -205,14 +213,7 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
             disabled={disabled}
             placeholder="Enter your O‘ahu, Hawai'i address"
             className={`${baseInputClass} ${inputClassName}`}
-            style={
-              darkMode && transparentDarkField
-                ? {
-                    backgroundColor: 'transparent',
-                    ...(disabled ? { opacity: 1 } : {}),
-                  }
-                : undefined
-            }
+            style={{ backgroundColor: '#ffffff' }}
           />
           {isLoading && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -227,7 +228,7 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
           <div
             ref={dropdownRef}
             className={`scrollbar absolute inset-x-0 top-full z-[60] mt-[9px] max-h-80 min-w-0 w-full overflow-y-auto rounded-lg shadow-lg
-                     ${darkMode ? 'border border-white/25 bg-[#0c1420]/95' : 'border border-black bg-white'}`}
+                     ${suggestionPanelNavy ? 'border border-white/25 bg-[#0c1420]/95' : 'border border-black bg-white'}`}
           >
             {predictions.map((prediction, index) => (
               <button
@@ -236,15 +237,15 @@ const AddressInput = forwardRef<AddressInputHandle, AddressInputProps>(
                 onClick={() => handleSelect(prediction)}
                 className={`w-full px-4 py-3 text-left transition-colors duration-150
                          last:border-b-0
-                         ${darkMode
+                         ${suggestionPanelNavy
                            ? `border-b border-white/20 hover:bg-white/10 ${index === selectedIndex ? 'bg-white/10' : ''}`
                            : `border-b border-gray-100 hover:bg-[#42B0A8]/10 ${index === selectedIndex ? 'bg-[#42B0A8]/10' : ''}`
                          }`}
               >
-                <div className={`font-medium ${darkMode ? 'text-white' : 'text-gray-900'}`}>
+                <div className={`font-medium ${suggestionPanelNavy ? 'text-white' : 'text-gray-900'}`}>
                   {prediction.structured_formatting?.main_text || prediction.description.split(',')[0]}
                 </div>
-                <div className={`text-sm ${darkMode ? 'text-white/60' : 'text-gray-500'}`}>
+                <div className={`text-sm ${suggestionPanelNavy ? 'text-white/60' : 'text-gray-500'}`}>
                   {prediction.structured_formatting?.secondary_text ||
                     prediction.description.split(',').slice(1).join(',')}
                 </div>
