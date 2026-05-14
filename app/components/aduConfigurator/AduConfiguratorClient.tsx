@@ -70,6 +70,13 @@ const PLANS: {
   },
 ];
 
+const ILLUSTRATIVE_MONTHLY_RANGE_BY_PLAN: Record<PlanId, string> = {
+  studio: "400 sqft · ~$1,050 – $1,150 / mo",
+  "one-bedroom": "600 sqft · ~$1,500 – $1,650 / mo",
+  "two-bedroom": "800 sqft · ~$1,950 – $2,150 / mo",
+  "two-office": "1,000 sqft · ~$2,400 – $2,650 / mo",
+};
+
 const SIDING_OPTIONS: { id: SidingId; title: string; sub: string }[] = [
   { id: "default-stucco", title: "Default stucco", sub: "Cladding material" },
   { id: "board-batten", title: "Board & Batten", sub: "Cladding material" },
@@ -758,6 +765,10 @@ export function AduConfiguratorClient() {
               <SnapshotRow
                 label="Customization Summary"
                 value={`${addonCount} site add-ons · ${upgradeCount} upgrades`}
+              />
+              <SnapshotRow
+                label="Illustrative monthly range"
+                value={ILLUSTRATIVE_MONTHLY_RANGE_BY_PLAN[planId]}
               />
               <SnapshotRow label="Estimated Rental Income" value="$3,400 – $3,600" />
             </div>
