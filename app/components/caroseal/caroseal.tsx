@@ -289,10 +289,22 @@ export default function PropertyCarousel() {
                         {isActive && (
                           <div className="pointer-events-none absolute bottom-4 right-4">
                             <div className="flex min-w-auto flex-col gap-[3.89px] rounded-[11.14px] border border-white/25 bg-[#0C1B2A]/30 px-[7.78px] py-[36px] backdrop-blur-md">
-                              <h3 className="font-dm-sans text-[14.6px] font-semibold leading-[14.6px] text-white">
+                              <h3
+                                className={
+                                  bp === "lg"
+                                    ? "section-three-card-heading font-semibold text-white"
+                                    : "font-dm-sans text-[14.6px] font-semibold leading-[14.6px] text-white"
+                                }
+                              >
                                 {property.title}
                               </h3>
-                              <p className="font-dm-sans text-[10.89px] font-normal leading-[15.14px] tracking-[-0.47px] text-white/90">
+                              <p
+                                className={
+                                  bp === "lg"
+                                    ? "section-three-card-paragraph text-white/90"
+                                    : "font-dm-sans text-[10.89px] font-normal leading-[15.14px] tracking-[-0.47px] text-white/90"
+                                }
+                              >
                                 {property.description}
                               </p>
                             </div>

@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import Navbar from "@/app/components/navbar/navbar";
 import Footer from "@/app/components/footer/footer";
+import CtaButton from "@/app/components/ctaButton/ctaButton";
 import { ContactImage } from "@/content";
 
 export default function ContactPage() {
@@ -58,23 +59,20 @@ export default function ContactPage() {
                     />
                   </div>
 
-                  <button
-                    type="button"
-                    className="flex h-[56px] w-full shrink-0 items-center justify-center gap-[9px] rounded-full px-10 font-dm-sans text-[15px] font-semibold text-white shadow-sm transition-colors hover:opacity-[0.94] active:opacity-90 sm:h-16 sm:px-14"
-                    style={{ backgroundColor: "#F05C4A" }}
-                  >
-                    Book Discovery Call
-                    <ArrowRight className="size-[18px] shrink-0" aria-hidden strokeWidth={2.5} />
-                  </button>
+                  <CtaButton
+                    buttonName="Book Discovery Call"
+                    href="https://links.womcom.com/widget/bookings/westay-discovery-call"
+                    className="w-full"
+                  />
                 </div>
               </div>
 
               {/* Right — Image (height auto based on left content) */}
-              <div className="w-full">
+              <div className="w-full overflow-hidden rounded-[20px]">
                 <Image
                   src={ContactImage}
                   alt="WeStay ADU home"
-                  className="h-full w-full rounded-[20px] object-cover"
+                  className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                   sizes="(min-width: 1280px) 50vw, 100vw"
                   priority
                 />

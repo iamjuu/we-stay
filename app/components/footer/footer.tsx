@@ -8,7 +8,7 @@ type FooterQuickLink = {
 };
 
 const FOOTER_QUICK_LINKS: FooterQuickLink[] = [
-  { label: "About us", href: "#" },
+  { label: "About us", href: "/about" },
   { label: "Contact us", href: "/contact" },
   { label: "Blog", href: "#" },
   { label: "FAQ", href: "#" },

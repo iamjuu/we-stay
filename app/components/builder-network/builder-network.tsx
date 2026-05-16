@@ -9,9 +9,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { Search } from "lucide-react";
+import { Info, Search } from "lucide-react";
+import { partnerImage } from "@/content";
 import CtaButton from "../ctaButton/ctaButton";
-
 const LENDING_PARTNER_MAILTO = "mailto:richie.westayhome@gmail.com";
 
 const SearchIcon = (props: SVGProps<SVGSVGElement>) => (
@@ -364,8 +364,10 @@ const BuilderNetwork = () => {
                     <RefreshIcon className="size-[24px] transition-colors duration-300" />
                   </div>
                 </div>
-                <div className="flex items-center gap-2 px-4 text-sm text-white/65 lg:px-6 lg:westay-para">
-                  <span className="whitespace-nowrap text-2xl text-white/65">Apply</span>
+                <div className="flex items-center gap-1.5 px-2 text-white/65 sm:gap-2 sm:px-4 lg:px-6 lg:westay-para">
+                  <span className="whitespace-nowrap text-sm text-white/65 sm:text-base md:text-lg lg:text-2xl">
+                    Apply
+                  </span>
                   <span
                     className="min-w-6 flex-1 self-center"
                     style={{
@@ -375,7 +377,9 @@ const BuilderNetwork = () => {
                     }}
                     aria-hidden
                   />
-                  <span className="whitespace-nowrap text-2xl">Review</span>
+                  <span className="whitespace-nowrap text-sm text-white/65 sm:text-base md:text-lg lg:text-2xl">
+                    Review
+                  </span>
                   <span
                     className="min-w-6 flex-1 self-center"
                     style={{
@@ -385,7 +389,9 @@ const BuilderNetwork = () => {
                     }}
                     aria-hidden
                   />
-                  <span className="whitespace-nowrap text-2xl">Approved Network</span>
+                  <span className="whitespace-nowrap text-sm text-white/65 sm:text-base md:text-lg lg:text-2xl">
+                    Approved Network
+                  </span>
                 </div>
               </div>
             </div>
@@ -393,7 +399,7 @@ const BuilderNetwork = () => {
         </div>
       </section>
 
-      {/* <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-50">
+      <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-50">
         <div className="mx-auto max-w-7xl 2xl:max-w-none">
           <div className="w-full flex flex-col gap-[50px]">
             <h1 className="join-the-westay text-center text-[white] transition-colors duration-300 hover:text-[#4DB6AC]">
@@ -405,10 +411,10 @@ const BuilderNetwork = () => {
               <Image
                 src={partnerImage}
                 className="block h-auto w-full origin-center transition-transform duration-500 ease-out group-hover:scale-105"
-                alt="partner"
-                width={1000}
-                height={1000}
-                sizes="100vw"
+                alt="Partner with WeStay financing network"
+                width={1200}
+                height={400}
+                sizes="(max-width: 1280px) 100vw, 1280px"
               />
             </div>
             <div className="grid w-full grid-cols-1 gap-4 min-[998px]:grid-cols-2 min-[998px]:gap-[20px]">
@@ -460,7 +466,7 @@ const BuilderNetwork = () => {
             </div>
           </div>
         </div>
-      </section> */}
+      </section>
     </div>
   );
 };

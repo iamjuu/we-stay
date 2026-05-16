@@ -181,9 +181,9 @@ export default function FlipClockHeadline({
           border: 0;
         }
       `}</style>
-      <div className="relative mx-auto max-w-full">
+      <div className="relative mx-auto max-w-full text-center">
         <p
-          className={`mx-auto inline max-w-full text-center ${className}`}
+          className={`text-center ${className}`}
           style={style}
           aria-hidden
         >

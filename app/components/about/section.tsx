@@ -14,8 +14,8 @@ interface StoryProps {
 const IMAGE_CARD_BASE =
   'relative mx-auto w-full h-full shrink-0 overflow-hidden rounded-[20px] shadow-xl lg:mx-0';
 
-const CARD_PORTRAIT = `${IMAGE_CARD_BASE} max-w-[745px]`;
-const CARD_LANDSCAPE = `${IMAGE_CARD_BASE} max-w-[633px]`;
+const CARD_PORTRAIT = `${IMAGE_CARD_BASE} aspect-[3/4] lg:aspect-auto lg:h-full max-w-[745px]`;
+const CARD_LANDSCAPE = `${IMAGE_CARD_BASE} aspect-[4/3] lg:aspect-auto lg:h-full max-w-[633px]`;
 
 const BODY_SPEC =
   'font-dm-sans text-[clamp(17px,1.46vw,28px)] font-normal leading-[1.5] tracking-normal text-[#93928E]';
@@ -54,7 +54,7 @@ const StorySection = ({
                 src={imageSrc}
                 alt={imageAlt}
                 fill
-                className="object-cover object-center"
+                className="object-cover object-center transition-transform duration-500 hover:scale-105"
                 priority={featured}
               />
             </div>

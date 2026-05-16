@@ -109,7 +109,7 @@ export default function RequirementsReviewModal({
         ) : (
           <div className="flex flex-col items-center justify-center gap-4 px-2 py-2 text-center sm:gap-5">
             <Image
-              src="/gif/house-stats.gif"
+              src="/gif/house-statsnew.gif"
               alt=""
               width={168}
               height={168}
