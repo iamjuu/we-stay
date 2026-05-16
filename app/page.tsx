@@ -178,7 +178,7 @@ export default function Home() {
         </h1>
       </div>
 
-      <div className="w-full px-4 py-[120px] sm:px-6 lg:px-8 2xl:px-50">
+      <div className="w-full px-4 py-16 sm:py-20 md:py-24 lg:py-[120px] sm:px-6 lg:px-8 2xl:px-50">
         <div className="mx-auto max-w-7xl 2xl:max-w-none">
           <div className="flex flex-col overflow-hidden rounded-[20px] border border-[#E1E0DB] bg-[#F5F7FA] lg:flex-row">
             <div className="group relative w-full min-h-[240px] shrink-0 overflow-hidden rounded-t-[20px] lg:min-h-0 lg:w-[46%] lg:rounded-[20px]">
@@ -195,7 +195,7 @@ export default function Home() {
                 <div className="flex w-full flex-col gap-0">
                   <h1
                     style={{ fontFamily: "DM Sans" }}
-                    className="flex flex-col gap-1 text-left font-medium  leading-[1.12] sm:text-[30px] md:text-[35px] min-[1849px]:text-[50px]! min-[1849px]:leading-[1.06] md:tracking-[-0.06em]"
+                    className="flex flex-col gap-1 text-left font-medium leading-[1.12] text-[22px] sm:text-[30px] md:text-[35px] min-[1849px]:text-[50px]! min-[1849px]:leading-[1.06] md:tracking-[-0.06em]"
                   >
                     Most Homeowners Want to Build,
                     <span className="text-[#93928E]">

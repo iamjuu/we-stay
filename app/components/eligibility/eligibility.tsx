@@ -6,7 +6,7 @@ const BOOKING_URL = "https://links.womcom.com/widget/bookings/westay-discovery-c
 
 export default function Eligibility() {
   return (
-    <section className="w-full px-4 py-[120px] sm:px-6 lg:px-8 2xl:px-[35px]">
+    <section className="w-full px-4 py-16 sm:py-20 md:py-24 lg:py-[120px] sm:px-6 lg:px-8 2xl:px-[35px]">
       {/* 1. Added 'relative' and 'overflow-hidden' here */}
       <div className="mx-auto max-w-7xl 2xl:max-w-none relative overflow-hidden rounded-[24px]">
         

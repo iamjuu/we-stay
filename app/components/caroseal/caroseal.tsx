@@ -119,6 +119,9 @@ const properties = [
   { id: 3, title: "Second Story Addition", description: "Build upward when space is limited.", image: Caroeal3 },
 ];
 
+/** Left rail: two 42px buttons + 8px gap — slides extend here and pass underneath on desktop */
+const ARROW_RAIL_PX = -20;
+
 export default function PropertyCarousel() {
   const [current, setCurrent] = useState(0);
   const [dragX, setDragX] = useState(0);
@@ -196,90 +199,112 @@ export default function PropertyCarousel() {
           </div>
         </div>
 
-        <div className="flex flex-row gap-16 2xl:gap-[100px]">          {/* Nav Buttons */}
-          <div className="flex shrink-0 gap-2 mb-8">
-            <button onClick={prev} className="flex h-[42px] w-[42px] items-center justify-center rounded-[8px] border-[1.5px] border-[#ccc] bg-white hover:bg-gray-50 transition-colors">
-              <MoveLeft className="h-5 w-5 text-gray-500" />
-            </button>
-            <button onClick={next} className="flex h-[42px] w-[42px] items-center justify-center rounded-[8px] border-[1.5px] border-[#f05c4a] bg-white hover:bg-red-50 transition-colors">
-              <MoveRight className="h-5 w-5 text-[#f05c4a]" />
-            </button>
-          </div>
+        {/* Carousel — desktop: arrows in left rail; slides fade/pass underneath when exiting left */}
+        <div className="relative min-w-0 w-full sm:-mr-6 lg:-mr-8 2xl:-mr-[100px]">
+          <div
+            className="relative w-full sm:pl-[92px]"
+            style={{ ["--arrow-rail" as string]: `${ARROW_RAIL_PX}px` }}
+          >
+            <div className="absolute left-0 top-6 z-40 hidden sm:flex gap-2">
+              <button
+                type="button"
+                onClick={prev}
+                aria-label="Previous slide"
+                className="flex h-[42px] w-[42px] items-center justify-center rounded-[8px] border-[1.5px] border-[#ccc] bg-white hover:bg-gray-50 transition-colors"
+              >
+                <MoveLeft className="h-5 w-5 text-gray-500" />
+              </button>
+              <button
+                type="button"
+                onClick={next}
+                aria-label="Next slide"
+                className="flex h-[42px] w-[42px] items-center justify-center rounded-[8px] border-[1.5px] border-[#f05c4a] bg-white hover:bg-red-50 transition-colors"
+              >
+                <MoveRight className="h-5 w-5 text-[#f05c4a]" />
+              </button>
+            </div>
 
-          {/* Carousel — needs flex-1 + min-w-0: slides are position:absolute so this column has no in-flow width otherwise */}
-          <div className="min-w-0 flex-1 -mr-4 sm:-mr-6 lg:-mr-8 2xl:-mr-[100px]">
             <div
-              ref={viewportRef}
-              role="presentation"
-              className="relative w-full cursor-grab touch-none select-none active:cursor-grabbing"
-              style={{ height: "clamp(300px, 50vw, 600px)" }}
-              onPointerDown={onPointerDown}
-              onPointerMove={onPointerMove}
-              onPointerUp={endDrag}
-              onPointerCancel={endDrag}
-              onLostPointerCapture={onLostPointerCapture}
-            >
+            ref={viewportRef}
+            role="presentation"
+            className="relative w-full cursor-grab touch-none select-none overflow-hidden active:cursor-grabbing"
+            style={{ height: "clamp(300px, 50vw, 600px)" }}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={endDrag}
+            onPointerCancel={endDrag}
+            onLostPointerCapture={onLostPointerCapture}
+          >
               <div
-                className="absolute inset-0 will-change-transform"
+                className="pointer-events-none absolute inset-y-0 left-0 z-20 hidden w-24 bg-gradient-to-r from-white via-white/80 to-transparent sm:block"
+                aria-hidden
+              />
+
+              <div
+                className="absolute inset-0 will-change-transform sm:-left-[var(--arrow-rail)] sm:w-[calc(100%+var(--arrow-rail))]"
                 style={{
                   transform: `translateX(${dragX}px)`,
                   transition: isDragging ? "none" : "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
               >
-                <div className="relative h-full w-full">
-                  {properties.map((property, index) => {
-                    const isActive = index === current;
-                    const isNext = index === (current + 1) % n;
-                    const isPrev = index === (current - 1 + n) % n;
-                    const base = slideStyles(bp, isActive, isNext, isPrev);
+              <div className="relative h-full w-full">
+                {properties.map((property, index) => {
+                  const isActive = index === current;
+                  const isNext = index === (current + 1) % n;
+                  const isPrev = index === (current - 1 + n) % n;
+                  const base = slideStyles(bp, isActive, isNext, isPrev);
 
-                    return (
-                      <div
-                        key={property.id}
-                        className="group shadow-xl"
-                        style={{
-                          ...base,
-                          transition: isDragging ? "none" : base.transition,
-                        }}
-                      >
-                        <div className="relative h-full w-full overflow-hidden rounded-[inherit]">
-                          <Image
-                            alt={property.title}
-                            src={property.image}
-                            fill
-                            className="pointer-events-none origin-center object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-                            sizes="(max-width: 768px) 100vw, 70vw"
-                            priority={isActive}
-                            draggable={false}
+                  return (
+                    <div
+                      key={property.id}
+                      className="group shadow-xl"
+                      style={{
+                        ...base,
+                        transition: isDragging ? "none" : base.transition,
+                      }}
+                    >
+                      <div className="relative h-full w-full overflow-hidden rounded-[inherit]">
+                        <Image
+                          alt={property.title}
+                          src={property.image}
+                          fill
+                          className="pointer-events-none origin-center object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                          sizes="(max-width: 768px) 100vw, 70vw"
+                          priority={isActive}
+                          draggable={false}
+                        />
+
+                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+                        {isNext && (
+                          <div
+                            className="pointer-events-none absolute inset-0 z-10"
+                            style={{
+                              background:
+                                "linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 60%, rgba(255,255,255,0.93) 100%)",
+                            }}
                           />
+                        )}
 
-                          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-                          {isNext && (
-                            <div
-                              className="pointer-events-none absolute inset-0 z-10"
-                              style={{
-                                background:
-                                  "linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 60%, rgba(255,255,255,0.93) 100%)",
-                              }}
-                            />
-                          )}
-
-                          {isActive && (
-                            <div className="pointer-events-none absolute bottom-0 left-0 right-0 p-3 sm:p-5">
-                              <div className="inline-block max-w-[calc(100%-1.5rem)] rounded-[16px] bg-black/30 px-3 py-2 backdrop-blur-sm sm:px-4 sm:py-3">
-                                <h3 className="mb-1 text-lg font-bold text-white sm:text-xl">{property.title}</h3>
-                                <p className="text-sm text-white/80">{property.description}</p>
-                              </div>
+                        {isActive && (
+                          <div className="pointer-events-none absolute bottom-4 right-4">
+                            <div className="flex min-w-auto flex-col gap-[3.89px] rounded-[11.14px] border border-white/25 bg-[#0C1B2A]/30 px-[7.78px] py-[36px] backdrop-blur-md">
+                              <h3 className="font-dm-sans text-[14.6px] font-semibold leading-[14.6px] text-white">
+                                {property.title}
+                              </h3>
+                              <p className="font-dm-sans text-[10.89px] font-normal leading-[15.14px] tracking-[-0.47px] text-white/90">
+                                {property.description}
+                              </p>
                             </div>
-                          )}
-                        </div>
+                          </div>
+                        )}
                       </div>
-                    );
-                  })}
-                </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
+          </div>
           </div>
         </div>
 

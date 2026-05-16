@@ -9,12 +9,12 @@ const testimonialCardBackground =
   "linear-gradient(114.49deg, rgba(57, 92, 126, 0.1) 0.47%, rgba(162, 184, 206, 0.1) 99.53%)";
 
 /**
- * Carousel left/right edge “fade” (not filter: blur). Two absolutely positioned strips
- * paint a white → transparent gradient over the marquee so cards don’t look cut off flat.
+ * Carousel left/right edge "fade" (not filter: blur). Two absolutely positioned strips
+ * paint a white → transparent gradient over the marquee so cards don't look cut off flat.
  *
  * - Spread: `carouselEdgeFadeWidthClass` — wider strip = softer, longer fade into the track.
  * - Intensity: gradient stops — more solid white at the start (higher %) = stronger hide at the rim.
- *   Match `carouselEdgeFadeLeft` / `Right` fill to your section background if it isn’t `#fff`.
+ *   Match `carouselEdgeFadeLeft` / `Right` fill to your section background if it isn't `#fff`.
  */
 const carouselEdgeFadeWidthClass = "w-28 sm:w-48 lg:w-60";
 const carouselEdgeFadeLeft =
@@ -83,20 +83,27 @@ function TestimonialCard({
   expanded,
   dimmed,
   onClick,
+  isMobile,
 }: {
   t: (typeof testimonials)[0];
   expanded: boolean;
   dimmed: boolean;
   onClick: () => void;
+  isMobile: boolean;
 }) {
+  const collapsedW = isMobile ? "220px" : "356px";
+  const collapsedH = isMobile ? "155px" : "200px";
+  const expandedW  = isMobile ? "270px" : "448px";
+  const expandedH  = isMobile ? "290px" : "390px";
+
   return (
     <div
       data-card
       onClick={onClick}
       className="shrink-0 rounded-[20px] overflow-hidden flex flex-col cursor-pointer select-none"
       style={{
-        width: expanded ? "448px" : "356px",
-        height: expanded ? "390px" : "200px",
+        width:  expanded ? expandedW  : collapsedW,
+        height: expanded ? expandedH : collapsedH,
         background: testimonialCardBackground,
         border: expanded ? "0.5px solid rgba(0,0,0,0.12)" : "1px solid #E0E0E2",
         boxShadow: expanded
@@ -107,30 +114,45 @@ function TestimonialCard({
         pointerEvents: dimmed ? "none" : "auto",
         transition:
           "width 0.4s cubic-bezier(0.4,0,0.2,1), height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease, filter 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border 0.3s ease",
-        /* Above sibling cards when expanded; edge fade masks are z-20 — track lifts when focused so expanded isn’t covered */
+        /* Above sibling cards when expanded; edge fade masks are z-20 — track lifts when focused so expanded isn't covered */
         zIndex: expanded ? 25 : 1,
         position: "relative",
       }}
     >
       {/* ── COLLAPSED: quote + avatar row ── */}
       {!expanded && (
-        <div className="flex flex-col justify-between h-full p-5 ">
-          <p className="text-[18.5px] leading-[1.65] text-[#0C1B2A]/65 italic line-clamp-3">
+        <div className={`flex flex-col justify-between h-full ${isMobile ? "p-3" : "p-5"}`}>
+          <p
+            className="leading-[1.65] text-[#0C1B2A]/65 italic line-clamp-3"
+            style={{ fontSize: isMobile ? "13px" : "18.5px" }}
+          >
             &ldquo;{t.quote}&rdquo;
           </p>
-          <div className="flex items-center gap-3 mt-4">
-            <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 border border-[#0C1B2A]/10">
+          <div className="flex items-center gap-2 mt-3">
+            <div
+              className={`rounded-full overflow-hidden flex-shrink-0 border border-[#0C1B2A]/10 ${isMobile ? "w-7 h-7" : "w-9 h-9"}`}
+            >
               <Image
                 src={t.image}
                 alt={t.imageAlt}
-                width={36}
-                height={36}
+                width={isMobile ? 28 : 36}
+                height={isMobile ? 28 : 36}
                 className="h-full w-full object-cover object-top grayscale"
               />
             </div>
             <div>
-              <p className="text-[12px] font-semibold text-[#0C1B2A]">{t.author}</p>
-              <p className="text-[11px] text-[#0C1B2A]/40 mt-0.5">{t.role}</p>
+              <p
+                className="font-semibold text-[#0C1B2A]"
+                style={{ fontSize: isMobile ? "11px" : "12px" }}
+              >
+                {t.author}
+              </p>
+              <p
+                className="text-[#0C1B2A]/40 mt-0.5"
+                style={{ fontSize: isMobile ? "10px" : "11px" }}
+              >
+                {t.role}
+              </p>
             </div>
           </div>
         </div>
@@ -140,32 +162,53 @@ function TestimonialCard({
       {expanded && (
         <div className="flex flex-col h-full">
           {/* Body: quote text + small avatar pinned top-right */}
-          <div className="relative flex-1 p-6 pb-3">
+          <div className={`relative flex-1 ${isMobile ? "p-4 pb-2" : "p-6 pb-3"}`}>
             {/* Small circular avatar — top right */}
-            <div className="absolute top-5 right-5 w-10 h-10 rounded-full overflow-hidden border border-[#0C1B2A]/10 flex-shrink-0">
+            <div
+              className={`absolute top-4 right-4 rounded-full overflow-hidden border border-[#0C1B2A]/10 flex-shrink-0 ${isMobile ? "w-8 h-8" : "w-10 h-10"}`}
+            >
               <Image
                 src={t.image}
                 alt={t.imageAlt}
-                width={40}
-                height={40}
+                width={isMobile ? 32 : 40}
+                height={isMobile ? 32 : 40}
                 className="grayscale"
-                style={{ width: "40px", height: "40px", objectFit: "cover", objectPosition: "top", display: "block" }}
+                style={{
+                  width: isMobile ? "32px" : "40px",
+                  height: isMobile ? "32px" : "40px",
+                  objectFit: "cover",
+                  objectPosition: "top",
+                  display: "block",
+                }}
               />
             </div>
 
             {/* Quote text */}
-            <p className="text-[22px] leading-[1.78] text-[#0C1B2A]/80 pr-14">
+            <p
+              className="leading-[1.78] text-[#0C1B2A]/80 pr-12"
+              style={{ fontSize: isMobile ? "14px" : "22px" }}
+            >
               {t.quote}
             </p>
           </div>
 
           {/* Footer: author name + role */}
           <div
-            className="mx-3 mb-3 px-4 py-3 rounded-xl shrink-0"
+            className="mx-2 mb-2 px-3 py-2 rounded-xl shrink-0"
             style={{ background: "#d8dbdf" }}
           >
-            <p className="text-[16px] font-semibold text-[#0C1B2A]">{t.author}</p>
-            <p className="text-[14px] text-[#0C1B2A]/50 mt-0.5">{t.role}</p>
+            <p
+              className="font-semibold text-[#0C1B2A]"
+              style={{ fontSize: isMobile ? "13px" : "16px" }}
+            >
+              {t.author}
+            </p>
+            <p
+              className="text-[#0C1B2A]/50 mt-0.5"
+              style={{ fontSize: isMobile ? "11px" : "14px" }}
+            >
+              {t.role}
+            </p>
           </div>
         </div>
       )}
@@ -176,9 +219,18 @@ function TestimonialCard({
 // ── MAIN EXPORT ───────────────────────────────────────────────────────────────
 export default function TestimonialCarousel() {
   const [focusedId, setFocusedId] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
 
   const doubled = [...testimonials, ...testimonials];
+
+  // Track mobile breakpoint
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   // Pause marquee while expanded
   useEffect(() => {
@@ -264,22 +316,22 @@ export default function TestimonialCarousel() {
         >
           {/* Edge fade masks — see carouselEdgeFade* constants for spread + intensity */}
           <div
-            className={`pointer-events-none absolute left-0 top-0 bottom-0 z-20 ${carouselEdgeFadeWidthClass}`}
+            className={`pointer-events-none absolute left-0 top-0 bottom-0 z-20 hidden md:block ${carouselEdgeFadeWidthClass}`}
             style={{ background: carouselEdgeFadeLeft }}
           />
           <div
-            className={`pointer-events-none absolute right-0 top-0 bottom-0 z-20 ${carouselEdgeFadeWidthClass}`}
+            className={`pointer-events-none absolute right-0 top-0 bottom-0 z-20 hidden md:block ${carouselEdgeFadeWidthClass}`}
             style={{ background: carouselEdgeFadeRight }}
           />
 
           {/* Scrolling track — items-end so expanded card grows upward */}
           <div
             ref={trackRef}
-            className="relative flex items-center gap-5 py-6"
+            className={`relative flex items-center py-6 ${isMobile ? "gap-3" : "gap-5"}`}
             style={{
               width: "max-content",
               animation: `marqueeScroll ${testimonials.length * 5.5}s linear infinite`,
-              // Whole row above edge fades (z-20) while a card is open so expanded content isn’t washed out
+              // Whole row above edge fades (z-20) while a card is open so expanded content isn't washed out
               zIndex: focusedId !== null ? 30 : 0,
             }}
           >
@@ -290,6 +342,7 @@ export default function TestimonialCarousel() {
                 expanded={focusedId === t.id}
                 dimmed={focusedId !== null && focusedId !== t.id}
                 onClick={() => setFocusedId(focusedId === t.id ? null : t.id)}
+                isMobile={isMobile}
               />
             ))}
           </div>

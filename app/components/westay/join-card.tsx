@@ -86,11 +86,15 @@ const getStickyTop = (index: number) => 100 + index * 16;
 export default function JoinCard() {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  /**
-   * Index of the card currently pinned at the top of the sticky stack.
-   * `-1` means no card has docked yet (section is below the viewport).
-   */
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [isLg, setIsLg] = useState(false);
+
+  useEffect(() => {
+    const checkLg = () => setIsLg(window.innerWidth >= 1024);
+    checkLg();
+    window.addEventListener("resize", checkLg);
+    return () => window.removeEventListener("resize", checkLg);
+  }, []);
 
   useEffect(() => {
     const compute = () => {
@@ -169,7 +173,7 @@ export default function JoinCard() {
           <div
             className="relative lg:self-start"
             style={{
-              paddingBottom: `${joinSteps.length * 40}px`,
+              paddingBottom: isLg ? `${joinSteps.length * 40}px` : "0px",
             }}
           >
             {joinSteps.map((step, index) => {
@@ -188,9 +192,9 @@ export default function JoinCard() {
                   style={{
                     top: `${stickyTop}px`,
                     zIndex: step.zIndex,
-                    rotate: step.rotation,
-                    marginLeft: step.offset,
-                    marginTop: index === 0 ? "0px" : "20px", // 👈 fixed 20px gap between every card
+                    rotate: isLg ? step.rotation : "0deg",
+                    marginLeft: isLg ? step.offset : "0px",
+                    marginTop: index === 0 ? "0px" : "20px",
                   }}
                   className="
                     sticky mb-3

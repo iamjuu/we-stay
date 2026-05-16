@@ -104,8 +104,8 @@
 
   /* SECTION */
   .section-heading {
-    font-size: clamp(52px, 2.7vw, 52px);
-    line-height: clamp(65px, 3.4vw, 65px);
+    font-size: clamp(28px, 4.5vw, 52px);
+    line-height: clamp(36px, 5.5vw, 65px);
   }
 
   .section-paragraph {

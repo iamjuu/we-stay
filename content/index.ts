@@ -4,9 +4,9 @@ import HeroImage from "./images/hero-img.png";
 import NaturalImage from "./images/gridiamge.svg";
 
 import SectionTwo from "./images/Section-two.svg";
-import Caroeal1 from "./images/caroseal-1.svg";
-import Caroeal2 from "./images/caroseal-2.svg";
-import Caroeal3 from "./images/caroseal-3.svg";
+import Caroeal1 from "./carosel/backyardhome.png";
+import Caroeal2 from "./carosel/attached addition.png";
+import Caroeal3 from "./carosel/secondstoryaddition.png";
 import Men1 from "./images/men.svg";
 import Men2 from "./images/men2.svg";
 import Property from "./images/property.png";

@@ -9,8 +9,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { partnerImage } from "@/content";
-import { Info, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import CtaButton from "../ctaButton/ctaButton";
 
 const LENDING_PARTNER_MAILTO = "mailto:richie.westayhome@gmail.com";
@@ -227,7 +226,6 @@ const BuilderNetwork = () => {
 
   return (
     <div className="w-full bg-[#0C1B2A]">
-      {/* Removed max-w constraints and adjusted padding */}
       <section className="w-full bg-[#0C1B2A] py-16 sm:py-20 lg:py-24">
         <div className="w-full px-4 sm:px-6 lg:px-8 2xl:px-50">
           <h2
@@ -238,29 +236,38 @@ const BuilderNetwork = () => {
             <span className="text-[#93928E]">Builder Network</span>
           </h2>
 
-          {/* Changed grid-cols-2 to grid-cols-10 for more granular control */}
+          {/*
+            2-column layout: left flex-col (Who We Want + Why Join) | right flex-col (Image flex-1 + Process)
+            At lg+ the grid row stretches both cols to equal height.
+            Image uses flex-1 so it fills: total-height − Process-height − gap.
+            With Process ≈ half Why Join's height, the image bottom naturally lands ~mid Why Join.
+            The puzzle notch clip-path is measured by ResizeObserver and recomputed automatically.
+          */}
           <div
             className="grid grid-cols-1 gap-3 lg:grid-cols-10 lg:gap-4"
             style={{ fontFamily: '"DM Sans", sans-serif' }}
           >
-            {/* LEFT COLUMN: Takes up 3 out of 10 columns (30%) */}
+            {/* LEFT COLUMN */}
             <div className="flex flex-col gap-3 lg:col-span-4 lg:gap-4">
-              <div 
-                  style={{
-                    background:
-                      "linear-gradient(114.49deg, rgba(57,92,126,0.1) 0.47%, rgba(162,184,206,0.1) 99.53%)",
-                    border: "1px solid #33506E",
-                    boxShadow: "5px 10px 20px rgba(0,0,0,0.1)",
-                    backdropFilter: "blur(20px)",
-                    WebkitBackdropFilter: "blur(20px)",
-                  }}
-              className="group relative flex flex-col items-center gap-2 rounded-3xl border border-white/10 bg-[#162032] text-center transition-transform duration-300 ease-out hover:scale-[1.02]">
-                <div className="w-full p-[10px]  flex justify-end">
+
+              {/* Who We Want */}
+              <div
+                style={{
+                  background:
+                    "linear-gradient(114.49deg, rgba(57,92,126,0.1) 0.47%, rgba(162,184,206,0.1) 99.53%)",
+                  border: "1px solid #33506E",
+                  boxShadow: "5px 10px 20px rgba(0,0,0,0.1)",
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                }}
+                className="group relative flex flex-col items-center gap-2 rounded-3xl border border-white/10 bg-[#162032] text-center transition-transform duration-300 ease-out hover:scale-[1.02]"
+              >
+                <div className="w-full p-[10px] flex justify-end">
                   <div className="flex items-center justify-center rounded-lg border border-[#F5F3ED1A]/20 bg-white/10 p-[15px] text-white backdrop-blur-md transition-colors duration-300 group-hover:text-[#4DB6AC]">
                     <Search className="transition-colors duration-300" />
                   </div>
                 </div>
-                <div className="flex flex-col gap-[30px] mb-[60px]">
+                <div className="flex flex-col gap-[30px] lg:gap-[16px] mb-[60px] lg:mb-[30px]">
                   <h3 className="westay-section-heading text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
                     Who We Want
                   </h3>
@@ -273,28 +280,28 @@ const BuilderNetwork = () => {
               </div>
 
               {/* Why Join */}
-               <div
-                   style={{
-                    background:
-                      "linear-gradient(114.49deg, rgba(57,92,126,0.1) 0.47%, rgba(162,184,206,0.1) 99.53%)",
-                    border: "1px solid #33506E",
-                    boxShadow: "5px 10px 20px rgba(0,0,0,0.1)",
-                    backdropFilter: "blur(20px)",
-                    WebkitBackdropFilter: "blur(20px)",
-                  }}
+              <div
+                style={{
+                  background:
+                    "linear-gradient(114.49deg, rgba(57,92,126,0.1) 0.47%, rgba(162,184,206,0.1) 99.53%)",
+                  border: "1px solid #33506E",
+                  boxShadow: "5px 10px 20px rgba(0,0,0,0.1)",
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                }}
                 ref={whyJoinRef}
-                className="group relative flex flex-1 flex-col overflow-visible rounded-3xl border border-white/10 bg-[#162032] text-center transition-transform duration-300 ease-out hover:scale-[1.02] lg:z-10 lg:-mr-40"
+                className="group relative flex flex-col overflow-visible rounded-3xl border border-white/10 bg-[#162032] text-center transition-transform duration-300 ease-out hover:scale-[1.02] lg:z-10 lg:-mr-40"
               >
-                <div className="w-full p-[10px]  flex justify-end">
-                  <div className="flex size-[80px] shrink-0 items-center justify-center rounded-[20px] border border-[#F5F3ED1A]/20 bg-white/10 text-white opacity-100 backdrop-blur-md transition-colors duration-300 group-hover:border-[#4DB6AC]/40 group-hover:text-[#4DB6AC]">
-                    <WhyJoinQuestionIcon className="h-[46.93333435058594px] w-[26.66666603088379px] shrink-0" />
+                <div className="w-full p-[10px] flex justify-end">
+                  <div className="flex size-[80px] lg:size-[56px] shrink-0 items-center justify-center rounded-[20px] border border-[#F5F3ED1A]/20 bg-white/10 text-white opacity-100 backdrop-blur-md transition-colors duration-300 group-hover:border-[#4DB6AC]/40 group-hover:text-[#4DB6AC]">
+                    <WhyJoinQuestionIcon className="h-[46.93333435058594px] w-[26.66666603088379px] lg:h-[33px] lg:w-[19px] shrink-0" />
                   </div>
                 </div>
-                <div className="flex flex-col gap-[30px] ">
+                <div className="flex flex-col gap-[30px] lg:gap-[16px]">
                   <h3 className="westay-section-heading text-white transition-colors duration-300 group-hover:text-[#4DB6AC]">
                     Why Join
                   </h3>
-                  <p className="westay-para  text-[#CECECE] leading-relaxed ">
+                  <p className="westay-para text-[#CECECE] leading-relaxed">
                     Qualified leads | Better projects
                     <br />
                     Less sales friction | Operational support
@@ -302,19 +309,21 @@ const BuilderNetwork = () => {
                     Growth pipeline
                   </p>
                 </div>
-                <div className="flex my-[60px] justify-center">
+                <div className="flex my-[40px] lg:my-[30px] justify-center">
                   <CtaButton
                     buttonName="Apply Now"
-                    className="px-[100px] "
+                    className="px-[100px]"
                     href={LENDING_PARTNER_MAILTO}
                   />
                 </div>
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Takes up 7 out of 10 columns (70%) */}
+            {/* RIGHT COLUMN */}
             <div className="relative z-0 flex flex-col gap-3 lg:col-span-6 lg:gap-4">
-              <div className="group relative z-0 aspect-video lg:aspect-[4/3] w-full overflow-visible">
+
+              {/* Image — flex-1 so it fills all space above Process, no fixed aspect at lg */}
+              <div className="group relative z-0 aspect-video lg:aspect-auto lg:flex-1 lg:min-h-0 w-full overflow-visible">
                 <div
                   ref={imageWrapRef}
                   className="absolute inset-0 z-0 overflow-hidden rounded-3xl"
@@ -333,33 +342,50 @@ const BuilderNetwork = () => {
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                 </div>
-                {/* ... (Debug logic stays same) */}
               </div>
 
+              {/* Process — compact so image gets ~60% of right-col height */}
               <div
-                  style={{
-                    background:
-                      "linear-gradient(114.49deg, rgba(57,92,126,0.1) 0.47%, rgba(162,184,206,0.1) 99.53%)",
-                    border: "1px solid #33506E",
-                    boxShadow: "5px 10px 20px rgba(0,0,0,0.1)",
-                    backdropFilter: "blur(20px)",
-                    WebkitBackdropFilter: "blur(20px)",
-                  }}
-              className="group relative flex flex-col justify-between rounded-3xl border border-white/10 bg-[#162032] pr-2 pl-8 py-6 sm:py-7 lg:ml-[160px] lg:min-h-[160px] lg:py-12 transition-transform duration-300 ease-out hover:scale-[1.02]">
+                style={{
+                  background:
+                    "linear-gradient(114.49deg, rgba(57,92,126,0.1) 0.47%, rgba(162,184,206,0.1) 99.53%)",
+                  border: "1px solid #33506E",
+                  boxShadow: "5px 10px 20px rgba(0,0,0,0.1)",
+                  backdropFilter: "blur(20px)",
+                  WebkitBackdropFilter: "blur(20px)",
+                }}
+                className="group relative flex flex-col justify-between rounded-3xl border border-white/10 bg-[#162032] pr-2 pl-8 py-6 sm:py-7 lg:ml-[160px] lg:py-8 transition-transform duration-300 ease-out hover:scale-[1.02]"
+              >
                 <div className="mb-4 flex items-center justify-between">
                   <h4 className="text-xl font-bold westay-section-heading text-white transition-colors duration-300 group-hover:text-[#4DB6AC] lg:text-2xl">
                     Process
                   </h4>
-               <div className="flex items-center justify-center rounded-lg border border-[#F5F3ED1A]/20 bg-white/10 p-[15px] text-white backdrop-blur-md transition-colors duration-300 group-hover:text-[#4DB6AC]">
-  <RefreshIcon className="size-[24px] transition-colors duration-300" />
-</div>
+                  <div className="flex items-center justify-center rounded-lg border border-[#F5F3ED1A]/20 bg-white/10 p-[15px] text-white backdrop-blur-md transition-colors duration-300 group-hover:text-[#4DB6AC]">
+                    <RefreshIcon className="size-[24px] transition-colors duration-300" />
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 px-4 text-sm text-white/65 lg:px-6 lg:text-base">
-                  <span className="whitespace-nowrap font-semibold text-white">Apply</span>
-                  <span className="h-px flex-1 bg-white/25" />
-                  <span className="whitespace-nowrap">Review</span>
-                  <span className="h-px flex-1 bg-white/25" />
-                  <span className="whitespace-nowrap">Approved Network</span>
+                <div className="flex items-center gap-2 px-4 text-sm text-white/65 lg:px-6 lg:westay-para">
+                  <span className="whitespace-nowrap text-2xl text-white/65">Apply</span>
+                  <span
+                    className="min-w-6 flex-1 self-center"
+                    style={{
+                      height: "1.49px",
+                      background:
+                        "linear-gradient(90deg, rgba(255,255,255,0) 0%, #FFFFFF 30%, #FFFFFF 70%, rgba(255,255,255,0) 100%)",
+                    }}
+                    aria-hidden
+                  />
+                  <span className="whitespace-nowrap text-2xl">Review</span>
+                  <span
+                    className="min-w-6 flex-1 self-center"
+                    style={{
+                      height: "1.49px",
+                      background:
+                        "linear-gradient(90deg, rgba(255,255,255,0) 0%, #FFFFFF 30%, #FFFFFF 70%, rgba(255,255,255,0) 100%)",
+                    }}
+                    aria-hidden
+                  />
+                  <span className="whitespace-nowrap text-2xl">Approved Network</span>
                 </div>
               </div>
             </div>
@@ -420,7 +446,7 @@ const BuilderNetwork = () => {
                   </h1>
                   <p className="financing-paragraph max-w-prose text-center text-[#CECECE]">
                     Each lead comes organized:<br />| Clear
-                    Homeowner Info | Property Data | Project Scope |  <br /> Estimated Costs | Qualification Notes  
+                    Homeowner Info | Property Data | Project Scope |  <br /> Estimated Costs | Qualification Notes
                   </p>
                 </div>
               </div>
