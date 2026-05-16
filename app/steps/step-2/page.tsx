@@ -24,7 +24,7 @@ function CriterionPassIcon() {
 function CriterionWarnIcon() {
   return (
     <svg width={30} height={30} viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-      <rect width="30" height="30" rx="15" fill="#E65100" />
+      <rect width="30" height="30" rx="15" fill="#EAB308" />
       <path
         d="M15.0342 16.9427C15.237 16.9427 15.4315 16.8622 15.5749 16.7188C15.7183 16.5754 15.7989 16.3809 15.7989 16.1781V12.6372C15.7989 12.4344 15.7183 12.2399 15.5749 12.0965C15.4315 11.9531 15.237 11.8726 15.0342 11.8726C14.8314 11.8726 14.6369 11.9531 14.4935 12.0965C14.3501 12.2399 14.2696 12.4344 14.2696 12.6372V16.1663C14.268 16.2677 14.2867 16.3684 14.3244 16.4626C14.3621 16.5567 14.4182 16.6424 14.4893 16.7146C14.5605 16.7869 14.6453 16.8443 14.7389 16.8834C14.8324 16.9226 14.9328 16.9428 15.0342 16.9427Z"
         fill="white"
@@ -90,13 +90,27 @@ function StatusBadge({ result }: { result: FullEligibilityResult }) {
   }
   if (result.status === "NEEDS_REVIEW") {
     return (
-      <div className="flex items-center gap-2 rounded-full border border-amber-500/70 bg-[#0c1b2a] px-[30px] py-[10px] text-[14px] font-medium leading-4 text-white">
+      <div className="flex items-center gap-2 rounded-full border border-amber-500/70 bg-amber-500/15 px-[30px] py-[10px] text-[14px] font-medium leading-4 text-[#0C1B2A]">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+          <path
+            d="M7.5 1.25L13.75 12.5H1.25L7.5 1.25ZM7.5 5.625V8.125M7.5 10.625V10.6313"
+            stroke="#EAB308"
+            strokeWidth="1.25"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <circle cx="7.5" cy="10.625" r="0.625" fill="#EAB308" />
+        </svg>
         Needs review
       </div>
     );
   }
   return (
-    <div className="flex items-center gap-2 rounded-full border border-red-500/70 bg-red-500/15 px-[30px] py-[10px] text-[14px] font-medium leading-4 text-red-200">
+    <div className="flex items-center gap-2 rounded-full border border-red-500/70 bg-red-500/15 px-[30px] py-[10px] text-[14px] font-medium leading-4 text-[#0C1B2A]">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+        <circle cx="7.5" cy="7.5" r="7.5" fill="#C62828" />
+        <path d="M5.25 5.25L9.75 9.75M9.75 5.25L5.25 9.75" stroke="white" strokeWidth="1.25" strokeLinecap="round" />
+      </svg>
       Not eligible
     </div>
   );
@@ -265,10 +279,6 @@ export default function PropertyScorePage() {
   return (
     <div className="flex h-dvh max-h-dvh flex-col overflow-hidden bg-transparent">
       <Navbar />
-
-      <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center">
-        <div className="h-[400px] w-[500px] rounded-full bg-teal-400/10 blur-[130px]" />
-      </div>
 
       {/* Results scroll only between navbar and CTA — full page does not scroll */}
       <div className="relative z-10 flex min-h-0 flex-1 flex-col">

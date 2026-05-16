@@ -44,11 +44,9 @@ const About = () => {
       {/* Wide landscape image */}
      
 
-      <Eligibility />
+      <Eligibility compact />
 
-      <div className="pt-10">
-        <Footer />
-      </div>
+      <Footer />
     </div>
   );
 };

@@ -108,6 +108,7 @@ const index = () => {
                 key={feature.number}
                 className={`
                   group relative flex flex-col justify-between gap-4 bg-[#F5F7FA]
+                  min-[1489px]:max-[2059px]:justify-start
                   p-5 sm:p-6
                   lg:pt-6 lg:px-6 lg:pb-6
                   xl:pt-7 xl:px-8 xl:pb-7

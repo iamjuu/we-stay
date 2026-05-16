@@ -399,7 +399,7 @@ const BuilderNetwork = () => {
         </div>
       </section>
 
-      <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-50">
+      {/* <section className="w-full px-4 sm:px-6 lg:px-8 2xl:px-50">
         <div className="mx-auto max-w-7xl 2xl:max-w-none">
           <div className="w-full flex flex-col gap-[50px]">
             <h1 className="join-the-westay text-center text-[white] transition-colors duration-300 hover:text-[#4DB6AC]">
@@ -466,7 +466,7 @@ const BuilderNetwork = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 };

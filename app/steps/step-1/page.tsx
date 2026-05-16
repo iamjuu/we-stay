@@ -82,10 +82,6 @@ export default function ReportForm() {
       <div className="relative w-full">
         <Navbar />
 
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <div className="h-[500px] w-[500px] rounded-full bg-teal-400/10 blur-[120px]" />
-        </div>
-
         <div className="relative mx-auto w-full max-w-7xl">
           <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10">
             <div className="space-y-2 text-center mt-36">
