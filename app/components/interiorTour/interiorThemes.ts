@@ -9,9 +9,11 @@ export type InteriorTheme = {
   label: string;
   /**
    * All equirect images for this style (one folder). Order = stable tour order;
-   * indices match “Tap here” targets within the same theme only.
+   * indices match hotspot targets within the same theme only.
    */
   panoramaPaths: string[];
+  /** Human-readable room name for each panorama (same order as panoramaPaths). */
+  roomNames: string[];
 };
 
 export const INTERIOR_THEMES: InteriorTheme[] = [
@@ -24,16 +26,18 @@ export const INTERIOR_THEMES: InteriorTheme[] = [
       "/imageinterior/Interior Aina 360/Interior Aina 381.png",
       "/imageinterior/Interior Aina 360/Interior Aina 382 (1).png",
     ],
+    roomNames: ["Living Room", "Bedroom", "Bathroom", "Hall"],
   },
   {
     id: "anu",
     label: "anu",
     panoramaPaths: [
-      "/imageinterior/Interior ANU 360/Interior ANU 366.png",
-      "/imageinterior/Interior ANU 360/Interior ANU 367.png",
-      "/imageinterior/Interior ANU 360/Interior ANU 368.png",
-      "/imageinterior/Interior ANU 360/Interior ANU 369.png",
+      "/imageinterior/Interior ANU 360/Interior ANU 374.png",
+      "/imageinterior/Interior ANU 360/Interior ANU 375.png",
+      "/imageinterior/Interior ANU 360/Interior ANU 376.png",
+      "/imageinterior/Interior ANU 360/Interior ANU 377.png",
     ],
+    roomNames: ["Living Room", "Bedroom", "Hall", "Bathroom"],
   },
   {
     id: "kai",
@@ -44,6 +48,7 @@ export const INTERIOR_THEMES: InteriorTheme[] = [
       "/imageinterior/Interior Kai 360/Interior Kai 376.png",
       "/imageinterior/Interior Kai 360/Interior Kai 377.png",
     ],
+    roomNames: ["Living Room", "Bedroom", "Hall", "Bathroom"],
   },
   {
     id: "lani",
@@ -54,5 +59,6 @@ export const INTERIOR_THEMES: InteriorTheme[] = [
       "/imageinterior/Interior Lani 360/Interior Lani 372.png",
       "/imageinterior/Interior Lani 360/Interior Lani 373.png",
     ],
+    roomNames: ["Living Room", "Bedroom", "Hall", "Bathroom"],
   },
 ];

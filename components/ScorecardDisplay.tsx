@@ -238,7 +238,7 @@ export default function ScorecardDisplay({
         <div className="px-5 sm:px-8 py-4 border-b border-white/10 bg-amber-500/[0.08]">
           <div className="flex items-center gap-3">
             <AlertTriangle className="h-5 w-5 text-amber-300 shrink-0" />
-            <p className="text-sm text-amber-50 font-medium">
+            <p className="text-sm text-black font-medium">
               Additional verification required for flagged requirements
             </p>
           </div>

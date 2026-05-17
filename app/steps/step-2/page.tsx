@@ -339,7 +339,7 @@ export default function PropertyScorePage() {
             {result.flagCount > 0 && (
               <div className="flex w-full max-w-4xl items-start gap-3 rounded-lg border border-orange-500/45 bg-[#E6510033] px-4 py-3">
                 <CriterionWarnIcon />
-                <p className="font-dm-sans text-sm leading-snug text-orange-100/95">
+                <p className="font-dm-sans text-sm leading-snug text-black">
                   Additional verification required for flagged requirements
                 </p>
               </div>

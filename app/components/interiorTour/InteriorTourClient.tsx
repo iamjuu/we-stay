@@ -8,9 +8,26 @@ import { Suspense, useCallback, useEffect, useMemo, useState, useSyncExternalSto
 import { createPortal } from "react-dom";
 
 import CtaButton from "@/app/components/ctaButton/ctaButton";
-import { getFolderHotspotsForPano } from "./interiorFolderHotspots";
+import { ARRIVAL_ANGLES, getFolderHotspotsForPano } from "./interiorFolderHotspots";
 import { INTERIOR_THEMES, type InteriorTheme, type InteriorThemeId } from "./interiorThemes";
 import { RoomTourScene } from "./RoomTourScene";
+
+/**
+ * Convert arrival azimuth/elevation into a camera position that OrbitControls
+ * reads on mount to set its initial viewing direction.
+ * Camera sits very close to origin; the direction from camera → target (0,0,0)
+ * is the opposite of the camera position vector.
+ */
+function arrivalCameraPos(azimuthDeg: number, elevationDeg: number): [number, number, number] {
+  const r = 0.052;
+  const az = (azimuthDeg * Math.PI) / 180;
+  const el = (elevationDeg * Math.PI) / 180;
+  return [
+    -r * Math.cos(el) * Math.sin(az),
+    -r * Math.sin(el),
+     r * Math.cos(el) * Math.cos(az),
+  ];
+}
 
 const STAGE_BG = "#eaecea";
 const ACCENT = "#F05C4A";
@@ -18,7 +35,7 @@ const ACCENT = "#F05C4A";
 type Phase = "splash" | "pick" | "explore";
 
 /** Wider default view — feels less tight than a high-zoom / narrow FOV framing. */
-const PANORAMA_CAMERA_FOV = 104;
+const PANORAMA_CAMERA_FOV = 115;
 const PANORAMA_CAMERA_POS: [number, number, number] = [0, 0, 0.052];
 
 const clientSnapshot = () => true;
@@ -31,6 +48,8 @@ export function InteriorTourClient() {
   const [themeId, setThemeId] = useState<InteriorThemeId | null>(null);
   /** Which file inside the chosen theme folder (same folder only — not cross-theme). */
   const [panoIndex, setPanoIndex] = useState(0);
+  /** Camera direction to face when the next panorama loads, or null for default. */
+  const [arrivalAngles, setArrivalAngles] = useState<[number, number] | null>(null);
   const isClient = useSyncExternalStore(emptySubscribe, clientSnapshot, serverSnapshot);
 
   const theme = useMemo(
@@ -68,6 +87,7 @@ export function InteriorTourClient() {
       if (!themeId) return;
       const paths = INTERIOR_THEMES.find((x) => x.id === themeId)?.panoramaPaths;
       if (!paths || next < 0 || next >= paths.length) return;
+      setArrivalAngles(ARRIVAL_ANGLES[themeId]?.[next] ?? null);
       setPanoIndex(next);
     },
     [themeId]
@@ -98,7 +118,9 @@ export function InteriorTourClient() {
             style={{ width: "100%", height: "100%" }}
             dpr={[1, 2]}
             camera={{
-              position: PANORAMA_CAMERA_POS,
+              position: arrivalAngles
+                ? arrivalCameraPos(arrivalAngles[0], arrivalAngles[1])
+                : PANORAMA_CAMERA_POS,
               fov: PANORAMA_CAMERA_FOV,
               near: 0.078,
               far: 8000,

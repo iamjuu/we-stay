@@ -50,7 +50,7 @@ function goalOptionIconClass(optId: (typeof options)[number]["id"], isSelected: 
   if (isSelected) {
     return optId === "long-term" ? "opacity-100" : tealFilter;
   }
-  return optId === "long-term" ? "opacity-100" : "opacity-70";
+  return optId === "long-term" ? "opacity-60 [filter:grayscale(100%)]" : "opacity-70";
 }
 
 export default function GoalSelection() {

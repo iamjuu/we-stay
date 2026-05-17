@@ -5,8 +5,7 @@ import { EquirectSphere } from "./EquirectSphere";
 import { PanoramaHotspot } from "./PanoramaHotspot";
 import { createTapHereLabelTexture } from "./tapHereTexture";
 import type { FolderHotspotDef } from "./interiorFolderHotspots";
-import type { RoomId } from "./tourHotspots";
-import { ROOM_HOTSPOTS } from "./tourHotspots";
+import { ROOM_HOTSPOTS, ROOM_LABEL, type RoomId } from "./tourHotspots";
 
 type RoomTourSceneProps = {
   /** Equirectangular image URL (already encoded if needed). */
@@ -29,8 +28,7 @@ export function RoomTourScene({
   panoHotspots,
   onGoToPanoramaIndex,
 }: RoomTourSceneProps) {
-  const useInteriorHotspots =
-    Boolean(panoHotspots?.length && onGoToPanoramaIndex);
+  const useInteriorHotspots = Boolean(panoHotspots?.length && onGoToPanoramaIndex);
 
   const interiorSpots = useInteriorHotspots ? (panoHotspots ?? []) : [];
   const roomSpots =
@@ -38,15 +36,29 @@ export function RoomTourScene({
       ? (ROOM_HOTSPOTS[interactiveRoom] ?? [])
       : [];
 
-  const labelTexture = useMemo(() => createTapHereLabelTexture(), []);
+  // One texture per unique room label so each hotspot shows the correct room name.
+  const labelTextures = useMemo(() => {
+    const labels = useInteriorHotspots
+      ? interiorSpots.map((h) => h.label)
+      : roomSpots.map((h) => ROOM_LABEL[h.to]);
+    const unique = [...new Set(labels)];
+    return Object.fromEntries(
+      unique.map((text) => [text, createTapHereLabelTexture(text)])
+    );
+    // Re-create when the panorama changes (new set of hotspots).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [panoramaUrl]);
 
   useEffect(() => {
-    return () => labelTexture.dispose();
-  }, [labelTexture]);
+    return () => {
+      Object.values(labelTextures).forEach((t) => t.dispose());
+    };
+  }, [labelTextures]);
 
   return (
     <>
       <EquirectSphere key={panoramaUrl} imageUrl={panoramaUrl} />
+
       {useInteriorHotspots
         ? interiorSpots.map((h, i) => (
             <PanoramaHotspot
@@ -59,7 +71,7 @@ export function RoomTourScene({
                 if (!Number.isFinite(idx)) return;
                 onGoToPanoramaIndex!(idx);
               }}
-              labelTexture={labelTexture}
+              labelTexture={labelTextures[h.label] ?? null}
             />
           ))
         : roomSpots.map((h, i) => (
@@ -69,7 +81,7 @@ export function RoomTourScene({
               elevationDeg={h.elevationDeg}
               to={h.to}
               onNavigate={(toKey) => onGoTo?.(toKey as RoomId)}
-              labelTexture={labelTexture}
+              labelTexture={labelTextures[ROOM_LABEL[h.to]] ?? null}
             />
           ))}
     </>

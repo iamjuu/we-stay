@@ -253,8 +253,7 @@ const BuilderNetwork = () => {
               {/* Who We Want */}
               <div
                 style={{
-                  background:
-                    "linear-gradient(114.49deg, rgba(57,92,126,0.1) 0.47%, rgba(162,184,206,0.1) 99.53%)",
+                  background: "linear-gradient(90deg, #0C1B2A 80%, #A2B8CE 280%)",
                   border: "1px solid #33506E",
                   boxShadow: "5px 10px 20px rgba(0,0,0,0.1)",
                   backdropFilter: "blur(20px)",
@@ -282,8 +281,7 @@ const BuilderNetwork = () => {
               {/* Why Join */}
               <div
                 style={{
-                  background:
-                    "linear-gradient(114.49deg, rgba(57,92,126,0.1) 0.47%, rgba(162,184,206,0.1) 99.53%)",
+                  background: "linear-gradient(90deg, #0C1B2A 80%, #A2B8CE 280%)",
                   border: "1px solid #33506E",
                   boxShadow: "5px 10px 20px rgba(0,0,0,0.1)",
                   backdropFilter: "blur(20px)",
@@ -347,8 +345,7 @@ const BuilderNetwork = () => {
               {/* Process — compact so image gets ~60% of right-col height */}
               <div
                 style={{
-                  background:
-                    "linear-gradient(114.49deg, rgba(57,92,126,0.1) 0.47%, rgba(162,184,206,0.1) 99.53%)",
+                  background: "linear-gradient(90deg, #0C1B2A 80%, #A2B8CE 280%)",
                   border: "1px solid #33506E",
                   boxShadow: "5px 10px 20px rgba(0,0,0,0.1)",
                   backdropFilter: "blur(20px)",

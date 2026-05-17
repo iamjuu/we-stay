@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 /** Bitmap label — works without Troika/font network; safe to build only on the client. */
-export function createTapHereLabelTexture(): THREE.CanvasTexture {
+export function createTapHereLabelTexture(text = "Tap here"): THREE.CanvasTexture {
   const w = 512;
   const h = 140;
   const canvas = document.createElement("canvas");
@@ -34,7 +34,7 @@ export function createTapHereLabelTexture(): THREE.CanvasTexture {
   ctx.font = "bold 52px system-ui, -apple-system, Segoe UI, sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText("Tap here", w / 2, h / 2 + 2);
+  ctx.fillText(text, w / 2, h / 2 + 2);
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
