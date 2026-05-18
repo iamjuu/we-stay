@@ -5,7 +5,7 @@ import { type PlanId, PLAN_MODEL_URL } from "@/app/components/aduConfigurator/pl
 import { type SidingId } from "@/app/components/aduConfigurator/ConfiguratorModel";
 import CtaButton from "@/app/components/ctaButton/ctaButton";
 import Navbar from "@/app/components/navbar/navbar";
-import { ArrowRight, Home, Layers, Maximize2, User } from "lucide-react";
+import { ArrowRight, CheckCircle, Home, Layers, Maximize2, User } from "lucide-react";
 import Image, { type StaticImageData } from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useGLTF } from "@react-three/drei";
@@ -500,11 +500,11 @@ export function AduConfiguratorClient() {
       });
       if (!r.ok) throw new Error("finish failed");
       setFinishSuccess(true);
-      window.open(BOOKING_URL, "_blank", "noopener,noreferrer");
-      clearWestayClientStorage();
+      // Auto-redirect home after 3s — user can book via the popup button before this fires
       window.setTimeout(() => {
+        clearWestayClientStorage();
         window.location.assign("/");
-      }, 2200);
+      }, 3000);
     } catch {
       setFinishError(true);
     } finally {
@@ -514,15 +514,14 @@ export function AduConfiguratorClient() {
 
   return (
     <div
-      className="font-dm-sans flex min-h-screen flex-col text-[#0f1412]"
-      style={{ background: "#0f1412" }}
+      className="font-dm-sans flex h-dvh flex-col overflow-hidden bg-[#f5f7fa] text-[#0f1412] lg:bg-[#0f1412]"
     >
       <Navbar />
 
-      <div className="flex   flex-1 flex-col pt-16 lg:flex-row lg:pt-0">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden pt-16 lg:flex-row lg:pt-0">
 
       <aside
-        className="order-2 flex w-full flex-1 flex-col gap-5 lg:order-2 lg:h-screen lg:w-[min(472px,40vw)] lg:shrink-0 lg:overflow-y-auto lg:border-l lg:border-white/10 lg:pb-12"
+        className="order-2 flex min-h-0 w-full flex-1 flex-col gap-5 overflow-y-auto lg:order-2 lg:h-screen lg:w-[min(472px,40vw)] lg:shrink-0 lg:border-l lg:border-white/10 lg:pb-12"
         style={{ background: VIEWER_BG }}
       >
         <div className="hidden px-8 pb-2 pt-8 lg:block">
@@ -773,19 +772,33 @@ export function AduConfiguratorClient() {
               <SnapshotRow label="Estimated Rental Income" value="$3,400 – $3,600" />
             </div>
 
-            <CtaButton
-              buttonName={finishSending ? "Sending…" : "Finish & Book Discovery Call"}
-              icon={<ArrowRight className="size-[18px] shrink-0" aria-hidden strokeWidth={2.5} />}
-              className="mt-6 w-full self-stretch! disabled:pointer-events-none disabled:opacity-60"
-              onClick={() => void handleFinish()}
-              disabled={finishSending || finishSuccess}
-            />
-            {finishSuccess ? (
-              <p className="font-dm-sans mt-4 text-center text-[13px] leading-relaxed text-[#2a6b5f]">
-                Thank you — we received your configuration. We&apos;ll verify the details and get back to you. Taking you
-                home…
-              </p>
-            ) : null}
+            <div className="relative mt-6">
+              {finishSuccess && (
+                <div className="absolute bottom-[calc(100%+10px)] left-0 right-0 animate-[fadeSlideUp_0.25s_ease-out] rounded-2xl border border-[#5fb3b3]/25 bg-[#0c1b2a] px-4 py-4 shadow-xl">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle className="size-5 shrink-0 text-[#5fb3b3]" strokeWidth={2} />
+                    <p className="text-[13px] font-semibold leading-snug text-white">Configuration sent!</p>
+                  </div>
+                  <a
+                    href={BOOKING_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-[#5fb3b3] px-4 py-2.5 text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
+                  >
+                    Book Your Discovery Call
+                    <ArrowRight className="size-4" strokeWidth={2.5} />
+                  </a>
+                  <p className="mt-2.5 text-center text-[11px] text-white/40">Redirecting you home in 3s…</p>
+                </div>
+              )}
+              <CtaButton
+                buttonName={finishSending ? "Sending…" : "Finish & Book Discovery Call"}
+                icon={<ArrowRight className="size-[18px] shrink-0" aria-hidden strokeWidth={2.5} />}
+                className="w-full self-stretch! disabled:pointer-events-none disabled:opacity-60"
+                onClick={() => void handleFinish()}
+                disabled={finishSending || finishSuccess}
+              />
+            </div>
             {finishError ? (
               <p className="font-dm-sans mt-4 text-center text-[13px] text-red-600">
                 We couldn&apos;t send the report. Check your connection and try again.
@@ -796,7 +809,7 @@ export function AduConfiguratorClient() {
       </aside>
 
       <main
-        className="relative order-1 h-[52svh] min-h-[300px] w-full shrink-0 lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch"
+        className="relative order-1 h-[42svh] min-h-[240px] w-full shrink-0 lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch"
         style={{ background: VIEWER_BG }}
       >
         {!viewportReady ? <ConfiguratorModelSkeleton loadProgress={loadProgress} /> : null}

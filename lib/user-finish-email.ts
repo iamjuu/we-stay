@@ -1,18 +1,27 @@
 /** Plain + HTML body for the homeowner after configurator finish — no PDF. */
+import path from "path";
 
 const BOOKING_URL = "https://links.womcom.com/widget/bookings/westay-discovery-call";
-const SUPPORT_EMAIL = "richie.westayhome@gmail.com";
+const SUPPORT_EMAIL = "info.atnhawaii@gmail.com";
 
 const BRAND_TEAL = "#2A9D8F";
 const BRAND_INK = "#0C1B2A";
 const BRAND_MUTED = "#5C6570";
 const BRAND_BG = "#F4F8F7";
+const HEADER_BG = "#0c1b2a";
+
+export const WESTAY_LOGO_ATTACHMENT = {
+  filename: "westay-logo.png",
+  path: path.join(process.cwd(), "public", "logo", "westay.png"),
+  cid: "westay-logo",
+  contentType: "image/png",
+} as const;
 
 export function buildUserFinishThankYouEmail(firstName: string): { subject: string; text: string; html: string } {
   const name = firstName.trim() || "there";
   const subject = "Thank you for connecting with WeStay";
 
-  const text = `Hi ${name},
+  const text = `Aloha ${name},
 
 Thank you for taking the time to explore your ADU journey with WeStay. We're glad you're here.
 
@@ -38,14 +47,14 @@ The WeStay team`;
       <td align="center">
         <table role="presentation" width="100%" style="max-width:520px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(12,27,42,0.08);">
           <tr>
-            <td style="background:${BRAND_TEAL};padding:28px 32px;text-align:center;">
-              <p style="margin:0;font-size:20px;font-weight:700;color:#ffffff;letter-spacing:-0.02em;">WeStay</p>
+            <td style="background:${HEADER_BG};padding:28px 32px;text-align:center;">
+              <img src="cid:westay-logo" alt="WeStay" width="176" height="52" style="display:block;margin:0 auto;max-width:100%;height:auto;">
               <p style="margin:8px 0 0;font-size:13px;color:rgba(255,255,255,0.9);">ADU clarity for Oʻahu homeowners</p>
             </td>
           </tr>
           <tr>
             <td style="padding:36px 32px 28px;background:${BRAND_BG};">
-              <p style="margin:0 0 16px;font-size:18px;font-weight:600;color:${BRAND_INK};">Hi ${escapeHtml(name)},</p>
+              <p style="margin:0 0 16px;font-size:18px;font-weight:600;color:${BRAND_INK};">Aloha ${escapeHtml(name)},</p>
               <p style="margin:0 0 14px;font-size:15px;line-height:1.55;color:${BRAND_INK};">
                 Thank you for connecting with us and for walking through your ADU snapshot with WeStay.
               </p>

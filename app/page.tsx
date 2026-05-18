@@ -23,6 +23,18 @@ import FlipClockHeadline from "./components/flip-clock-headline/flip-clock-headl
 const flipClockStripHeadingClass =
   "semi-heading max-[709px]:w-full max-[709px]:max-w-[min(100%,26rem)] max-[709px]:text-balance max-[709px]:text-center max-[709px]:text-[clamp(1.25rem,4.8vw,2rem)] max-[709px]:leading-snug";
 
+/**
+ * MOBILE HERO TEXT POSITION — increase to push text lower (more image above),
+ * decrease to move text higher. Desktop is unaffected (controlled by md:pt-[...]).
+ */
+const MOBILE_HERO_TEXT_TOP = "16vh";
+
+/**
+ * MOBILE HERO ELIGIBILITY GAP — controls the space between the heading and
+ * the Check Eligibility input on mobile only. Increase to push it further down.
+ */
+const MOBILE_HERO_ELIGIBILITY_MT = "24px";
+
 /** Top-of-hero vignette — always painted on `/` above the photo, below copy (z-stacking). */
 const HERO_TOP_VIGNETTE =
   "linear-gradient(180deg, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.72) 22%, rgba(0, 0, 0, 0.38) 48%, rgba(0, 0, 0, 0) 100%)";
@@ -68,7 +80,7 @@ export default function Home() {
           backgroundRepeat: "no-repeat",
         }}
         id="home-hero"
-        className="relative min-h-screen bg-[#0C1B2A]"
+        className="relative bg-[#0C1B2A] sm:min-h-screen"
       >
         {/* Hero top fade — full viewport height so the vignette always reads on `/` (with or without modal) */}
         <div
@@ -83,11 +95,11 @@ export default function Home() {
           className="pointer-events-none absolute inset-0 z-[1]"
           aria-hidden="true"
         />
-        <div className="relative z-[2] flex min-h-screen flex-col justify-between">
+        <div className="absolute inset-0 z-2 flex flex-col sm:relative sm:inset-auto sm:min-h-screen">
         <div className="relative z-20">
           <div>
-            <div className="mx-auto mb-[120px] flex w-full max-w-275 flex-col items-center gap-14 px-4 md:px-20 md:gap-20" style={{ paddingTop: 'max(80px, 13vh)' }}>
-              <div className="flex w-full flex-col items-center gap-0 text-center">
+            <div className="mx-auto mb-0 flex w-full max-w-275 flex-col items-center gap-8 px-4 md:mb-30 md:gap-20 md:px-20 md:pt-[max(72px,10vh)]" style={{ paddingTop: MOBILE_HERO_TEXT_TOP }}>
+              <div className="flex w-full flex-col items-center gap-0 text-center ">
                 <p
                   className="mt-10 max-w-xl font-dm-sans font-normal tracking-tight text-white/95 sm:mt-12 md:mt-14"
                   style={{
@@ -116,7 +128,9 @@ export default function Home() {
                 </h1>
               </div>
 
-              <HeroEligibility />
+              <div className="w-full md:contents" style={{ marginTop: MOBILE_HERO_ELIGIBILITY_MT }}>
+                <HeroEligibility />
+              </div>
             </div>
           </div>
         </div>

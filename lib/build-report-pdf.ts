@@ -1,7 +1,10 @@
+import path from "path";
 import PDFDocument from "pdfkit";
 import type { FullEligibilityResult } from "@/lib/eligibility-gates";
 import type { EligibilityRentalPayload } from "@/lib/eligibility-pipeline";
 import type { JourneyDocument } from "@/lib/journey-types";
+
+const LOGO_PATH = path.join(process.cwd(), "public", "logo", "westay.png");
 
 const PAGE_W = 612;
 const PAGE_H = 792;
@@ -245,11 +248,20 @@ export function buildJourneyReportPdf(journey: JourneyDocument): Promise<Buffer>
     // Teal accent stripe
     doc.rect(0, 100, PAGE_W, 5).fill(C.teal);
 
+    // WeStay logo — right side of header
+    const logoW = 130;
+    const logoH = Math.round(logoW * (52 / 176)); // preserve 176:52 aspect ratio
+    try {
+      doc.image(LOGO_PATH, PAGE_W - M - logoW, Math.round((100 - logoH) / 2), { width: logoW });
+    } catch {
+      // logo file missing — skip silently
+    }
+
     // Title
     doc.font("Helvetica-Bold").fontSize(30).fillColor(C.white);
-    doc.text("ADU Snapshot", M, 22, { width: PAGE_W - 2 * M });
+    doc.text("ADU Snapshot", M, 22, { width: PAGE_W - 2 * M - logoW - 16 });
     doc.font("Helvetica").fontSize(11).fillColor(C.teal);
-    doc.text("Eligibility  ·  Cost  ·  Income  ·  Next Steps", M, 58, { width: PAGE_W - 2 * M });
+    doc.text("Eligibility  ·  Cost  ·  Income  ·  Next Steps", M, 58, { width: PAGE_W - 2 * M - logoW - 16 });
 
     // ── User profile card ──
     const profileY = 120;

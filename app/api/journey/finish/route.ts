@@ -4,7 +4,7 @@ import { buildJourneyReportPdf } from "@/lib/build-report-pdf";
 import { getJourneyByJourneyId, mergeJourney } from "@/lib/journey-db";
 import type { JourneyConfiguratorSummary, JourneyContact, JourneyDocument } from "@/lib/journey-types";
 import { getMongoUri, getSmtpConfig } from "@/lib/server-config";
-import { buildUserFinishThankYouEmail } from "@/lib/user-finish-email";
+import { buildUserFinishThankYouEmail, WESTAY_LOGO_ATTACHMENT } from "@/lib/user-finish-email";
 
 function ownedBy(doc: JourneyDocument, browserUserId: string): boolean {
   const owner = doc.browserUserId ?? doc.userId;
@@ -103,21 +103,77 @@ export async function POST(req: Request) {
         subject: userMail.subject,
         text: userMail.text,
         html: userMail.html,
+        attachments: [WESTAY_LOGO_ATTACHMENT],
       });
+
+      const adminHtml = `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f8f7;font-family:Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f8f7;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" style="max-width:520px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(12,27,42,0.08);">
+          <tr>
+            <td style="background:#0c1b2a;padding:24px 32px;text-align:center;">
+              <img src="cid:westay-logo-admin" alt="WeStay" width="176" height="52" style="display:block;margin:0 auto;max-width:100%;height:auto;">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px 32px;font-size:14px;line-height:1.65;color:#0c1b2a;white-space:pre-wrap;">${internalNote}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+
       await transporter.sendMail({
         from: smtp.from,
         to: smtp.from,
         subject: adminSubject,
         text: internalNote,
-        attachments: [attachment],
+        html: adminHtml,
+        attachments: [
+          attachment,
+          { ...WESTAY_LOGO_ATTACHMENT, cid: "westay-logo-admin" },
+        ],
       });
     } else {
+      const fallbackNote = `${internalNote}\n\n(No contact email on file — user thank-you not sent.)`;
+      const fallbackHtml = `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f4f8f7;font-family:Helvetica,Arial,sans-serif;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f8f7;padding:32px 16px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" style="max-width:520px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(12,27,42,0.08);">
+          <tr>
+            <td style="background:#0c1b2a;padding:24px 32px;text-align:center;">
+              <img src="cid:westay-logo-admin" alt="WeStay" width="176" height="52" style="display:block;margin:0 auto;max-width:100%;height:auto;">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px 32px;font-size:14px;line-height:1.65;color:#0c1b2a;white-space:pre-wrap;">${fallbackNote}</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
       await transporter.sendMail({
         from: smtp.from,
         to: smtp.from,
         subject: adminSubject,
-        text: `${internalNote}\n\n(No contact email on file — user thank-you not sent.)`,
-        attachments: [attachment],
+        text: fallbackNote,
+        html: fallbackHtml,
+        attachments: [
+          attachment,
+          { ...WESTAY_LOGO_ATTACHMENT, cid: "westay-logo-admin" },
+        ],
       });
     }
 

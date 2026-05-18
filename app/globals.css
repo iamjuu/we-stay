@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes scorecard-fade-in {
   from {
     opacity: 0;
@@ -492,11 +503,17 @@ ha.footer-section-one {
 
 /* ── Mobile overrides (≤767px only) ────────────────────────────────────── */
 @media (max-width: 767px) {
-  /* Hero banner — full-width image, no cropping */
+  /* ── MOBILE HERO TUNING ── edit the two values below ───────────────
+     min-height          → total height of the hero section
+     background-position → vertical crop of the image
+                           "center 0%"   = top of image visible
+                           "center 50%"  = middle (default)
+                           "center 100%" = bottom of image visible        */
   #home-hero {
+    min-height: 585px;                          /* ← HERO HEIGHT       */
     background-image: url('/images/homemobile.png') !important;
     background-size: cover !important;
-    background-position: center center !important;
+    background-position: center 25% !important; /* ← IMAGE POSITION    */
     background-repeat: no-repeat !important;
   }
 
@@ -511,6 +528,7 @@ ha.footer-section-one {
   .homeowners-start-heading {
     font-size: 28px !important;
     line-height: 1.2 !important;
+    text-align: center !important;
   }
 
   /* Roof carousel — reduce image height & card padding on mobile to close the gap */

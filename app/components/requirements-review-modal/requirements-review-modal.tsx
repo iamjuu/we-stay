@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { createPortal } from 'react-dom';
 import { useEffect, useState } from 'react';
 
 import { Loader2, X } from 'lucide-react';
@@ -78,7 +77,7 @@ export default function RequirementsReviewModal({
 
   const panelInner = (
     <div
-      className="relative flex w-full flex-col overflow-hidden rounded-[999px] border border-white/12 bg-black/60 px-5 pb-6 pt-10 shadow-lg"
+      className="relative flex w-full flex-col overflow-hidden rounded-[999px] border border-white/12 bg-black/60 px-5 pb-6 pt-6 shadow-lg sm:pt-10"
       style={{
         maxWidth: '643.568px',
       }}
@@ -117,7 +116,7 @@ export default function RequirementsReviewModal({
               className="size-[140px] shrink-0 object-contain sm:size-[156px]"
               aria-hidden
             />
-            <div className="flex flex-row flex-wrap items-center justify-center gap-3">
+            <div className="flex flex-col items-center justify-center gap-2 sm:flex-row sm:flex-wrap sm:gap-3">
               <Loader2
                 className="size-8 shrink-0 animate-spin text-white/90 sm:size-9"
                 aria-hidden
@@ -145,29 +144,17 @@ export default function RequirementsReviewModal({
   const dialogAriaBusy = !!isRunning && !errorMessage;
 
   if (variant === 'below-anchor') {
-    const scrimMount =
-      typeof document !== 'undefined'
-        ? document.getElementById('home-hero-modal-scrim-mount')
-        : null;
-
-    const scrim = (
-      <button
-        type="button"
-        className={
-          scrimMount
-            ? 'pointer-events-auto absolute inset-0 z-0 h-full w-full bg-black/50'
-            : 'pointer-events-auto fixed inset-0 z-[90] bg-black/50'
-        }
-        onClick={onClose}
-        aria-label="Close"
-      />
-    );
-
     return (
       <>
-        {scrimMount ? createPortal(scrim, scrimMount) : scrim}
+        <button
+          type="button"
+          className="pointer-events-auto fixed inset-0 z-90 bg-black/50"
+          onClick={onClose}
+          aria-label="Close"
+        />
+        {/* Mobile: fixed full-screen centred; sm+: anchored below input */}
         <div
-          className="absolute left-0 right-0 top-[calc(100%+9px)] z-[100] flex w-full justify-end overflow-y-auto"
+          className="fixed inset-0 z-100 flex items-center justify-center px-4 sm:absolute sm:inset-auto sm:left-0 sm:right-0 sm:top-[calc(100%+9px)] sm:flex sm:w-full sm:justify-end sm:px-0"
           role="dialog"
           aria-modal="true"
           aria-labelledby="requirements-review-title"
