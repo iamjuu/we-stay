@@ -23,7 +23,7 @@ const C = {
 };
 
 const DISCOVERY_URL = "https://links.womcom.com/widget/bookings/westay-discovery-call";
-const CONTACT_EMAIL = "richie.westayhome@gmail.com";
+const CONTACT_EMAIL = "info.atnhawaii@gmail.com";
 
 // ─── Label lookup maps ───────────────────────────────────────────────────────
 

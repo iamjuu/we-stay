@@ -106,7 +106,7 @@ const SLIDE_RAIL_CARD_CLASS =
   'shrink-0 cursor-pointer min-w-[min(88%,560px)] sm:min-w-[min(84%,620px)] lg:min-w-[min(78%,660px)] xl:min-w-[min(72%,700px)]';
 
 const SLIDE_IMAGE_STAGE_CLASS =
-  'mx-auto flex h-[320px] w-full max-w-[min(94vw,900px)] items-center justify-center overflow-hidden sm:h-[380px] lg:h-[420px]';
+  'roof-image-stage mx-auto flex h-[320px] w-full max-w-[min(94vw,900px)] items-center justify-center overflow-hidden sm:h-[380px] lg:h-[420px]';
 
 /** Tailwind `gap-4` between flex items */
 const CAROUSEL_GAP_PX = 16;
@@ -511,11 +511,11 @@ const RoofComponent = () => {
                 <>
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute inset-y-3 left-0 z-[6] w-[clamp(14px,3.5vw,32px)] bg-gradient-to-r from-[#F5F7FA]/90 via-[#F5F7FA]/35 to-transparent backdrop-blur-sm"
+                    className="pointer-events-none absolute inset-y-3 left-0 z-[6] w-[clamp(14px,3.5vw,32px)] bg-gradient-to-r from-[#F5F7FA]/90 via-[#F5F7FA]/35 to-transparent"
                   />
                   <div
                     aria-hidden
-                    className="pointer-events-none absolute inset-y-3 right-0 z-[6] w-[clamp(14px,3.5vw,32px)] bg-gradient-to-l from-[#F5F7FA]/90 via-[#F5F7FA]/35 to-transparent backdrop-blur-sm"
+                    className="pointer-events-none absolute inset-y-3 right-0 z-[6] w-[clamp(14px,3.5vw,32px)] bg-gradient-to-l from-[#F5F7FA]/90 via-[#F5F7FA]/35 to-transparent"
                   />
                 </>
               )}
@@ -570,8 +570,8 @@ const RoofComponent = () => {
                       aria-current={isActive ? 'true' : undefined}
                       className={SLIDE_RAIL_CARD_CLASS}
                     >
-                      <div className="px-4 py-8 sm:px-8">
-                        <p className="text-center text-[30px] font-normal leading-[36px] text-gray-900">
+                      <div className="roof-slide-inner px-4 py-8 sm:px-8">
+                        <p className="roof-slide-title text-center text-[30px] font-normal leading-[36px] text-gray-900">
                           {model.title}
                         </p>
 
@@ -644,13 +644,31 @@ const RoofComponent = () => {
               </div>
             </div>
 
+            {!isLgUp && (
+              <div className="order-2 flex items-center justify-center gap-2 py-1">
+                {MODEL_SLIDES.map((_, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => goToSlide(idx)}
+                    aria-label={`Go to slide ${idx + 1}`}
+                    className={`h-2 cursor-pointer rounded-full transition-all duration-300 ${
+                      activeSlide === idx
+                        ? 'w-6 bg-[#0D9488]'
+                        : 'w-2 bg-gray-300 hover:bg-gray-400'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+
             <aside
               className={`flex shrink-0 rounded-2xl border border-black/6 bg-[#E8EAED] transition-opacity duration-300 ${
                 isLgUp
                   ? `order-1 w-[72px] sm:w-[84px] flex-col items-center justify-center gap-4 self-center px-4 py-10 sm:gap-5 sm:px-5 sm:py-12 ${
                       finishBarVisible ? 'opacity-100' : 'pointer-events-none opacity-0'
                     }`
-                  : 'order-2 w-full flex-row flex-wrap items-center justify-center gap-4 self-stretch rounded-xl px-6 py-4 opacity-100'
+                  : 'order-3 w-full flex-row flex-wrap items-center justify-center gap-4 self-stretch rounded-xl px-6 py-4 opacity-100'
               }`}
               aria-label="Exterior finish"
               aria-hidden={isLgUp && !finishBarVisible}

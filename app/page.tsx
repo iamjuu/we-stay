@@ -195,7 +195,7 @@ export default function Home() {
                 <div className="flex w-full flex-col gap-0">
                   <h1
                     style={{ fontFamily: "DM Sans" }}
-                    className="flex flex-col gap-1 text-left font-medium leading-[1.12] text-[22px] sm:text-[30px] md:text-[35px] min-[1849px]:text-[50px]! min-[1849px]:leading-[1.06] md:tracking-[-0.06em]"
+                    className="homeowners-start-heading flex flex-col gap-1 text-left font-medium leading-[1.12] text-[22px] sm:text-[30px] md:text-[35px] min-[1849px]:text-[50px]! min-[1849px]:leading-[1.06] md:tracking-[-0.06em]"
                   >
                     Most Homeowners Want to Build,
                     <span className="text-[#93928E]">

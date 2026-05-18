@@ -489,3 +489,83 @@ ha.footer-section-one {
     letter-spacing: normal;
   }
 }
+
+/* ── Mobile overrides (≤767px only) ────────────────────────────────────── */
+@media (max-width: 767px) {
+  /* Hero banner — full-width image, no cropping */
+  #home-hero {
+    background-image: url('/images/homemobile.png') !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+  }
+
+  /* All section headings — uniform 28px on mobile */
+  .semi-heading,
+  .medium-heading,
+  .section-heading,
+  .carousel-heading,
+  .roof-section-heading,
+  .join-the-westay,
+  .westay-section-heading,
+  .homeowners-start-heading {
+    font-size: 28px !important;
+    line-height: 1.2 !important;
+  }
+
+  /* Roof carousel — reduce image height & card padding on mobile to close the gap */
+  .roof-image-stage {
+    height: 240px !important;
+  }
+
+  .roof-slide-inner {
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+  }
+}
+
+/* Roof carousel — below 486px: ensure slide title is visible */
+@media (max-width: 486px) {
+  .roof-slide-title {
+    display: block !important;
+    visibility: visible !important;
+    font-size: 22px !important;
+    line-height: 1.3 !important;
+  }
+
+  .roof-image-stage {
+    height: 200px !important;
+  }
+}
+
+/* Below 400px — roof slide title smaller so "Two bedroom with office" never cuts off */
+@media (max-width: 400px) {
+  .roof-slide-title {
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+    overflow: visible !important;
+  }
+}
+
+/* CTA button — fits within very small screens (≤399px) */
+@media (max-width: 399px) {
+  .cta-animated-border {
+    max-width: 88vw !important;
+    flex-shrink: 1 !important;
+    height: auto !important;
+    min-height: 40px !important;
+    padding: 8px 12px !important;
+    font-size: 11px !important;
+    line-height: 1.3 !important;
+  }
+
+  .cta-animated-border .cta-label {
+    white-space: normal !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    line-height: 1.3 !important;
+    text-align: center !important;
+    font-size: 11px !important;
+    gap: 4px !important;
+  }
+}

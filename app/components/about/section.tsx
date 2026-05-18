@@ -48,7 +48,7 @@ const StorySection = ({
           } ${isImageLeft ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
         >
           {/* IMAGE COLUMN (will stretch to match content height) */}
-          <div className={`w-full lg:flex-1 ${imageColMax}`}>
+          <div className={`order-2 lg:order-1 w-full lg:flex-1 ${imageColMax}`}>
             <div className={imageCardClass}>
               <Image
                 src={imageSrc}
@@ -62,19 +62,19 @@ const StorySection = ({
 
           {/* CONTENT COLUMN (controls the height) */}
           <div
-            className={`flex w-full flex-col gap-10 lg:flex-1 ${
+            className={`order-1 lg:order-2 flex w-full flex-col gap-6 lg:gap-10 lg:flex-1 ${
               featured ? 'lg:justify-between' : 'justify-center'
             }`}
           >
             {(titlePrimary || titleSecondary) && featured && (
-           <h2 className="font-dm-sans flex flex-col font-medium tracking-[-1px] text-black leading-[65px]">
+           <h2 className="font-dm-sans flex flex-col font-medium tracking-[-1px] text-black leading-tight lg:leading-[65px]">
            {titlePrimary && (
-             <span className="block text-[clamp(32px,2.9vw,52px)] lg:whitespace-nowrap xl:text-[52px]">
+             <span className="block text-[32px] md:text-[38px] lg:text-[clamp(32px,2.9vw,52px)] lg:whitespace-nowrap xl:text-[52px]">
                {titlePrimary}
              </span>
            )}
            {titleSecondary && (
-             <span className="mt-3 block text-[clamp(32px,2.9vw,52px)] font-medium tracking-[-1px] text-[#93928E] xl:mt-[10px] xl:text-[52px]">
+             <span className="mt-2 block text-[32px] md:text-[38px] font-medium tracking-[-1px] text-[#93928E] lg:text-[clamp(32px,2.9vw,52px)] xl:mt-[10px] xl:text-[52px]">
                {titleSecondary}
              </span>
            )}
@@ -82,7 +82,7 @@ const StorySection = ({
             )}
 
             {(titlePrimary || titleSecondary) && !featured && (
-              <h2 className="text-4xl font-medium tracking-tight text-black md:text-5xl">
+              <h2 className="text-[32px] font-medium tracking-tight text-black md:text-[38px] lg:text-5xl">
                 {titlePrimary}
                 {titleSecondary && (
                   <span className="mt-1 block font-medium text-gray-400">
@@ -92,7 +92,7 @@ const StorySection = ({
               </h2>
             )}
 
-            <div className="flex flex-col gap-10">
+            <div className="flex flex-col gap-5 lg:gap-10">
               {paragraphs.map((para, i) => (
                 <p key={i} className={BODY_SPEC}>
                   {para}
