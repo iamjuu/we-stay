@@ -228,15 +228,14 @@ export default function Home() {
                   >
                     <div className="relative z-[1] h-full w-[4px] shrink-0 rounded-l-[6px] bg-[#8ED9D8]" />
                    <span
-                      className="relative z-[1] second-section-list-data py-[10px] px-4 text-left"
-                      style={
-                        index === 2
-                          ? { fontSize: 17, letterSpacing: "-0.04em", lineHeight: "20px" }
+                      className={
+                        "relative z-[1] second-section-list-data py-[10px] px-4 text-left" +
+                        (index === 2
+                          ? " max-sm:text-[17px] max-sm:tracking-[-0.04em] max-sm:leading-5"
                           : index === 4
-                            ? { fontSize: 17, letterSpacing: "-0.03em", lineHeight: "15px" }
-                            : undefined
+                            ? " max-sm:text-[17px] max-sm:tracking-[-0.03em] max-sm:leading-3.75"
+                            : "")
                       }
-
                     >
                       {item}
                     </span>
