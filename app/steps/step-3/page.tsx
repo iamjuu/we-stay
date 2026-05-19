@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
 import { StepsSubmitBtn } from "../components/steps-submit-btn";
-import { StepFooter } from "../components/step-footer";
+import { StepFooter, StepLabel } from "../components/step-footer";
 import { useBuildPath } from "@/app/context/build-path-session";
 import { useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-progress";
 import { flowIndexFromPath, nextWizardPath, prevWizardPath } from "@/lib/wizard-flow";
@@ -187,11 +187,12 @@ export default function GoalSelection() {
                 }
               }}
             />
+            <StepLabel currentStep={4} totalSteps={7} />
             <div className="w-full pt-[10px]">
               <StepFooter
                 currentStep={4}
                 totalSteps={7}
-                variant="step2"
+                variant="step3"
                 onBack={() => router.push(prevWizardPath(flowIdx))}
                 onForward={() => {
                   const n = nextWizardPath(flowIdx);

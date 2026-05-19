@@ -8,7 +8,7 @@ import zigzagIcon from "@/content/icons/zigzag.svg";
 type StepFooterProps = {
   currentStep: number;
   totalSteps?: number;
-  variant?: "default" | "step2" | "step5" | "step6";
+  variant?: "default" | "step2" | "step3" | "step5" | "step6";
   /** Left round control — previous step (always enabled when provided). */
   onBack?: () => void;
   /** Right round control — next step only if `canGoForward` (completed that leg before). */
@@ -82,6 +82,21 @@ const ACTIVE_INNER_PX = Math.round((70 / 85) * ACTIVE_OUTER_PX);
 const SECOND_CIRCLE_PX = 70;
 const STEP2_ACTIVE_PX = 120;
 
+/** Renders "Step X of Y" above the CTA button on mobile only. */
+export function StepLabel({
+  currentStep,
+  totalSteps = 7,
+}: {
+  currentStep: number;
+  totalSteps?: number;
+}) {
+  return (
+    <p className="sm:hidden text-center text-xs tracking-wide text-slate-500 pb-1">
+      Step {currentStep} of {totalSteps}
+    </p>
+  );
+}
+
 export function StepFooter({
   currentStep,
   totalSteps = 7,
@@ -105,7 +120,55 @@ export function StepFooter({
               className="relative z-10 flex shrink-0 items-center justify-center rounded-full"
               style={{ width: SECOND_CIRCLE_PX, height: SECOND_CIRCLE_PX, backgroundColor: "#4DB6AC33" }}
             >
-              <TimeIcon size={28} />
+              <FileIcon size={28} />
+            </div>
+          </NavCircleWrap>
+
+          <div
+            className="relative z-10 flex shrink-0 items-center justify-center rounded-full"
+            style={{ width: STEP2_ACTIVE_PX, height: STEP2_ACTIVE_PX, backgroundColor: "#579da440" }}
+          >
+            <div
+              className="flex items-center justify-center rounded-full"
+              style={{ width: 92, height: 92, backgroundColor: "#4DB6AC" }}
+            >
+              <Image src="/logo/Icon.png" alt="" width={40} height={40} aria-hidden />
+            </div>
+          </div>
+
+          <NavCircleWrap
+            onClick={onForward}
+            disabled={fwdDisabled}
+            label="Go to next step"
+          >
+            <div
+              className="relative z-10 flex shrink-0 items-center justify-center rounded-full"
+              style={{ width: SECOND_CIRCLE_PX, height: SECOND_CIRCLE_PX, backgroundColor: "#4DB6AC33" }}
+            >
+              <Image src={clickIcon} alt="" width={28} height={28} aria-hidden />
+            </div>
+          </NavCircleWrap>
+
+          <p className="pointer-events-none absolute left-[74%] top-1/2 -translate-x-1/2 -translate-y-[15px] whitespace-nowrap text-xs tracking-wide text-slate-600 max-sm:hidden">
+            Step {currentStep} of {totalSteps}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (variant === "step3") {
+    return (
+      <div className="w-full pt-2 pb-6">
+        <div className="relative flex items-center justify-between">
+          <div className="pointer-events-none absolute left-[35px] right-[35px] top-1/2 h-px -translate-y-1/2 bg-teal-400/30" />
+
+          <NavCircleWrap onClick={onBack} label="Go to previous step">
+            <div
+              className="relative z-10 flex shrink-0 items-center justify-center rounded-full"
+              style={{ width: SECOND_CIRCLE_PX, height: SECOND_CIRCLE_PX, backgroundColor: "#4DB6AC33" }}
+            >
+              <Image src="/logo/Icon.png" alt="" width={28} height={28} aria-hidden />
             </div>
           </NavCircleWrap>
 
@@ -134,7 +197,7 @@ export function StepFooter({
             </div>
           </NavCircleWrap>
 
-          <p className="pointer-events-none absolute left-[74%] top-1/2 -translate-x-1/2 -translate-y-[15px] whitespace-nowrap text-xs tracking-wide text-slate-600">
+          <p className="pointer-events-none absolute left-[74%] top-1/2 -translate-x-1/2 -translate-y-[15px] whitespace-nowrap text-xs tracking-wide text-slate-600 max-sm:hidden">
             Step {currentStep} of {totalSteps}
           </p>
         </div>
@@ -183,7 +246,7 @@ export function StepFooter({
           </NavCircleWrap>
 
           <p
-            className="pointer-events-none absolute top-1/2 -translate-x-1/2 translate-y-[-15px] whitespace-nowrap text-xs tracking-wide text-slate-600"
+            className="pointer-events-none absolute top-1/2 -translate-x-1/2 translate-y-[-15px] whitespace-nowrap text-xs tracking-wide text-slate-600 max-sm:hidden"
             style={{ left: "calc(75% - 18px)" }}
           >
             Step {currentStep} of {totalSteps}
@@ -233,7 +296,7 @@ export function StepFooter({
           </NavCircleWrap>
 
           <p
-            className="pointer-events-none absolute top-1/2 -translate-x-1/2 translate-y-[-15px] whitespace-nowrap text-xs tracking-wide text-slate-600"
+            className="pointer-events-none absolute top-1/2 -translate-x-1/2 translate-y-[-15px] whitespace-nowrap text-xs tracking-wide text-slate-600 max-sm:hidden"
             style={{ left: "calc(75% - 18px)" }}
           >
             Step {currentStep} of {totalSteps}
@@ -263,7 +326,7 @@ export function StepFooter({
         </NavCircleWrap>
 
         <div className="flex min-w-0 flex-1 flex-col items-center gap-1.5 px-3">
-          <p className="whitespace-nowrap text-xs tracking-wide text-slate-600">
+          <p className="whitespace-nowrap text-xs tracking-wide text-slate-600 max-sm:hidden">
             Step {currentStep} of {totalSteps}
           </p>
           <div className="h-px w-full bg-slate-300/80">
@@ -288,7 +351,7 @@ export function StepFooter({
               borderRadius: "50%",
             }}
           >
-            <TimeIcon size={28} />
+            <Image src="/logo/Icon.png" alt="" width={28} height={28} aria-hidden />
           </div>
         </NavCircleWrap>
       </div>

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
 import { StepsSubmitBtn } from "../components/steps-submit-btn";
-import { StepFooter } from "../components/step-footer";
+import { StepFooter, StepLabel } from "../components/step-footer";
 import { useBuildPath } from "@/app/context/build-path-session";
 import { useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-progress";
 import { flowIndexFromPath, nextWizardPath, prevWizardPath } from "@/lib/wizard-flow";
@@ -190,6 +190,7 @@ export default function StepFourAduType() {
             .
           </p>
 
+          <StepLabel currentStep={5} totalSteps={7} />
           <div className="w-full pt-0 ">
             <StepFooter
               currentStep={5}

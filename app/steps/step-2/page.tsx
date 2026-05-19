@@ -9,6 +9,7 @@ import { useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-p
 import { flowIndexFromPath, nextWizardPath, prevWizardPath } from "@/lib/wizard-flow";
 import type { EligibilityGate } from "@/lib/eligibility-gates";
 import type { FullEligibilityResult } from "@/lib/eligibility-gates";
+import { StepLabel } from "@/app/steps/components/step-footer";
 function CriterionPassIcon() {
   return (
     <svg width={30} height={30} viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
@@ -165,7 +166,7 @@ function getScoreLabel(score: number): string {
   if (score >= 85) return "Promising";
   if (score >= 70) return "Possible";
   if (score >= 55) return "Limited";
-  return "Your Score";
+  return "Limited";
 }
 
 function CircleProgress({ score, gradientId }: { score: number; gradientId: string }) {
@@ -395,6 +396,7 @@ export default function PropertyScorePage() {
                 </>
               )}
             </button>
+            <StepLabel currentStep={3} totalSteps={7} />
             <StepFooter
               currentStep={3}
               totalSteps={7}

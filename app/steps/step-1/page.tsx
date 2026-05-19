@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { StepsInput } from "../components/steps-input";
 import { StepsSubmitBtn } from "../components/steps-submit-btn";
-import { StepFooter } from "../components/step-footer";
+import { StepFooter, StepLabel } from "../components/step-footer";
 import { useReportContact } from "@/app/context/report-contact";
 import { useJourneyProgress, useWizardRouteGuard } from "@/app/context/journey-progress";
 import { flowIndexFromPath, nextWizardPath, prevWizardPath } from "@/lib/wizard-flow";
@@ -141,7 +141,7 @@ export default function ReportForm() {
                 form.email.trim() && form.phone.trim()
               )}
             />
-
+            <StepLabel currentStep={2} totalSteps={7} />
             <StepFooter
               currentStep={2}
               totalSteps={7}
@@ -152,7 +152,7 @@ export default function ReportForm() {
               }}
               canGoForward={maxNavIndex > flowIdx}
             />
-            <p className="text-gray-600">Your design, your numbers. No obligation.We keep your information private</p>
+            <p className="text-gray-600 text-center">Your design, your numbers. No obligation.We keep your information private</p>
           </div>
         </div>
       </div>
