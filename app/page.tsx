@@ -211,7 +211,7 @@ export default function Home() {
                     style={{ fontFamily: "DM Sans" }}
                     className="homeowners-start-heading flex flex-col gap-1 text-left font-medium leading-[1.12] text-[22px] sm:text-[30px] md:text-[35px] min-[1849px]:text-[50px]! min-[1849px]:leading-[1.06] md:tracking-[-0.06em]"
                   >
-                    Most Homeowners Want to Build, an ADU
+                    Most Homeowners Want to Build an ADU
                     <span className="text-[#93928E]">
                       But Don&apos;t Know Where to Start
                     </span>
@@ -221,13 +221,23 @@ export default function Home() {
               </div>
 
               <div className="mt-[20px] flex flex-col gap-[12px]">
-                {homeownerQuestions.map((item) => (
+                {homeownerQuestions.map((item, index) => (
                   <div
                     key={item}
                     className="homeowner-question-sheen relative flex h-[49px] w-full cursor-default items-center overflow-hidden rounded-[6px] border border-[#E2E2E2] bg-[#FAFAFA] shadow-[inset_0_1px_6px_rgba(0,0,0,0.18)]"
                   >
                     <div className="relative z-[1] h-full w-[4px] shrink-0 rounded-l-[6px] bg-[#8ED9D8]" />
-                    <span className="relative z-[1] second-section-list-data py-[10px] px-6 text-left">
+                   <span
+                      className="relative z-[1] second-section-list-data py-[10px] px-4 text-left"
+                      style={
+                        index === 2
+                          ? { fontSize: 17, letterSpacing: "-0.04em", lineHeight: "20px" }
+                          : index === 4
+                            ? { fontSize: 17, letterSpacing: "-0.03em", lineHeight: "15px" }
+                            : undefined
+                      }
+
+                    >
                       {item}
                     </span>
                   </div>

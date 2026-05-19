@@ -147,7 +147,8 @@
     color: #93928e;
   }
 
-  .list-data-heading {
+
+.list-data-heading {
     font-family: "DM Sans", sans-serif;
     font-size: clamp(18px, 1.2vw, 25px);
     line-height: clamp(26px, 1.6vw, 32px);
