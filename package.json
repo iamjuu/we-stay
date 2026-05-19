@@ -1,6 +1,6 @@
 {
   "name": "3d",
-  "version": "10.9.0",
+  "version": "12.9.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
