@@ -86,10 +86,11 @@ export default function ReportForm() {
           <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10">
             <div className="space-y-2 text-center mt-36">
               <h1 className="steps-heading whitespace-nowrap !text-[#1a2a3a]">
-                Your Report Is Ready 
-              </h1>
+                YOUR ADU BEGINS HERE
+              </h1> 
+              <p className="steps-subheading !text-[#1a2a3a]">Your Backyard says yes.</p>
               <p className="steps-subheading text-sm leading-relaxed !text-slate-600">
-                Enter your details to view your ADU eligibility score and next steps
+                You've cleared the first checks. Next: see your model, configure your design,and schedule your discovery call.
               </p>
             </div>
 
@@ -151,6 +152,7 @@ export default function ReportForm() {
               }}
               canGoForward={maxNavIndex > flowIdx}
             />
+            <p className="text-gray-600">Your design, your numbers. No obligation.We keep your information private</p>
           </div>
         </div>
       </div>

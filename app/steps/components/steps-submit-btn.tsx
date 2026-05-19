@@ -15,7 +15,7 @@ export type StepsSubmitBtnProps = {
 export function StepsSubmitBtn({
   loading = false,
   loadingText = "Preparing…",
-  idleText = "Reveal My Score",
+  idleText = "Continue My Project",
   isComplete = false,
   className = "",
   children,

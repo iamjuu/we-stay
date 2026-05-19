@@ -41,8 +41,8 @@ const HERO_TOP_VIGNETTE =
 
 export default function Home() {
   const homeownerQuestions = [
-    "If their property qualifies",
-    "What it may cost",
+    "Does my property qualify",
+    "What does it  cost",
     "What type of ADU makes sense",
     "Who to trust",
     "How to move forward without costly mistakes",
@@ -211,13 +211,13 @@ export default function Home() {
                     style={{ fontFamily: "DM Sans" }}
                     className="homeowners-start-heading flex flex-col gap-1 text-left font-medium leading-[1.12] text-[22px] sm:text-[30px] md:text-[35px] min-[1849px]:text-[50px]! min-[1849px]:leading-[1.06] md:tracking-[-0.06em]"
                   >
-                    Most Homeowners Want to Build,
+                    Most Homeowners Want to Build, an ADU
                     <span className="text-[#93928E]">
                       But Don&apos;t Know Where to Start
                     </span>
                   </h1>
                 </div>
-                <p className="list-data-heading">Many homeowners are unsure:</p>
+                {/* <p className="list-data-heading">Many homeowners are unsure:</p> */}
               </div>
 
               <div className="mt-[20px] flex flex-col gap-[12px]">

@@ -16,14 +16,14 @@ import type { StaticImageData } from "next/image";
 const paths = [
   {
     id: "fast-track",
-    title: "Fast Track",
-    description: "Choose from standardized plans for a faster and simpler process.",
+    title: "WeStay Models",
+    description: "Start from a tested, pre-approved permit design .Faster lower cost, light customization possible.",
     icon: clockIcon,
   },
   {
     id: "custom",
-    title: "Custom",
-    description: "Work toward a more tailored design based on your property and goals.",
+    title: "Designed for Your Lot",
+    description: "An architect designs around  your property from scratch. More time, more cost and more flexibility.",
     icon: penIcon,
   },
 ] as const satisfies {
@@ -71,7 +71,7 @@ export default function StepFiveBuildPreference() {
           <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10 lg:max-w-4xl">
             <div className="space-y-2 text-center mt-36 w-full">
               <h1 className="steps-heading text-balance !text-[#1a2a3a]">
-                How Would You Like to Build?
+                How Would You Like to Start?
               </h1>
             </div>
 
@@ -121,7 +121,7 @@ export default function StepFiveBuildPreference() {
 
           <StepsSubmitBtn
             isComplete={Boolean(selected)}
-            idleText="Choose My Path"
+            idleText="Continue"
             disabled={!selected}
             loading={submitting}
             loadingText="Opening configurator…"

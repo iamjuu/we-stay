@@ -19,26 +19,31 @@ const options = [
   {
     id: "long-term",
     label: "Long-Term Rental",
+    subtitle: "Steady monthly income",
     icon: calenderIcon,
   },
   {
     id: "short-term",
     label: "Short-Term Rental",
+    subtitle: "Vacation or weekly stays",
     icon: shortTermIcon,
   },
   {
     id: "family",
-    label: "Family Living",
+    label: "Ohana (Family Housing)",
+    subtitle: "Parents, kids, or extended family",
     icon: familyIcon,
   },
   {
     id: "live-rent",
-    label: "Live In It, Rent the Main House",
+    label: "House Hack",
+    subtitle: "Live in the ADU, rent the main",
     icon: liveInIcon,
   },
   {
     id: "not-sure",
-    label: "Not Sure Yet",
+    label: "Still Exploring",
+    subtitle: "I'll decide as I learn more",
     icon: notSureIcon,
   },
 ] as const;
@@ -79,10 +84,10 @@ export default function GoalSelection() {
           <div className="mx-auto flex w-full max-w-full flex-col items-center gap-6 py-10 sm:max-w-xl md:max-w-2xl lg:max-w-3xl">
             <div className="space-y-2 px-1 text-center mt-24 sm:mt-32 md:mt-36">
               <h1 className="steps-heading text-balance text-[#1a2a3a]">
-                What Are You Trying to Do?
+                How we will you use your ADU?
               </h1>
               <p className="steps-subheading text-sm leading-relaxed !text-slate-600">
-                What Are You Hoping to Create?
+                Pick the path that fits you best.You can Change this later.
               </p>
             </div>
 
@@ -97,9 +102,9 @@ export default function GoalSelection() {
                     type="button"
                     onClick={() => setSelected(opt.id)}
                     className={`
-                          flex min-h-[3.5rem] w-full min-w-0 items-center justify-between gap-3
-                          rounded-full border px-4 py-3 text-left transition-all duration-200
-                          sm:min-h-[4rem] sm:px-4 sm:py-4
+                          flex w-full min-w-0 items-center justify-between gap-3
+                          rounded-2xl border px-4 py-3 text-left transition-all duration-200
+                          sm:px-4 sm:py-4
                           ${
                             isSelected
                               ? "border-2 border-[#4DB6AC] bg-white shadow-[0_0_0_1px_rgba(45,212,191,0.22)]"
@@ -124,9 +129,14 @@ export default function GoalSelection() {
                           aria-hidden
                         />
                       </div>
-                      <span className="step-four-content min-w-0 text-pretty text-sm font-medium leading-snug !text-black sm:text-base">
-                        {opt.label}
-                      </span>
+                      <div className="flex min-w-0 flex-col">
+                        <span className="step-four-content min-w-0 text-pretty text-sm font-medium leading-snug !text-black sm:text-base">
+                          {opt.label}
+                        </span>
+                        <span className="mt-0.5 text-[11px] leading-tight text-slate-400">
+                          {opt.subtitle}
+                        </span>
+                      </div>
                     </div>
 
                     <div

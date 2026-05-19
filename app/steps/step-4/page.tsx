@@ -31,6 +31,13 @@ const aduTypes: AduTypeOption[] = [
     icon: backyardIcon,
   },
   {
+    id: "interior-suite",
+    title: "Interior Suite",
+    description:
+      "An ADU within your existing home that adds space and value without expanding the footprint.",
+    Icon: MdOutlineMeetingRoom,
+  },
+  {
     id: "attached",
     title: "Attached Addition",
     description: "Shares a wall with your main home—great for seamlessly expanding living space.",
@@ -42,13 +49,7 @@ const aduTypes: AduTypeOption[] = [
     description: "Built above an existing structure—perfect for smaller lots with limited ground space.",
     icon: secondStoryIcon,
   },
-  {
-    id: "interior-suite",
-    title: "Interior Suite",
-    description:
-      "An ADU within your existing home that adds space and value without expanding the footprint.",
-    Icon: MdOutlineMeetingRoom,
-  },
+  
 ];
 
 function AduTypeCardIcon({ opt, isSelected }: { opt: AduTypeOption; isSelected: boolean }) {
@@ -117,8 +118,9 @@ export default function StepFourAduType() {
           <div className="mx-auto flex w-full max-w-[550px] flex-col items-center gap-6 py-10 lg:max-w-4xl">
             <div className="space-y-2 px-1 text-center  w-full">
               <h1 className=" text-[18px] md:text-[26px] mt-14 !text-[#1a2a3a] font-medium">
-                Which Type of ADU Fits Your Property Best?
+                How have you pictured your ADU?
               </h1>
+              <p>pick what feel closet. we will help you confirm what actually fits during your site assesment</p>
             </div>
 
           <div className="grid w-full grid-cols-1 gap-3 md:grid-cols-2">

@@ -68,7 +68,7 @@ function summaryCopy(address: string, result: FullEligibilityResult): string {
     return "Excellent news. Your lot meets all primary zoning criteria. You are well-positioned to maximize property value through an ADU addition.";
   }
   if (result.status === "NEEDS_REVIEW") {
-    return "Needs review. Your lot does not fully meet primary zoning criteria. Further assessment is required before planning an ADU.";
+    return "Most of your property's digital checks came back strong.One or two areas will benefit from a closer look during your site assesment, a normal  part of every WeStay project. Your matched team will walk you through the details."
   }
   const short = address.split(",")[0]?.trim() || "This property";
   return `Based on preliminary screening, ${short} may face significant eligibility constraints. Review failed gates below and consult DPP before proceeding.`;
@@ -161,6 +161,13 @@ function GateCard({ gate }: { gate: EligibilityGate }) {
   );
 }
 
+function getScoreLabel(score: number): string {
+  if (score >= 85) return "Promising";
+  if (score >= 70) return "Possible";
+  if (score >= 55) return "Limited";
+  return "Your Score";
+}
+
 function CircleProgress({ score, gradientId }: { score: number; gradientId: string }) {
   const [animated, setAnimated] = useState(0);
   const radius = 70;
@@ -231,7 +238,7 @@ function CircleProgress({ score, gradientId }: { score: number; gradientId: stri
       />
       <div className="absolute flex flex-col items-center justify-center">
         <span className="text-3xl font-bold leading-none text-slate-900">{score}%</span>
-        <span className="mt-1 text-xs tracking-wide text-slate-500">Your Score</span>
+        <span className="mt-1 text-xs tracking-wide text-slate-500">{getScoreLabel(score)}</span>
       </div>
     </div>
   );
@@ -285,7 +292,7 @@ export default function PropertyScorePage() {
         <div className="scrollbar min-h-0 flex-1 overflow-y-auto overscroll-y-contain px-4 pb-2 pt-24 sm:px-6 sm:pt-32">
           <div className="mx-auto flex w-full max-w-5xl flex-col items-center gap-6 pb-2">
             <h1 className="text-center font-dm-sans text-2xl font-bold tracking-tight text-slate-900">
-              Your Property Potential
+              Your Property Has Potential
             </h1>
 
             <p className="max-w-3xl text-balance px-2 text-center font-dm-sans text-sm leading-snug text-slate-600 sm:text-base md:text-lg">
@@ -373,7 +380,7 @@ export default function PropertyScorePage() {
                 </>
               ) : (
                 <>
-                  Continue My Build Path
+                  See what you can Build
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-4 w-4 shrink-0"
