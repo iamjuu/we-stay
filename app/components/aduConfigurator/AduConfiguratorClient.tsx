@@ -809,7 +809,7 @@ export function AduConfiguratorClient() {
       </aside>
 
       <main
-        className="relative order-1 h-[42svh] min-h-[240px] w-full shrink-0 lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch"
+        className="relative order-1 h-[28svh] min-h-[180px] w-full shrink-0 lg:order-1 lg:h-auto lg:min-h-0 lg:flex-1 lg:self-stretch"
         style={{ background: VIEWER_BG }}
       >
         {!viewportReady ? <ConfiguratorModelSkeleton loadProgress={loadProgress} /> : null}
