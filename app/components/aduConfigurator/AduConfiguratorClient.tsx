@@ -5,7 +5,7 @@ import { type PlanId, PLAN_MODEL_URL } from "@/app/components/aduConfigurator/pl
 import { type SidingId } from "@/app/components/aduConfigurator/ConfiguratorModel";
 import CtaButton from "@/app/components/ctaButton/ctaButton";
 import Navbar from "@/app/components/navbar/navbar";
-import { ArrowRight, CheckCircle, Home, Layers, Maximize2, User } from "lucide-react";
+import { ArrowRight, Home, Layers, Maximize2, User } from "lucide-react";
 import Image, { type StaticImageData } from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useGLTF } from "@react-three/drei";
@@ -376,8 +376,6 @@ export function AduConfiguratorClient() {
   const [viewportReady, setViewportReady] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
   const [finishSending, setFinishSending] = useState(false);
-  const [finishSuccess, setFinishSuccess] = useState(false);
-  const [finishError, setFinishError] = useState(false);
 
   const handleLoadIdle = useCallback(() => setViewportReady(true), []);
   const handleLoadProgress = useCallback((p: number) => setLoadProgress(p), []);
@@ -474,12 +472,16 @@ export function AduConfiguratorClient() {
       chipLabels: [...yourAduChips],
     };
     setConfiguratorSummary(summary);
-    setFinishError(false);
     setFinishSending(true);
+
+    // Open booking in new tab immediately
+    window.open(BOOKING_URL, "_blank", "noopener,noreferrer");
+
+    // Await email/PDF in background, then clear context and go home
+    const browserUserId = userId ?? ensureJourneyUserId();
+    const journeyId = ensureActiveJourneyId();
     try {
-      const browserUserId = userId ?? ensureJourneyUserId();
-      const journeyId = ensureActiveJourneyId();
-      const r = await fetch("/api/journey/finish", {
+      await fetch("/api/journey/finish", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -498,18 +500,12 @@ export function AduConfiguratorClient() {
             : {}),
         }),
       });
-      if (!r.ok) throw new Error("finish failed");
-      setFinishSuccess(true);
-      // Auto-redirect home after 3s — user can book via the popup button before this fires
-      window.setTimeout(() => {
-        clearWestayClientStorage();
-        window.location.assign("/");
-      }, 3000);
     } catch {
-      setFinishError(true);
-    } finally {
-      setFinishSending(false);
+      // proceed to home even if the request fails
     }
+
+    clearWestayClientStorage();
+    window.location.assign("/");
   };
 
   return (
@@ -773,37 +769,14 @@ export function AduConfiguratorClient() {
             </div>
 
             <div className="relative mt-6">
-              {finishSuccess && (
-                <div className="absolute bottom-[calc(100%+10px)] left-0 right-0 animate-[fadeSlideUp_0.25s_ease-out] rounded-2xl border border-[#5fb3b3]/25 bg-[#0c1b2a] px-4 py-4 shadow-xl">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="size-5 shrink-0 text-[#5fb3b3]" strokeWidth={2} />
-                    <p className="text-[13px] font-semibold leading-snug text-white">Configuration sent!</p>
-                  </div>
-                  <a
-                    href={BOOKING_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-[#5fb3b3] px-4 py-2.5 text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
-                  >
-                    Book Your Discovery Call
-                    <ArrowRight className="size-4" strokeWidth={2.5} />
-                  </a>
-                  <p className="mt-2.5 text-center text-[11px] text-white/40">Redirecting you home in 3s…</p>
-                </div>
-              )}
               <CtaButton
-                buttonName={finishSending ? "Sending…" : "Finish & Book Discovery Call"}
+                buttonName={finishSending ? "Redirecting…" : "Finish & Book Discovery Call"}
                 icon={<ArrowRight className="size-[18px] shrink-0" aria-hidden strokeWidth={2.5} />}
                 className="w-full self-stretch! disabled:pointer-events-none disabled:opacity-60"
                 onClick={() => void handleFinish()}
-                disabled={finishSending || finishSuccess}
+                disabled={finishSending}
               />
             </div>
-            {finishError ? (
-              <p className="font-dm-sans mt-4 text-center text-[13px] text-red-600">
-                We couldn&apos;t send the report. Check your connection and try again.
-              </p>
-            ) : null}
           </SidebarSection>
         </div>
       </aside>
