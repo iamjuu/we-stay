@@ -298,11 +298,8 @@ export default function TestimonialCarousel() {
           <span className="text-gray-400">We Bring the Clarity</span>
         </h2>
 
-        {/*
-          overflowX:clip  — hides horizontal marquee overflow without creating a scroll container
-          overflowY:visible — lets the expanded card grow vertically without being cut off
-        */}
-        <div
+  
+        {/* <div
           className="relative w-full"
           style={{ overflowX: "clip", overflowY: "visible" }}
           onMouseEnter={() => {
@@ -314,7 +311,7 @@ export default function TestimonialCarousel() {
               trackRef.current.style.animationPlayState = "running";
           }}
         >
-          {/* Edge fade masks — see carouselEdgeFade* constants for spread + intensity */}
+        
           <div
             className={`pointer-events-none absolute left-0 top-0 bottom-0 z-20 hidden md:block ${carouselEdgeFadeWidthClass}`}
             style={{ background: carouselEdgeFadeLeft }}
@@ -324,7 +321,7 @@ export default function TestimonialCarousel() {
             style={{ background: carouselEdgeFadeRight }}
           />
 
-          {/* Scrolling track — items-end so expanded card grows upward */}
+          
           <div
             ref={trackRef}
             className={`relative flex items-center py-6 ${isMobile ? "gap-3" : "gap-5"}`}
@@ -346,7 +343,7 @@ export default function TestimonialCarousel() {
               />
             ))}
           </div>
-        </div>
+        </div> */}
       </section>
 
       <style>{`
