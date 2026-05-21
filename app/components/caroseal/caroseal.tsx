@@ -235,10 +235,6 @@ export default function PropertyCarousel() {
             onPointerCancel={endDrag}
             onLostPointerCapture={onLostPointerCapture}
           >
-              <div
-                className="pointer-events-none absolute inset-y-0 left-0 z-20 hidden w-24 bg-gradient-to-r from-white via-white/80 to-transparent sm:block"
-                aria-hidden
-              />
 
               <div
                 className="absolute inset-0 will-change-transform sm:-left-[var(--arrow-rail)] sm:w-[calc(100%+var(--arrow-rail))]"
