@@ -1,6 +1,6 @@
 import Navbar from "./components/navbar/navbar";
 import HeroEligibility from "./components/hero-eligibility/hero-eligibility";
-import { Avatar1, Avatar2, Avatar3, Avatar4, SectionTwo } from "@/content";
+import { Avatar1, Avatar2, Avatar3, Avatar4, HeroSectionVideo, SectionTwo } from "@/content";
 
 /** Hero background — `public/c7ce8d3f5b95b6b50f07aef058275d6266d8379d (1).png` */
 const HERO_BACKGROUND_URL =
@@ -73,15 +73,19 @@ export default function Home() {
       {/* Navbar is fixed above the viewport; hero extends to the top behind it */}
       <Navbar />
       <div
-        style={{
-          backgroundImage: ` url("${HERO_BACKGROUND_URL}")`,
-          backgroundSize: "cover, cover",
-          backgroundPosition: "center, center",
-          backgroundRepeat: "no-repeat",
-        }}
         id="home-hero"
-        className="relative bg-[#0C1B2A] sm:min-h-screen"
+        className="relative overflow-hidden bg-[#0C1B2A] sm:min-h-screen"
       >
+        <video
+          className="absolute inset-0 h-full w-full object-cover object-center"
+          src={HeroSectionVideo}
+          autoPlay
+          muted
+          loop
+          playsInline
+          aria-hidden
+        />
+        <div className="absolute inset-0 bg-black/50" aria-hidden />
         {/* Hero top fade — full viewport height so the vignette always reads on `/` (with or without modal) */}
         <div
           className="pointer-events-none absolute inset-x-0 top-0 z-0 min-h-screen w-full"

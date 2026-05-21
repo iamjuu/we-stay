@@ -1,5 +1,7 @@
 // Importable media lives under `content/`; `public/` is only for files served by URL path.
 import Logo from "./images/logo.svg";
+// Served from `public/` (URL path) — video cannot be imported as a module in Next.js.
+const HeroSectionVideo = "/hero-section/roodny-poor.mp4";
 import HeroImage from "./images/hero-img.png";
 import NaturalImage from "./images/gridiamge.svg";
 
@@ -38,7 +40,9 @@ import LinkedInIcon from "./images/footer/6239ba027547cf7eb7430709_Linkedin.svg.
 import ContactImage from "./images/about/contact-image.svg"
 
 
-export {AboutSectionImage,
+export {
+  HeroSectionVideo,
+  AboutSectionImage,
   ContactImage,
   FacebookIcon,
   TwitterIcon,
