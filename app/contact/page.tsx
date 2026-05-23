@@ -32,17 +32,17 @@ export default function ContactPage() {
                 <ul className="flex flex-col gap-[30px]">
                   <li className="flex items-center gap-[10px]  font-[400] font-dm-sans text-[clamp(13px,0.94vw,20px)]  leading-[25px] text-[#4DB6AC]">
                     <MapPin className="size-[20px]  opacity-95" aria-hidden strokeWidth={2} />
-                    <span>loremipsum, address</span>
+                    <span>2045 Lauwiliwili St, Unit 201, Kapolei, HI 96707</span>
                   </li>
 
                   <li className="flex items-center gap-[10px] font-[400] font-dm-sans text-[clamp(13px,0.94vw,20px)]  leading-[25px] text-[#4DB6AC]">
                     <Mail className="size-[20px]  opacity-95" aria-hidden strokeWidth={2} />
-                    <span>westay@example.com</span>
+                    <span>info.westayhome@gmail.com</span>
                   </li>
 
                   <li className="flex items-center gap-[10px] font-[400] font-dm-sans text-[clamp(13px,0.94vw,20px)]  leading-[25px] text-[#4DB6AC]">
                     <Phone className="size-[20px] opacity-95" aria-hidden strokeWidth={2} />
-                    <span>+000 000 0000</span>
+                    <span>+1 808 230 3385</span>
                   </li>
                 </ul>
 
@@ -50,7 +50,7 @@ export default function ContactPage() {
                 <div className="flex w-full flex-col gap-[40px]">
                   <div className="w-full overflow-hidden rounded-[20px] bg-gray-100 h-[220px] sm:h-[290px]">
                     <iframe
-                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d423286.27405069!2d-118.69192!3d34.02016!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80c2c75ddc27da13%3A0xe22fefa2c9e6c5d1!2sLos%20Angeles%2C%20CA!5e0!3m2!1sen!2sus!4v1"
+                      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3718.7!2d-158.0558!3d21.3358!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7c001a3b7b3b3b3b%3A0x0!2s2045+Lauwiliwili+St%2C+Kapolei%2C+HI+96707!5e0!3m2!1sen!2sus!4v1"
                       className="h-full w-full border-0"
                       allowFullScreen
                       loading="lazy"
