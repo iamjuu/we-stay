@@ -474,9 +474,6 @@ export function AduConfiguratorClient() {
     setConfiguratorSummary(summary);
     setFinishSending(true);
 
-    // Open booking in new tab immediately
-    window.open(BOOKING_URL, "_blank", "noopener,noreferrer");
-
     // Await email/PDF in background, then clear context and go home
     const browserUserId = userId ?? ensureJourneyUserId();
     const journeyId = ensureActiveJourneyId();
@@ -773,7 +770,15 @@ export function AduConfiguratorClient() {
                 buttonName={finishSending ? "Redirecting…" : "Finish & Book Discovery Call"}
                 icon={<ArrowRight className="size-[18px] shrink-0" aria-hidden strokeWidth={2.5} />}
                 className="w-full self-stretch! disabled:pointer-events-none disabled:opacity-60"
-                onClick={() => void handleFinish()}
+                onClick={(e) => {
+                  // Open new tab synchronously inside the click handler so popup blocker allows it
+                  const tab = window.open(BOOKING_URL, "_blank", "noopener,noreferrer");
+                  if (!tab) {
+                    // Fallback: navigate current tab if popup was blocked
+                    window.location.href = BOOKING_URL;
+                  }
+                  void handleFinish();
+                }}
                 disabled={finishSending}
               />
             </div>
