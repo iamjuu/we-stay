@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import Navbar from "@/app/components/navbar/navbar";
 import { StepsSubmitBtn } from "../components/steps-submit-btn";
@@ -184,9 +183,14 @@ export default function StepFourAduType() {
 
           <p className="text-center font-dm-sans text-xs leading-relaxed text-slate-400">
             Not sure? We&apos;ll help you determine the best fit during your{" "}
-            <Link href="/about" className="text-[#6BB8FF] underline underline-offset-2 hover:text-[#9dceff]">
+            <a
+              href="https://links.womcom.com/widget/bookings/westay-discovery-call"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#6BB8FF] underline underline-offset-2 hover:text-[#9dceff]"
+            >
               Discovery Call
-            </Link>
+            </a>
             .
           </p>
 
