@@ -459,7 +459,7 @@ export function AduConfiguratorClient() {
     setUpgrades((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleFinish = async () => {
+  const handleFinish = () => {
     const summary = {
       planId,
       sidingId,
@@ -474,32 +474,31 @@ export function AduConfiguratorClient() {
     setConfiguratorSummary(summary);
     setFinishSending(true);
 
-    // Await email/PDF in background, then clear context and go home
     const browserUserId = userId ?? ensureJourneyUserId();
     const journeyId = ensureActiveJourneyId();
-    try {
-      await fetch("/api/journey/finish", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          journeyId,
-          browserUserId,
-          configuratorSummary: summary,
-          ...(reportContact
-            ? {
-                reportContact: {
-                  firstName: reportContact.firstName,
-                  lastName: reportContact.lastName,
-                  email: reportContact.email,
-                  phone: reportContact.phone,
-                },
-              }
-            : {}),
-        }),
-      });
-    } catch {
-      // proceed to home even if the request fails
-    }
+    const payload = JSON.stringify({
+      journeyId,
+      browserUserId,
+      configuratorSummary: summary,
+      ...(reportContact
+        ? {
+            reportContact: {
+              firstName: reportContact.firstName,
+              lastName: reportContact.lastName,
+              email: reportContact.email,
+              phone: reportContact.phone,
+            },
+          }
+        : {}),
+    });
+
+    // Fire-and-forget so navigation to home is not blocked by SMTP latency/failures
+    void fetch("/api/journey/finish", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: payload,
+      keepalive: true,
+    }).catch(() => {});
 
     clearWestayClientStorage();
     window.location.assign("/");
@@ -770,13 +769,9 @@ export function AduConfiguratorClient() {
                 buttonName={finishSending ? "Redirecting…" : "Finish & Book Discovery Call"}
                 icon={<ArrowRight className="size-[18px] shrink-0" aria-hidden strokeWidth={2.5} />}
                 className="w-full self-stretch! disabled:pointer-events-none disabled:opacity-60"
-                onClick={(e) => {
-                  // Open new tab synchronously inside the click handler so popup blocker allows it
-                  const tab = window.open(BOOKING_URL, "_blank", "noopener,noreferrer");
-                  if (!tab) {
-                    // Fallback: navigate current tab if popup was blocked
-                    window.location.href = BOOKING_URL;
-                  }
+                onClick={() => {
+                  // Booking opens in a new tab only — current tab always goes home via handleFinish
+                  window.open(BOOKING_URL, "_blank", "noopener,noreferrer");
                   void handleFinish();
                 }}
                 disabled={finishSending}

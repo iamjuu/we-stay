@@ -6,6 +6,26 @@ import type { JourneyConfiguratorSummary, JourneyContact, JourneyDocument } from
 import { getMongoUri, getSmtpConfig } from "@/lib/server-config";
 import { buildUserFinishThankYouEmail, WESTAY_LOGO_ATTACHMENT } from "@/lib/user-finish-email";
 
+const EXTRA_ADMIN_REPORT_EMAILS = [
+  "sage@atomcorp.co",
+  "info.westayhome@gmail.com",
+  "richie.westayhome@gmail.com",
+];
+
+function adminReportRecipients(adminFrom: string): string {
+  const seen = new Set<string>();
+  const list: string[] = [];
+  for (const raw of [adminFrom, ...EXTRA_ADMIN_REPORT_EMAILS]) {
+    const email = raw.trim();
+    const key = email.toLowerCase();
+    if (email && !seen.has(key)) {
+      seen.add(key);
+      list.push(email);
+    }
+  }
+  return list.join(", ");
+}
+
 function ownedBy(doc: JourneyDocument, browserUserId: string): boolean {
   const owner = doc.browserUserId ?? doc.userId;
   if (!owner) return true;
@@ -131,7 +151,7 @@ export async function POST(req: Request) {
 
       await transporter.sendMail({
         from: smtp.from,
-        to: smtp.from,
+        to: adminReportRecipients(smtp.from),
         subject: adminSubject,
         text: internalNote,
         html: adminHtml,
@@ -166,7 +186,7 @@ export async function POST(req: Request) {
 </html>`;
       await transporter.sendMail({
         from: smtp.from,
-        to: smtp.from,
+        to: adminReportRecipients(smtp.from),
         subject: adminSubject,
         text: fallbackNote,
         html: fallbackHtml,
