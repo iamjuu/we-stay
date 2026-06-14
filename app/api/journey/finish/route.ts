@@ -8,7 +8,6 @@ import { buildUserFinishThankYouEmail, WESTAY_LOGO_ATTACHMENT } from "@/lib/user
 
 const EXTRA_ADMIN_REPORT_EMAILS = [
   "sage@atomcorp.co",
-  "info.westayhome@gmail.com",
   "richie.westayhome@gmail.com",
 ];
 

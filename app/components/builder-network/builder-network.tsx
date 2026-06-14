@@ -12,7 +12,7 @@ import {
 import { Info, Search } from "lucide-react";
 import { partnerImage } from "@/content";
 import CtaButton from "../ctaButton/ctaButton";
-const LENDING_PARTNER_MAILTO = "mailto:info.atnhawaii@gmail.com";
+const LENDING_PARTNER_MAILTO = "mailto:info.westayhome@gmail.com";
 
 const SearchIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
